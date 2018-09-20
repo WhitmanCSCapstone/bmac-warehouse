@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  background-color: white;
+}
+
+.body{
+  border-left:5px solid #222 ;
+  border-right:5px solid #222 ;
 }
 
 .App-logo {
@@ -7,22 +13,37 @@
   height: 80px;
 }
 
+.button{
+  background-color: gray;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  
+}
+.button:hover {
+  background-color: white;
+  color: black;
+}
+
+.button:active {
+  background-color: white;
+  transform: translateY(4px);
+}
+.button:focus{
+  outline:0;
+}
+
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color:teal;
+  height: 200px;
   padding: 20px;
   color: white;
 }
 
 .App-title {
   font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }

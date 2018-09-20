@@ -19,6 +19,10 @@ class About extends React.Component {
   render() {
     return(
       <div style={styles.container}>
+
+
+
+      
         Hello there! This is the about page!
       </div>
     );

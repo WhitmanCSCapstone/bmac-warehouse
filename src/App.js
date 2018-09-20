@@ -23,38 +23,40 @@ class App extends Component {
             <h1 className="App-title">Welcome to BMAC-Warehouse</h1>
 
             <Link to="/home">
-              <button>Home</button>
+              <button className="button">Home</button>
             </Link>
             <Link to="/about">
-              <button>About</button>
+              <button className="button">About</button>
             </Link>
             <Link to="/shipments">
-              <button>Shipments</button>
+              <button className="button"> Shipments</button>
             </Link>
             <Link to="/receipts">
-              <button>Receipts</button>
+              <button className="button">Receipts</button>
             </Link>
             <Link to="products">
-              <button>Products</button>
+              <button className="button">Products</button>
             </Link>
             <Link to="staff">
-              <button>Staff</button>
+              <button className="button">Staff</button>
             </Link>
             <Link to="providers">
-              <button>Providers</button>
+              <button className="button">Providers</button>
             </Link>
             <Link to="customers">
-              <button>Customers</button>
+              <button className="button">Customers</button>
             </Link>
             <Link to="reports">
-              <button>Reports</button>
+              <button className="button">Reports</button>
             </Link>
             <Link to="help">
-              <button>Help</button>
+              <button className="button">Help</button>
             </Link>
 
           </header>
-
+<body>
+  This is the body
+</body>
           <Route exact path="/about" component={About} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/shipments" component={Shipments} />
