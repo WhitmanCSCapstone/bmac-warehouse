@@ -13,9 +13,11 @@ import Customers from './pages/customers';
 import Reports from './pages/reports';
 import Help from './pages/help';
 
+
 class App extends Component {
   render() {
     return (
+      <div>
       <Router>
         <div className="App">
           <header className="App-header">
@@ -23,7 +25,7 @@ class App extends Component {
             <h1 className="App-title">Welcome to BMAC-Warehouse</h1>
 
             <Link to="/home">
-              <button className="button">Home</button>
+              <button className="button active">Home</button>
             </Link>
             <Link to="/about">
               <button className="button">About</button>
@@ -54,9 +56,7 @@ class App extends Component {
             </Link>
 
           </header>
-<body>
-  This is the body
-</body>
+
           <Route exact path="/about" component={About} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/shipments" component={Shipments} />
@@ -70,6 +70,11 @@ class App extends Component {
 
         </div>
       </Router>
+      <footer className="footer">
+      Whitman Capstone Project 2019 <br/>
+      Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart
+      </footer>
+      </div>
     );
   }
 }
