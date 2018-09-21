@@ -72,7 +72,7 @@ class App extends Component {
       </Router>
       <footer className="footer">
       Whitman Capstone Project 2019 <br/>
-      Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart
+      Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, Pablo Fernandez
       </footer>
       </div>
     );
