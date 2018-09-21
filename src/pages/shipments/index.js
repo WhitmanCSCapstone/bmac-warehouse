@@ -14,7 +14,7 @@ class Shipments extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [0, 1],
+      data: [],
     }
   }
 
