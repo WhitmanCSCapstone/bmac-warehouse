@@ -12,69 +12,149 @@ import Providers from './pages/providers';
 import Customers from './pages/customers';
 import Reports from './pages/reports';
 import Help from './pages/help';
+import { Layout, Button, Menu } from 'antd';
 
+
+const { Header, Content, Footer } = Layout;
+
+const styles = {
+  layout: {
+    display: "flex",
+    flex: "column",
+    minHeight: "100vh",
+  },
+
+  header: {
+    display: "flex",
+    backgroundColor: "white",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    borderBottom: "1px solid #EBEDF0",
+  },
+
+  footer: {
+    width: "100%",
+    padding: "1em",
+    alignSelf: "flex-end",
+    backgroundColor: "white",
+    borderTop: "1px solid #EBEDF0",
+    fontSize: "small",
+    color: "#595959",
+    textAlign: "center",
+  },
+
+  content: {
+    backgroundColor: "#F0F2F5",
+    textAlign: "center",
+  },
+
+  menu: {
+  },
+
+  title: {
+    paddingRight: "50px",
+    fontSize: "2em",
+  },
+}
 
 class App extends Component {
+  state = {
+    // this should be "home" but currently the app doesn't
+    // auto-route to the home page, so for now this is null
+    current: null,
+  }
+
+  handleClick = (e) => {
+    console.log('click ', e);
+    this.setState({
+      current: e.key,
+    });
+  }
+
   render() {
     return (
-      <div>
       <Router>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} alt="logo" />
-            <h1 className="App-title">Welcome to BMAC-Warehouse</h1>
+        <Layout style={styles.layout}>
+          <Header style={styles.header}>
 
-            <Link to="/home">
-              <button className="button active">Home</button>
-            </Link>
-            <Link to="/about">
-              <button className="button">About</button>
-            </Link>
-            <Link to="/shipments">
-              <button className="button"> Shipments</button>
-            </Link>
-            <Link to="/receipts">
-              <button className="button">Receipts</button>
-            </Link>
-            <Link to="products">
-              <button className="button">Products</button>
-            </Link>
-            <Link to="staff">
-              <button className="button">Staff</button>
-            </Link>
-            <Link to="providers">
-              <button className="button">Providers</button>
-            </Link>
-            <Link to="customers">
-              <button className="button">Customers</button>
-            </Link>
-            <Link to="reports">
-              <button className="button">Reports</button>
-            </Link>
-            <Link to="help">
-              <button className="button">Help</button>
-            </Link>
+            {
+              /*
+                logo for BMAC, but its kinda ugly and hard to fit in
+                so for right now its just gonna be commented out
+                <img src={logo} />
+              */
+            }
 
-          </header>
+            <em style={styles.title}>BMAC-Warehouse</em>
 
-          <Route exact path="/about" component={About} />
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/shipments" component={Shipments} />
-          <Route exact path="/receipts" component={Receipts} />
-          <Route exact path="/products" component={Products} />
-          <Route exact path="/staff" component={Staff} />
-          <Route exact path="/providers" component={Providers} />
-          <Route exact path="/customers" component={Customers} />
-          <Route exact path="/reports" component={Reports} />
-          <Route exact path="/help" component={Help} />
+            <Menu
+              onClick={this.handleClick}
+              selectedKeys={[this.state.current]}
+              mode="horizontal"
+              theme="light"
+              style={styles.menu}
+            >
 
-        </div>
+              <Menu.Item key="home">
+                <Link to="/home">Home</Link>
+              </Menu.Item>
+              <Menu.Item key="about">
+                <Link to="/about">About</Link>
+              </Menu.Item>
+              <Menu.Item key="shipments">
+                <Link to="/shipments"> Shipments</Link>
+              </Menu.Item>
+              <Menu.Item key="receipts">
+                <Link to="/receipts">Receipts</Link>
+              </Menu.Item>
+              <Menu.Item key="products">
+                <Link to="products">Products</Link>
+              </Menu.Item>
+              <Menu.Item key="staff">
+                <Link to="staff">Staff</Link>
+              </Menu.Item>
+              <Menu.Item key="providers">
+                <Link to="providers">Providers</Link>
+              </Menu.Item>
+              <Menu.Item key="customers">
+                <Link to="customers">Customers</Link>
+              </Menu.Item>
+              <Menu.Item key="reports">
+                <Link to="reports">Reports</Link>
+              </Menu.Item>
+              <Menu.Item key="help">
+                <Link to="help">Help</Link>
+              </Menu.Item>
+
+            </Menu>
+
+          </Header>
+
+          <Content style={styles.content}>
+
+            <Route exact path="/about" component={About} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/shipments" component={Shipments} />
+            <Route exact path="/receipts" component={Receipts} />
+            <Route exact path="/products" component={Products} />
+            <Route exact path="/staff" component={Staff} />
+            <Route exact path="/providers" component={Providers} />
+            <Route exact path="/customers" component={Customers} />
+            <Route exact path="/reports" component={Reports} />
+            <Route exact path="/help" component={Help} />
+
+          </Content>
+
+          <Footer style={styles.footer}>
+            Whitman Capstone Project 2019 <br/>
+            Copyright ©2018 Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, and Pablo Fernandez
+          </Footer>
+
+        </Layout>
+
       </Router>
-      <footer className="footer">
-      Whitman Capstone Project 2019 <br/>
-      Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, Pablo Fernandez
-      </footer>
-      </div>
+
     );
   }
 }
