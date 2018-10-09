@@ -4,22 +4,34 @@
 
 import React from 'react';
 import firebase from '../../firebase.js';
+import ReactTable from 'react-table';
 import { Button } from 'antd' ;
+import LoadingScreen from '../../components/LoadingScreen';
 
 const styles = {
   container: {
+    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
   },
 };
+
+const keys = [
+  'Customer',
+  'Product',
+  'Ship Date',
+  'Weight'
+];
 
 class Shipments extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [],
+      data: null,
     }
   }
 
-  displayShipments = () => {
+  componentDidMount(){
     var database = firebase.database();
     var shipmentsRef = database.ref('shipments')
     shipmentsRef.on('value', (snapshot) => {
@@ -33,16 +45,22 @@ class Shipments extends React.Component {
   render() {
     return(
       <div style={styles.container}>
-        This is the shipments page!
+        {!this.state.data ? <LoadingScreen/> :
 
-        <Button onClick={()=>{this.displayShipments()}}type="danger">click me (and then wait 5 seconnds)</Button>
-        {this.state.data.map((obj) => {
-           var cust = obj['Customer'];
-           var prod = obj['Product'];
-           var date = obj['Ship Date'];
-           var weight = obj['Weight'];
-           return <div>{cust} {prod} {date} {weight}</div>
-        })}
+         <ReactTable
+             data={this.state.data  ? this.state.data : []}
+             columns={keys.map(string => {
+             return({
+             Header: string,
+             accessor: string,
+             })
+             })}
+
+             defaultPageSize={10}
+             className="-striped -highlight"
+         />
+
+        }
 
       </div>
     );

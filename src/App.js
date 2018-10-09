@@ -45,6 +45,8 @@ const styles = {
   },
 
   content: {
+    display: "flex",
+    flexDirection: "column",
     backgroundColor: "#F0F2F5",
     textAlign: "center",
   },
