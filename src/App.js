@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './bmac_logo.png';
 import './App.css';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import About from './pages/about';
@@ -16,6 +15,19 @@ import { Layout, Button, Menu } from 'antd';
 
 
 const { Header, Content, Footer } = Layout;
+
+const pages = {
+  home: Home,
+  about: About,
+  shipments: Shipments,
+  receipts: Receipts,
+  products: Products,
+  staff: Staff,
+  providers: Providers,
+  customers: Customers,
+  reports: Reports,
+  help: Help,
+}
 
 const styles = {
   layout: {
@@ -80,14 +92,6 @@ class App extends Component {
         <Layout style={styles.layout}>
           <Header style={styles.header}>
 
-            {
-              /*
-                logo for BMAC, but its kinda ugly and hard to fit in
-                so for right now its just gonna be commented out
-                <img src={logo} />
-              */
-            }
-
             <em style={styles.title}>BMAC-Warehouse</em>
 
             <Menu
@@ -98,36 +102,15 @@ class App extends Component {
               style={styles.menu}
             >
 
-              <Menu.Item key="home">
-                <Link to="/home">Home</Link>
-              </Menu.Item>
-              <Menu.Item key="about">
-                <Link to="/about">About</Link>
-              </Menu.Item>
-              <Menu.Item key="shipments">
-                <Link to="/shipments"> Shipments</Link>
-              </Menu.Item>
-              <Menu.Item key="receipts">
-                <Link to="/receipts">Receipts</Link>
-              </Menu.Item>
-              <Menu.Item key="products">
-                <Link to="products">Products</Link>
-              </Menu.Item>
-              <Menu.Item key="staff">
-                <Link to="staff">Staff</Link>
-              </Menu.Item>
-              <Menu.Item key="providers">
-                <Link to="providers">Providers</Link>
-              </Menu.Item>
-              <Menu.Item key="customers">
-                <Link to="customers">Customers</Link>
-              </Menu.Item>
-              <Menu.Item key="reports">
-                <Link to="reports">Reports</Link>
-              </Menu.Item>
-              <Menu.Item key="help">
-                <Link to="help">Help</Link>
-              </Menu.Item>
+              {Object.keys(pages).map((name) => {
+                 return(
+                   <Menu.Item key={name}>
+                     <Link to={"/"+name}>
+                       {name.charAt(0).toUpperCase() + name.slice(1)}
+                     </Link>
+                   </Menu.Item>
+                 )
+              })}
 
             </Menu>
 
@@ -135,16 +118,11 @@ class App extends Component {
 
           <Content style={styles.content}>
 
-            <Route exact path="/about" component={About} />
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/shipments" component={Shipments} />
-            <Route exact path="/receipts" component={Receipts} />
-            <Route exact path="/products" component={Products} />
-            <Route exact path="/staff" component={Staff} />
-            <Route exact path="/providers" component={Providers} />
-            <Route exact path="/customers" component={Customers} />
-            <Route exact path="/reports" component={Reports} />
-            <Route exact path="/help" component={Help} />
+            {Object.keys(pages).map((name) => {
+               return(
+                 <Route exact path={"/" + name} component={pages[name]} />
+               )
+            })}
 
           </Content>
 
