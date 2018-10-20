@@ -11,7 +11,7 @@ import Providers from './pages/providers';
 import Customers from './pages/customers';
 import Reports from './pages/reports';
 import Help from './pages/help';
-import { Layout, Button, Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 
 
 const { Header, Content, Footer } = Layout;
@@ -80,7 +80,6 @@ class App extends Component {
   }
 
   handleClick = (e) => {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
@@ -120,7 +119,7 @@ class App extends Component {
 
             {Object.keys(pages).map((name) => {
                return(
-                 <Route exact path={"/" + name} component={pages[name]} />
+                 <Route exact path={"/" + name} component={pages[name]} key={name} />
                )
             })}
 
