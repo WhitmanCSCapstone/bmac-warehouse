@@ -20,7 +20,6 @@ const keys = [
     "funds_source",
     "ship_date",
     "ship_via",
-    "ship_items",
     "ship_rate",
     "total_weight",
     "total_price",

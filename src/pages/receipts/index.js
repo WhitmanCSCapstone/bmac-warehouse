@@ -18,7 +18,6 @@ const styles = {
 const keys = [
   "provider_id",
   "recieve_date",
-  "receive_items",
   "payment_source",
   "billed_amt",
   "notes"
