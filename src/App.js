@@ -13,7 +13,6 @@ import Reports from './pages/reports';
 import Help from './pages/help';
 import { Layout, Menu } from 'antd';
 
-
 const { Header, Content, Footer } = Layout;
 
 const pages = {
@@ -60,7 +59,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#F0F2F5",
-    textAlign: "center",
   },
 
   menu: {
