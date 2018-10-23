@@ -45,7 +45,7 @@ class Customers extends React.Component {
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
                 return({
-                  Header: string,
+                  Header: string+'lol',
                   accessor: string,
                 })
             })}

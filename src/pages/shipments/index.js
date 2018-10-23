@@ -9,6 +9,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
 import { tableKeys } from '../../constants';
+import TableDropdown from '../../components/TableDropdown';
 
 const keys = tableKeys['shipments'];
 
@@ -76,6 +77,9 @@ class Shipments extends React.Component {
                   accessor: string,
                 })
             })}
+            SubComponent={row => {
+              return <TableDropdown/>
+            }}
             defaultPageSize={10}
             className="-striped -highlight"
           />
