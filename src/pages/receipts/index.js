@@ -54,11 +54,11 @@ class Receipts extends React.Component {
 
   componentDidMount(){
     var database = firebase.database();
-    var shipmentsRef = database.ref('6/contributions')
-    shipmentsRef.on('value', (snapshot) => {
-      var ship = snapshot.val()
+    var receiptsRef = database.ref('6/contributions')
+    receiptsRef.on('value', (snapshot) => {
+      var receipts = snapshot.val()
       this.setState({
-        data: ship
+        data: receipts
       })
     });;
   }
