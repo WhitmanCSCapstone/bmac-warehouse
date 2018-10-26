@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.9.3",
     "firebase": "^5.5.0",
+    "moment": "^2.22.2",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-router-dom": "^4.3.1",
