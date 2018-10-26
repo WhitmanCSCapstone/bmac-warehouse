@@ -47,7 +47,7 @@ class Shipments extends React.Component {
     for (var i = 0; i < this.state.data.length; i++){
       var entry = this.state.data[i]
       var entryDate = Moment(entry['ship_date'], 'YY-MM-DD:HH:mm')
-      if(entryDate >= dateRange[0] && entryDate >= dateRange[0]){
+      if(entryDate >= dateRange[0] && entryDate <= dateRange[1]){
         newData.push(entry)
       }
     }
