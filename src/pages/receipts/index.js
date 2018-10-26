@@ -31,8 +31,8 @@ class Receipts extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: null,
-      filteredData: null,
+      data: [],
+      filteredData: [],
     }
   }
 
@@ -69,10 +69,9 @@ class Receipts extends React.Component {
           <RangePicker onChange={this.onDateChange} />
         </div>
 
-        { !this.state.data ? <LoadingScreen/> :
+        { !this.state.data.length ? <LoadingScreen/> :
           <ReactTable
-            data={this.state.filteredData ? this.state.filteredData :
-                  this.state.data ? this.state.data : []}
+            data={this.state.filteredData.length ? this.state.filteredData : this.state.data}
             columns={keys.map(string => {
                 return({
                   Header: string,
