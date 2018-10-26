@@ -31,8 +31,9 @@ class Receipts extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [],
-      filteredData: [],
+      data: null,
+      filteredData: null,
+      dateRange: null,
     }
   }
 
@@ -47,7 +48,8 @@ class Receipts extends React.Component {
     }
     this.setState({
       filteredData: newData,
-    })
+      dateRange: dateRange,
+    }, function () {console.log(this.state.dateRange)})
   }
 
   componentDidMount(){
@@ -69,9 +71,10 @@ class Receipts extends React.Component {
           <RangePicker onChange={this.onDateChange} />
         </div>
 
-        { !this.state.data.length ? <LoadingScreen/> :
+        { !this.state.data ? <LoadingScreen/> :
           <ReactTable
-            data={this.state.filteredData.length ? this.state.filteredData : this.state.data}
+            data={this.state.filteredData && this.state.dateRange.length ?
+                  this.state.filteredData : this.state.data}
             columns={keys.map(string => {
                 return({
                   Header: string,
