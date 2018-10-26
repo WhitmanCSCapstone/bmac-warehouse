@@ -6,6 +6,8 @@ import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { DatePicker } from 'antd';
+import Moment from 'moment';
 
 const styles = {
   container: {
@@ -15,17 +17,19 @@ const styles = {
   },
 };
 
+const { RangePicker } = DatePicker;
+
 const keys = [
-    "customer_id",
-    "funds_source",
-    "ship_date",
-    "ship_via",
-    "ship_rate",
-    "total_weight",
-    "total_price",
-    "invoice_date",
-    "invoice_no",
-    "notes"
+  "customer_id",
+  "funds_source",
+  "ship_date",
+  "ship_via",
+  "ship_rate",
+  "total_weight",
+  "total_price",
+  "invoice_date",
+  "invoice_no",
+  "notes"
 ];
 
 class Shipments extends React.Component {
@@ -33,7 +37,22 @@ class Shipments extends React.Component {
     super(props);
     this.state = {
       data: null,
+      filteredData: null,
     }
+  }
+
+  onDateChange = (dateRange) => {
+    var newData = []
+    for (var i = 0; i < this.state.data.length; i++){
+      var entry = this.state.data[i]
+      var entryDate = Moment(entry['ship_date'], 'YY-MM-DD:HH:mm')
+      if(entryDate >= dateRange[0] && entryDate >= dateRange[0]){
+        newData.push(entry)
+      }
+    }
+    this.setState({
+      filteredData: newData,
+    })
   }
 
   componentDidMount(){
@@ -50,9 +69,15 @@ class Shipments extends React.Component {
   render() {
     return(
       <div style={styles.container}>
+
+        <div>
+          <RangePicker onChange={this.onDateChange} />
+        </div>
+
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
-            data={this.state.data ? this.state.data : []}
+            data={this.state.filteredData ? this.state.filteredData :
+                  this.state.data ? this.state.data : []}
             columns={keys.map(string => {
                 return({
                   Header: string,
@@ -63,6 +88,7 @@ class Shipments extends React.Component {
             className="-striped -highlight"
           />
         }
+
       </div>
     );
   }

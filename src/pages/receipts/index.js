@@ -6,6 +6,8 @@ import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { DatePicker } from 'antd';
+import Moment from 'moment';
 
 const styles = {
   container: {
@@ -14,6 +16,8 @@ const styles = {
     flexDirection: "column",
   },
 };
+
+const { RangePicker } = DatePicker;
 
 const keys = [
   "provider_id",
@@ -28,7 +32,22 @@ class Receipts extends React.Component {
     super(props);
     this.state = {
       data: null,
+      filteredData: null,
     }
+  }
+
+  onDateChange = (dateRange) => {
+    var newData = []
+    for (var i = 0; i < this.state.data.length; i++){
+      var entry = this.state.data[i]
+      var entryDate = Moment(entry['recieve_date'], 'YY-MM-DD:HH:mm')
+      if(entryDate >= dateRange[0] && entryDate >= dateRange[0]){
+        newData.push(entry)
+      }
+    }
+    this.setState({
+      filteredData: newData,
+    })
   }
 
   componentDidMount(){
@@ -45,9 +64,15 @@ class Receipts extends React.Component {
   render() {
     return(
       <div style={styles.container}>
+
+        <div>
+          <RangePicker onChange={this.onDateChange} />
+        </div>
+
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
-            data={this.state.data ? this.state.data : []}
+            data={this.state.filteredData ? this.state.filteredData :
+                  this.state.data ? this.state.data : []}
             columns={keys.map(string => {
                 return({
                   Header: string,
@@ -58,6 +83,7 @@ class Receipts extends React.Component {
             className="-striped -highlight"
           />
         }
+
       </div>
     );
   }
