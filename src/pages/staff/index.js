@@ -6,6 +6,9 @@ import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants';
+
+const keys = tableKeys['staff'];
 
 const styles = {
   container: {
@@ -14,23 +17,6 @@ const styles = {
     flexDirection: "column",
   },
 };
-
-const keys = [
-  "unique_id",
-  "username",
-  "last_name",
-  "first_name",
-  "address",
-  "city",
-  "zip",
-  "phone1",
-  "phone2",
-  "email",
-  "type",
-  "status",
-  "notes",
-  "password",
-]
 
 class Staff extends React.Component {
   constructor(props){

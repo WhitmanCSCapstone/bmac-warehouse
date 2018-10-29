@@ -6,6 +6,9 @@ import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants';
+
+const keys = tableKeys['providers'];
 
 const styles = {
   container: {
@@ -14,22 +17,6 @@ const styles = {
     flexDirection: "column",
   },
 };
-
-const keys = [
-  "provider_id",
-  "code",
-  "type",
-  "address",
-  "city",
-  "state",
-  "zip",
-  "county",
-  "contact",
-  "phone",
-  "email",
-  "status",
-  "notes"
-];
 
 class Providers extends React.Component {
   constructor(props){

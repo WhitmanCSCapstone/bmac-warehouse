@@ -8,6 +8,9 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
+import { tableKeys } from '../../constants';
+
+const keys = tableKeys['receipts'];
 
 const styles = {
   container: {
@@ -18,14 +21,6 @@ const styles = {
 };
 
 const { RangePicker } = DatePicker;
-
-const keys = [
-  "provider_id",
-  "recieve_date",
-  "payment_source",
-  "billed_amt",
-  "notes"
-];
 
 class Receipts extends React.Component {
   constructor(props){

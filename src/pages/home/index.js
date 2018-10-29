@@ -7,6 +7,10 @@ import Moment from 'moment';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants';
+
+const shipKeys = tableKeys['shipments'];
+const receiptKeys = tableKeys['receipts']
 
 const styles = {
   container: {
@@ -15,27 +19,6 @@ const styles = {
     flexDirection: "column",
   },
 };
-
-const shipKeys = [
-  "customer_id",
-  "funds_source",
-  "ship_date",
-  "ship_via",
-  "ship_rate",
-  "total_weight",
-  "total_price",
-  "invoice_date",
-  "invoice_no",
-  "notes"
-];
-
-const receiptKeys = [
-  "provider_id",
-  "recieve_date",
-  "payment_source",
-  "billed_amt",
-  "notes"
-];
 
 class Home extends React.Component {
   constructor(props){

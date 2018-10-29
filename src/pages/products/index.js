@@ -6,6 +6,9 @@ import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants';
+
+const keys = tableKeys['products'];
 
 const styles = {
   container: {
@@ -14,22 +17,6 @@ const styles = {
     flexDirection: "column",
   },
 };
-
-const keys = [
-  "product_id",
-  "product_code",
-  "funding_source",
-  "unit_weight",
-  "unit_price",
-  "initial_date",
-  "initial_stock",
-  "minimum_stock",
-  "history",
-  "current_stock",
-  "inventory_date",
-  "status",
-  "notes"
-];
 
 class Products extends React.Component {
   constructor(props){
