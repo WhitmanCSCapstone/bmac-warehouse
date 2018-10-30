@@ -78,7 +78,10 @@ class Shipments extends React.Component {
                 })
             })}
             SubComponent={row => {
-              return <TableDropdown/>
+              return <TableDropdown
+                data_type={"ship_items"}
+                row={row.original.ship_items}
+              />
             }}
             defaultPageSize={10}
             className="-striped -highlight"

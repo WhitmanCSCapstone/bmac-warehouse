@@ -19,65 +19,76 @@ const styles = {
 
 const keys = [
   "product",
-  "caselots",
-  "totalweight",
-];
-
-const stubData = [
-  {
-    product: "a",
-    caselots: "b",
-    totalweight: "c",
-
-  },
-
-  {
-    product: "food",
-    caselots: "many",
-    totalweight: "a dozen",
-  },
+  "case_lots",
+  "total_weight",
 ];
 
 class TableDropdown extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: stubData,
+      data: props.row,
       editable: false,
     }
+    this.renderEditable = this.renderEditable.bind(this);
+  }
+
+  renderEditable(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
   }
 
   getTable = () => {
-    return (
-      <ReactTable
-            data={this.state.data ? this.state.data : []}
-            columns={keys.map(string => {
-                return({
-                  Header: string,
-                  accessor: string,
-                })
-            })}
-            showPagination={false}
-            defaultPageSize={this.state.data.length}
-            className="-striped -highlight"
-          />
-    )
-  };
+        return (
+          <ReactTable
+              data={this.state.data ? this.state.data : []}
+              columns={keys.map(string => {
+                if(this.state.editable) {
+                  return({
+                    Header: string,
+                    accessor: string,
+                    Cell: this.renderEditable,
+                  })
+                }
+
+                else {
+                  return({
+                    Header: string,
+                    accessor: string,
+                  })
+                }
+              })}
+              showPagination={false}
+              defaultPageSize={this.state.data ? this.state.data.length : 0}
+              className="-striped -highlight"
+            />
+          )
+      };
 
   click = () => {
-    this.setState({editable: true})
+    this.setState({editable: !this.state.editable})
   };
 
   render() {
     return(
       <div style={styles.container}>
-
-        {this.state.editable ? this.getTable() : "editable"}
-
+        {this.getTable()}
         <button onClick = {this.click}>
-          edit
+          Edit
         </button>
-
       </div>
     );
   }

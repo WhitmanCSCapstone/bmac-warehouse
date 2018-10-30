@@ -9,6 +9,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
 import { tableKeys } from '../../constants';
+import TableDropdown from '../../components/TableDropdown';
 
 const keys = tableKeys['receipts'];
 
@@ -76,6 +77,11 @@ class Receipts extends React.Component {
                   accessor: string,
                 })
             })}
+            SubComponent={row => {
+              return <TableDropdown
+                row={row.original.receive_items}
+              />
+            }}
             defaultPageSize={10}
             className="-striped -highlight"
           />
