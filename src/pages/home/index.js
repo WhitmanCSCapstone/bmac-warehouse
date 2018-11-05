@@ -1,7 +1,3 @@
-/**
- *  A component
- */
-
 import React from 'react';
 import Moment from 'moment';
 import { db } from '../../firebase';
