@@ -85,3 +85,63 @@ export const tableKeys = {
     "password"
   ],
 }
+
+export const reportKeys = {
+  'shipments': ['product', 'ship_date', 'customer', 'weight'],
+  'receipts': ['product', 'receive_date', 'provider', 'weight'],
+  'products': [],
+  'customers': [],
+  'providers': [],
+}
+
+export const radioValue2ReportType = {
+  '1': 'Inventory Shipments',
+  '2': 'Inventory Receipts',
+  '3': 'Current Inventory',
+  '4': 'Current Customers',
+  '5': 'Current Providers',
+  '6': 'Active',
+  '7': 'Inactive/Discontinued',
+}
+
+export const reportType2TableName = {
+  'Inventory Shipments': 'shipments',
+  'Inventory Receipts': 'receipts',
+  'Current Inventory': 'products',
+  'Current Customers': 'customers',
+  'Current Providers': 'providers',
+};
+
+export const reportType2DateAccessor = {
+  'Inventory Shipments': 'ship_date',
+  'Inventory Receipts': 'recieve_date',
+  'Current Inventory': 'initial_date',
+  'Current Customers': null,
+  'Current Providers': null,
+};
+
+export const reportType2FundingSourceRelavancy = {
+  'Inventory Shipments': true,
+  'Inventory Receipts': false,
+  'Current Inventory': true,
+  'Current Customers': false,
+  'Current Providers': false,
+};
+
+export const reportType2DateRangeRelavancy = {
+  'Inventory Shipments': true,
+  'Inventory Receipts': true,
+  'Current Inventory': false,
+  'Current Customers': false,
+  'Current Providers': false,
+};
+
+export const tableName2FirebasePath = {
+  'shipments': '2/shipments',
+  'receipts':  '6/contributions',
+  'products': '5/products',
+  'customers': '1/customers',
+  'providers': '3/providers',
+  'persons': '0/persons',
+  'fundingsources': '4/fundingsources',
+};
