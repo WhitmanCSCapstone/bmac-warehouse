@@ -16,6 +16,7 @@ import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import { getReadableShipmentsTableData } from '../../utils/shipments';
 import matchSorter from 'match-sorter';
+import Forms from '../../pages/form';
 
 const keys = tableKeys['shipments'];
 
@@ -80,6 +81,7 @@ class Shipments extends React.Component {
         <div>
           <RangePicker onChange={this.onDateChange} />
         </div>
+        <Forms/>
 
         { !this.state.data.length ? <LoadingScreen/> :
           <ReactTable
