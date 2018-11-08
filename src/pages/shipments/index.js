@@ -21,7 +21,18 @@ const styles = {
   },
 };
 
-const { RangePicker } = DatePicker;
+const keys = [
+    "customer_id",
+    "funds_source",
+    "ship_date",
+    "ship_via",
+    "ship_rate",
+    "total_weight",
+    "total_price",
+    "invoice_date",
+    "invoice_no",
+    "notes"
+];   
 
 class Shipments extends React.Component {
   constructor(props){
@@ -79,8 +90,8 @@ class Shipments extends React.Component {
             })}
             SubComponent={row => {
               return <TableDropdown
-                data_type={"ship_items"}
                 row={row.original.ship_items}
+                index={this.state.data.indexOf(row.original)}
               />
             }}
             defaultPageSize={10}

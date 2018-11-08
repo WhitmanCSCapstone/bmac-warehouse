@@ -8,6 +8,7 @@ import ReactTable from 'react-table';
 import EditableTable from 'react-table';
 
 
+
 const styles = {
   container: {
     flexGrow: 1,
@@ -23,9 +24,16 @@ const keys = [
   "total_weight",
 ];
 
+var ref = null;
+var originalData = null;
+
 class TableDropdown extends React.Component {
   constructor(props){
     super(props);
+    ref = firebase.database().ref('2/shipments/' + props.index + '/ship_items/');
+    /*ref.on("value", function(snapshot) {
+         console.log(snapshot.val());
+      })*/
     this.state = {
       data: props.row,
       editable: false,
@@ -78,17 +86,51 @@ class TableDropdown extends React.Component {
           )
       };
 
-  click = () => {
+  onEdit = () => {
+    originalData = this.state.data
     this.setState({editable: !this.state.editable})
   };
 
+  onSave = () => {
+    //do firebase thing
+    this.setState({editable: !this.state.editable})
+    ref.set(this.state.data)
+  }
+
+  onCancel = () => {
+    this.setState({data: originalData})
+    this.setState({editable: !this.state.editable})
+  }
+
   render() {
+    var renderEdit = null;
+    var renderSave = null;
+    
+    if(this.state.editable) {
+      renderEdit = <div>
+                       <button onClick = {this.onCancel}>
+                        Cancel
+                       </button>
+                     </div>
+      renderSave = <div>
+                       <button onClick = {this.onSave}>
+                        Save
+                       </button>
+                     </div>
+    }
+    else {
+      renderEdit = <div>
+                       <button onClick = {this.onEdit}>
+                        Edit
+                       </button>
+                     </div>
+    }
+
     return(
       <div style={styles.container}>
         {this.getTable()}
-        <button onClick = {this.click}>
-          Edit
-        </button>
+        {renderEdit}
+        {renderSave}
       </div>
     );
   }
