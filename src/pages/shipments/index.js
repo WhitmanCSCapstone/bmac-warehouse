@@ -21,18 +21,7 @@ const styles = {
   },
 };
 
-const keys = [
-    "customer_id",
-    "funds_source",
-    "ship_date",
-    "ship_via",
-    "ship_rate",
-    "total_weight",
-    "total_price",
-    "invoice_date",
-    "invoice_no",
-    "notes"
-];   
+const { RangePicker } = DatePicker;
 
 class Shipments extends React.Component {
   constructor(props){
