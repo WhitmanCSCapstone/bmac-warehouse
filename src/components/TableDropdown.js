@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from '../firebase.js';
 import ReactTable from 'react-table';
-import EditableTable from 'react-table';\
+import EditableTable from 'react-table';
 
 const styles = {
   container: {
@@ -25,9 +25,6 @@ class TableDropdown extends React.Component {
   constructor(props){
     super(props);
     ref = firebase.database().ref('2/shipments/' + props.index + '/ship_items/');
-    /*ref.on("value", function(snapshot) {
-       console.log(snapshot.val());
-       })*/
     this.state = {
       data: props.row,
       editable: false,
@@ -86,7 +83,6 @@ class TableDropdown extends React.Component {
   };
 
   onSave = () => {
-    //do firebase thing
     this.setState({editable: !this.state.editable})
     ref.set(this.state.data)
   }
