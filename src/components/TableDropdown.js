@@ -1,13 +1,7 @@
-/**
- *  A component
- */
-
 import React from 'react';
 import firebase from '../firebase.js';
 import ReactTable from 'react-table';
-import EditableTable from 'react-table';
-
-
+import EditableTable from 'react-table';\
 
 const styles = {
   container: {
@@ -32,8 +26,8 @@ class TableDropdown extends React.Component {
     super(props);
     ref = firebase.database().ref('2/shipments/' + props.index + '/ship_items/');
     /*ref.on("value", function(snapshot) {
-         console.log(snapshot.val());
-      })*/
+       console.log(snapshot.val());
+       })*/
     this.state = {
       data: props.row,
       editable: false,
@@ -48,9 +42,9 @@ class TableDropdown extends React.Component {
         contentEditable
         suppressContentEditableWarning
         onBlur={e => {
-          const data = [...this.state.data];
-          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-          this.setState({ data });
+            const data = [...this.state.data];
+            data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+            this.setState({ data });
         }}
         dangerouslySetInnerHTML={{
           __html: this.state.data[cellInfo.index][cellInfo.column.id]
@@ -60,31 +54,31 @@ class TableDropdown extends React.Component {
   }
 
   getTable = () => {
-        return (
-          <ReactTable
-              data={this.state.data ? this.state.data : []}
-              columns={keys.map(string => {
-                if(this.state.editable) {
-                  return({
-                    Header: string,
-                    accessor: string,
-                    Cell: this.renderEditable,
-                  })
-                }
+    return (
+      <ReactTable
+        data={this.state.data ? this.state.data : []}
+        columns={keys.map(string => {
+            if(this.state.editable) {
+              return({
+                Header: string,
+                accessor: string,
+                Cell: this.renderEditable,
+              })
+            }
 
-                else {
-                  return({
-                    Header: string,
-                    accessor: string,
-                  })
-                }
-              })}
-              showPagination={false}
-              defaultPageSize={this.state.data ? this.state.data.length : 0}
-              className="-striped -highlight"
-            />
-          )
-      };
+            else {
+              return({
+                Header: string,
+                accessor: string,
+              })
+            }
+        })}
+        showPagination={false}
+        defaultPageSize={this.state.data ? this.state.data.length : 0}
+        className="-striped -highlight"
+      />
+    )
+  };
 
   onEdit = () => {
     originalData = this.state.data
@@ -105,25 +99,25 @@ class TableDropdown extends React.Component {
   render() {
     var renderEdit = null;
     var renderSave = null;
-    
+
     if(this.state.editable) {
       renderEdit = <div>
-                       <button onClick = {this.onCancel}>
-                        Cancel
-                       </button>
-                     </div>
+        <button onClick = {this.onCancel}>
+          Cancel
+        </button>
+      </div>
       renderSave = <div>
-                       <button onClick = {this.onSave}>
-                        Save
-                       </button>
-                     </div>
+        <button onClick = {this.onSave}>
+          Save
+        </button>
+      </div>
     }
     else {
       renderEdit = <div>
-                       <button onClick = {this.onEdit}>
-                        Edit
-                       </button>
-                     </div>
+        <button onClick = {this.onEdit}>
+          Edit
+        </button>
+      </div>
     }
 
     return(
