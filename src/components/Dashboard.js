@@ -1,32 +1,28 @@
-import React, { Component } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import About from './pages/about';
-import Home from './pages/home';
-import Shipments from './pages/shipments';
-import Receipts from './pages/receipts';
-import Products from './pages/products';
-import Staff from './pages/staff';
-import Providers from './pages/providers';
-import Customers from './pages/customers';
-import Reports from './pages/reports';
-import Help from './pages/help';
+import React from 'react';
+import withAuthorization from './withAuthorization';
+import SignOutButton from './SignOut';
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+} from 'react-router-dom';
+
+import About from '../pages/about';
+import Home from '../pages/home';
+import Shipments from '../pages/shipments';
+import Receipts from '../pages/receipts';
+import Products from '../pages/products';
+import Staff from '../pages/staff';
+import Providers from '../pages/providers';
+import Customers from '../pages/customers';
+import Reports from '../pages/reports';
+import Help from '../pages/help';
+
+import './Dashboard.css';
 import { Layout, Menu } from 'antd';
-
 const { Header, Content, Footer } = Layout;
-
-const pages = {
-  home: Home,
-  about: About,
-  shipments: Shipments,
-  receipts: Receipts,
-  products: Products,
-  staff: Staff,
-  providers: Providers,
-  customers: Customers,
-  reports: Reports,
-  help: Help,
-}
 
 const styles = {
   layout: {
@@ -70,27 +66,41 @@ const styles = {
   },
 }
 
-class App extends Component {
+const pages = {
+  home: Home,
+  about: About,
+  shipments: Shipments,
+  receipts: Receipts,
+  products: Products,
+  staff: Staff,
+  providers: Providers,
+  customers: Customers,
+  reports: Reports,
+  help: Help,
+}
+
+class Dashboard extends React.Component {
   state = {
     // this should be "home" but currently the app doesn't
     // auto-route to the home page, so for now this is null
     current: null,
   }
 
-  handleClick = (e) => {
-    this.setState({
-      current: e.key,
-    });
+  componentDidMount() {
+    console.log('Dashboard Mounted');
   }
 
-  render() {
-    return (
+  render(){
+
+    const { match } = this.props // coming from React Router.
+
+    return(
       <Router>
+
         <Layout style={styles.layout}>
+
           <Header style={styles.header}>
-
             <em style={styles.title}>BMAC-Warehouse</em>
-
             <Menu
               onClick={this.handleClick}
               selectedKeys={[this.state.current]}
@@ -98,32 +108,30 @@ class App extends Component {
               theme="light"
               style={styles.menu}
             >
-
               {Object.keys(pages).map((name) => {
                  return(
                    <Menu.Item key={name}>
-                     <Link to={"/"+name}>
+                     <Link to={`${match.url}/${name}`}>
                        {name.charAt(0).toUpperCase() + name.slice(1)}
                      </Link>
                    </Menu.Item>
-                 )
+                 );
               })}
-
             </Menu>
-
           </Header>
 
           <Content style={styles.content}>
-
-            {Object.keys(pages).map((name) => {
-               return(
-                 <Route exact path={"/" + name} component={pages[name]} key={name} />
-               )
-            })}
-
+            <Switch>
+              {Object.keys(pages).map((name) => {
+                 return(
+                   <Route exact path={`${match.path}/${name}`} component={pages[name]} key={name} />
+                 )
+              })}
+            </Switch>
           </Content>
 
           <Footer style={styles.footer}>
+            <SignOutButton />
             Whitman Capstone Project 2019 <br/>
             Copyright ©2018 Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, and Pablo Fernandez
           </Footer>
@@ -131,9 +139,10 @@ class App extends Component {
         </Layout>
 
       </Router>
-
     );
   }
-}
+};
 
-export default App;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Dashboard);

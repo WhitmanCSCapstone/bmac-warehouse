@@ -4,10 +4,11 @@
 
 import React from 'react';
 import Moment from 'moment';
-import firebase from '../../firebase.js';
+import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
-import { tableKeys } from '../../constants';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
 
 const shipKeys = tableKeys['shipments'];
 const receiptKeys = tableKeys['receipts']
@@ -31,39 +32,33 @@ class Home extends React.Component {
   }
 
   componentDidMount(){
-    var database = firebase.database();
 
-    var shipmentsRef = database.ref('2/shipments')
-    shipmentsRef.on('value', (snapshot) => {
-      var ship = snapshot.val()
-      var filteredShip = []
+    db.onceGetStaff().then(snapshot => {
+      var ship = snapshot.val();
+      var filteredShip = [];
       for (var i = 0; i < ship.length; i++){
-        var entry = ship[i]
-        var entryDate = Moment(entry['ship_date'], 'YY-MM-DD:HH:mm')
-        if(entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()){
-          filteredShip.push(entry)
+        var entry = ship[i];
+        var entryDate = Moment(entry['ship_date'], 'YY-MM-DD:HH:mm');
+        if(entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
+          filteredShip.push(entry);
         }
       }
-      this.setState({
-        shipData: filteredShip
-      })
-    });;
+      this.setState({ shipData: filteredShip });
+    });
 
-    var receiptsRef = database.ref('6/contributions')
-    receiptsRef.on('value', (snapshot) => {
-      var receipts = snapshot.val()
-      var filteredReceipts = []
+    db.onceGetReceipts().then(snapshot => {
+      var receipts = snapshot.val();
+      var filteredReceipts = [];
       for (var i = 0; i < receipts.length; i++){
-        var entry = receipts[i]
-        var entryDate = Moment(entry['recieve_date'], 'YY-MM-DD:HH:mm')
-        if(entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()){
-          filteredReceipts.push(entry)
+        var entry = receipts[i];
+        var entryDate = Moment(entry['recieve_date'], 'YY-MM-DD:HH:mm');
+        if(entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
+          filteredReceipts.push(entry);
         }
       }
-      this.setState({
-        receiptsData: filteredReceipts
-      })
-    });;
+      this.setState({ receiptsData: filteredReceipts });
+    });
+
   }
 
   render() {
@@ -109,4 +104,6 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Home);

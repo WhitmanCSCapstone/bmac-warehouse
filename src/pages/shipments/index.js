@@ -3,13 +3,14 @@
  */
 
 import React from 'react';
-import firebase from '../../firebase.js';
+import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
-import { tableKeys } from '../../constants';
 import TableDropdown from '../../components/TableDropdown';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
 
 const keys = tableKeys['shipments'];
 
@@ -49,14 +50,9 @@ class Shipments extends React.Component {
   }
 
   componentDidMount(){
-    var database = firebase.database();
-    var shipmentsRef = database.ref('2/shipments')
-    shipmentsRef.on('value', (snapshot) => {
-      var ship = snapshot.val()
-      this.setState({
-        data: ship
-      })
-    });;
+    db.onceGetShipments().then(snapshot =>
+      this.setState({ data: snapshot.val() })
+    );
   }
 
   render() {
@@ -93,4 +89,6 @@ class Shipments extends React.Component {
   }
 }
 
-export default Shipments;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Shipments);

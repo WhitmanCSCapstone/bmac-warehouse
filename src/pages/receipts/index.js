@@ -3,13 +3,14 @@
  */
 
 import React from 'react';
-import firebase from '../../firebase.js';
+import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
-import { tableKeys } from '../../constants';
 import TableDropdown from '../../components/TableDropdown';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
 
 const keys = tableKeys['receipts'];
 
@@ -49,14 +50,9 @@ class Receipts extends React.Component {
   }
 
   componentDidMount(){
-    var database = firebase.database();
-    var receiptsRef = database.ref('6/contributions')
-    receiptsRef.on('value', (snapshot) => {
-      var receipts = snapshot.val()
-      this.setState({
-        data: receipts
-      })
-    });;
+    db.onceGetReceipts().then(snapshot =>
+      this.setState({ data: snapshot.val() })
+    );
   }
 
   render() {
@@ -92,4 +88,6 @@ class Receipts extends React.Component {
   }
 }
 
-export default Receipts;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Receipts);

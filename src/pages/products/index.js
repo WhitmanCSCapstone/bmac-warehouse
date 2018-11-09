@@ -3,10 +3,11 @@
  */
 
 import React from 'react';
-import firebase from '../../firebase.js';
+import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
-import { tableKeys } from '../../constants';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
 
 const keys = tableKeys['products'];
 
@@ -27,16 +28,10 @@ class Products extends React.Component {
   }
 
   componentDidMount(){
-    var database = firebase.database();
-    var shipmentsRef = database.ref('5/products')
-    shipmentsRef.on('value', (snapshot) => {
-      var ship = snapshot.val()
-      this.setState({
-        data: ship
-      })
-    });;
+    db.onceGetProducts().then(snapshot =>
+      this.setState({ data: snapshot.val() })
+    );
   }
-
 
   render() {
     return(
@@ -59,4 +54,6 @@ class Products extends React.Component {
   }
 }
 
-export default Products;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Products);

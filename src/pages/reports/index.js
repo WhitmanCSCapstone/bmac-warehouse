@@ -5,18 +5,20 @@
 import React from 'react';
 import firebase from '../../firebase.js';
 import ReactTable from 'react-table';
-import { tableKeys, reportKeys } from '../../constants';
 import { Spin, Dropdown, Button, Icon, DatePicker, Radio, Menu } from 'antd';
-import { reportType2TableName,
+import { tableKeys,
+         reportKeys,
+         reportType2TableName,
          reportType2DateAccessor,
          reportType2FundingSourceRelavancy,
          reportType2DateRangeRelavancy,
-         radioValue2ReportType } from '../../constants';
+         radioValue2ReportType } from '../../constants/constants';
 import { populateTableData,
          getCSVdata,
          filterDataByDate,
          cleanFundingSourcesData } from './utils';
 import { CSVLink, CSVDownload } from "react-csv";
+import withAuthorization from '../../components/withAuthorization';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -254,4 +256,6 @@ class Reports extends React.Component {
   }
 }
 
-export default Reports;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Reports);

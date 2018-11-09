@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import withAuthorization from '../../components/withAuthorization';
 
 const styles = {
   container: {
@@ -35,4 +36,6 @@ class About extends React.Component {
   }
 }
 
-export default About;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(About);
