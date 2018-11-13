@@ -5,7 +5,7 @@ import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
-import img from '../walla.jpg';
+import img from '../blues4.jpg';
 import logo from '../bmacblue.jpg';
 
 const styles = {
