@@ -78,7 +78,6 @@ const pages = {
   customers: Customers,
   reports: Reports,
   help: Help,
-  logout: SignOut,
 }
 
 class Dashboard extends React.Component {
@@ -120,6 +119,7 @@ class Dashboard extends React.Component {
                    );
               })}
             </Menu>
+            <SignOutButton type="danger"/>
           </Header>
 
           <Content style={styles.content}>
