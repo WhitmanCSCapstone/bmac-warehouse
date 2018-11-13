@@ -35,16 +35,6 @@ const styles = {
   },
 };
 
-
-
-
-// receipts report is done except it doesn't do weight properly
-// figure out which reports actually need to be implemented
-// see where you need the active inactive/discontinued radio to be clickable
-
-
-
-
 class Reports extends React.Component {
   constructor(props){
     super(props);
@@ -176,9 +166,9 @@ class Reports extends React.Component {
 
             <Radio value={1}>Inventory Shipments</Radio>
             <Radio value={2}>Inventory Receipts</Radio>
-            <Radio value={3}>Current Inventory</Radio>
-            <Radio value={4}>Current Customers</Radio>
-            <Radio value={5}>Current Providers</Radio>
+            <Radio disabled={true} value={3}>Current Inventory</Radio>
+            <Radio disabled={true} value={4}>Current Customers</Radio>
+            <Radio disabled={true} value={5}>Current Providers</Radio>
 
           </Radio.Group>
 
