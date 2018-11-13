@@ -6,6 +6,7 @@ import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 import img from '../walla.jpg';
+import logo from '../bmacblue.jpg';
 
 const styles = {
     splitScreen: {
@@ -26,15 +27,21 @@ const styles = {
     prettyForm: {
         display:'flex',
         flexDirection:'column',
-        maxWidth: '300px',
+        maxWidth: '400px',
         justifyContent:'center', 
         alignItems:'center',
-        marginLeft: '20%',
+        marginLeft: '12%',
+        marginRight: '12%',
     },  
+
     prettyElement: {
         width:'100%',
         marginTop: '5%',
-    },            
+    }, 
+
+    prettyBottom: {
+        marginBottom: '3%',
+    },                  
 };
 
 const SignInPage = ({ history }) =>
@@ -43,10 +50,11 @@ const SignInPage = ({ history }) =>
         <div style={styles.splitA}>
             <div style={styles.prettyForm}>
                 <br/><br/><br/><br/>
-                <br/><br/><br/><br/>
-                <br/><br/><br/><br/>
+                <br/>
+                <img src={logo} height='100'/>
+                <br/><br/><br/><br/><br/>
                 <h1><font color="#12263f">Sign In</font></h1>
-                <p>Access to BMAC Warehouse requires a Username and a Password to access the system.
+                <p>Access to BMAC Warehouse requires a Username and a Password for viewing.
                 </p>
                 <SignInForm history={history} />
                 <PasswordForgetLink />
@@ -110,17 +118,21 @@ class SignInForm extends Component {
         return (
         <div>
             <Form onSubmit={this.onSubmit}>
+
+            Email address
               <Input
                 value={email}
                 onChange={event => this.setState(byPropKey('email', event.target.value))}
                 type="text"
-                placeholder="Email Address"
+                placeholder="name@address.com"
+                style={styles.prettyBottom}
               />
+            Password
               <Input
                 value={password}
                 onChange={event => this.setState(byPropKey('password', event.target.value))}
                 type="password"
-                placeholder="Password"
+                placeholder="Enter your password"
               />
               <Button disabled={isInvalid} onClick={this.onSubmit} type="primary" style={styles.prettyElement}>
                 Sign In
