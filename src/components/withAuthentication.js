@@ -20,7 +20,7 @@ const withAuthentication = (Component) =>
           : this.setState({ authUser: null });
       });
     }
-
+    
     render() {
       const { authUser } = this.state;
 

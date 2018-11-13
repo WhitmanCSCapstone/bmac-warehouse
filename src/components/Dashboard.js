@@ -19,6 +19,7 @@ import Providers from '../pages/providers';
 import Customers from '../pages/customers';
 import Reports from '../pages/reports';
 import Help from '../pages/help';
+import SignOut from '../components/SignOut';
 
 import './Dashboard.css';
 import { Layout, Menu } from 'antd';
@@ -77,6 +78,7 @@ const pages = {
   customers: Customers,
   reports: Reports,
   help: Help,
+  logout: SignOut,
 }
 
 class Dashboard extends React.Component {
@@ -115,7 +117,7 @@ class Dashboard extends React.Component {
                        {name.charAt(0).toUpperCase() + name.slice(1)}
                      </Link>
                    </Menu.Item>
-                 );
+                   );
               })}
             </Menu>
           </Header>
@@ -131,7 +133,6 @@ class Dashboard extends React.Component {
           </Content>
 
           <Footer style={styles.footer}>
-            <SignOutButton />
             Whitman Capstone Project 2019 <br/>
             Copyright ©2018 Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, and Pablo Fernandez
           </Footer>
