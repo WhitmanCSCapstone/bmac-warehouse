@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 import img from '../blues4.jpg';
-import logo from '../bmacblue.jpg';
+import logo from '../bmac_logo.png';
 
 const styles = {
     splitScreen: {
@@ -17,6 +17,7 @@ const styles = {
         borderTop: '5px solid #2C7BE5',
         width:'35%',
         height:'925px',
+        backgroundColor: 'off-white',
     },    
     splitB: {
         width:'65%',
@@ -51,14 +52,13 @@ const SignInPage = ({ history }) =>
             <div style={styles.prettyForm}>
                 <br/><br/><br/><br/>
                 <br/>
-                <img src={logo} height='100'/>
+                <img src={logo} alt='' height='100'/>
                 <br/><br/><br/><br/><br/>
                 <h1><font color="#12263f">Sign In</font></h1>
                 <p>Access to BMAC Warehouse requires a Username and a Password for viewing.
                 </p>
                 <SignInForm history={history} />
                 <PasswordForgetLink />
-                <SignUpLink />
             </div>
         </div>
         <div style={styles.splitB}></div>
@@ -119,20 +119,22 @@ class SignInForm extends Component {
         <div>
             <Form onSubmit={this.onSubmit}>
 
-            Email address
+            
               <Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 value={email}
                 onChange={event => this.setState(byPropKey('email', event.target.value))}
                 type="text"
-                placeholder="name@address.com"
                 style={styles.prettyBottom}
+                placeholder='Email Address'
               />
-            Password
+            
               <Input
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 value={password}
                 onChange={event => this.setState(byPropKey('password', event.target.value))}
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Password"
               />
               <Button disabled={isInvalid} onClick={this.onSubmit} type="primary" style={styles.prettyElement}>
                 Sign In
