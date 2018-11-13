@@ -52,7 +52,7 @@ const SignInPage = ({ history }) =>
             <div style={styles.prettyForm}>
                 <br/><br/><br/><br/>
                 <br/>
-                <img src={logo} alt='' height='100'/>
+               
                 <br/><br/><br/><br/><br/>
                 <h1><font color="#12263f">Sign In</font></h1>
                 <p>Access to BMAC Warehouse requires a Username and a Password for viewing.
