@@ -1,3 +1,5 @@
+import { db } from '../firebase';
+
 export const tableKeys = {
 
   shipments: [
@@ -136,12 +138,12 @@ export const reportType2DateRangeRelavancy = {
   'Current Providers': false,
 };
 
-export const tableName2FirebasePath = {
-  'shipments': '2/shipments',
-  'receipts':  '6/contributions',
-  'products': '5/products',
-  'customers': '1/customers',
-  'providers': '3/providers',
-  'persons': '0/persons',
-  'fundingsources': '4/fundingsources',
+export const tableName2FirebaseCallback = {
+  'shipments': db.onceGetShipments,
+  'receipts': db.onceGetReceipts,
+  'products': db.onceGetProducts,
+  'customers': db.onceGetCustomers,
+  'providers': db.onceGetProviders,
+  'persons': db.onceGetStaff,
+  'fundingsources': db.onceGetFundingSources,
 };

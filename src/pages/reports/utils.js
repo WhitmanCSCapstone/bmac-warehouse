@@ -1,6 +1,6 @@
 import Moment from 'moment';
-import firebase from '../../firebase.js';
-import { tableName2FirebasePath } from '../../constants';
+import { db } from '../../firebase';
+import { tableName2FirebaseCallback } from '../../constants/constants';
 
 function createDictOfShipmentsSortedByProduct(data) {
   var dict = {};
@@ -102,19 +102,15 @@ export function getCSVdata(data, tableName, callback) {
   }
 }
 
-export function populateTableData(reportTypeTableName, fundingSource, dateRange, date_accessor, callback) {
+export async function populateTableData(reportTypeTableName, fundingSource, dateRange, date_accessor, callback) {
   console.log('populating table data');
-  var database = firebase.database();
-  var path = tableName2FirebasePath[reportTypeTableName];
-  var ref = database.ref(path);
+  var firebaseCallback = tableName2FirebaseCallback[reportTypeTableName];
+  var data = await firebaseCallback().then(snapshot => snapshot.val());
 
-  ref.on('value', (snapshot) => {
-    var data = snapshot.val();
-    data = Array.isArray(data) ? data : Object.keys(data).map((i) => {return(data[i])});
-    data = dateRange.length ? filterDataByDate(data, dateRange, date_accessor) : data;
-    data = fundingSource ? filterDataByFundingSource(data, fundingSource) : data;
-    callback(data);
-  });;
+  data = Array.isArray(data) ? data : Object.keys(data).map((i) => {return(data[i])});
+  data = dateRange.length ? filterDataByDate(data, dateRange, date_accessor) : data;
+  data = fundingSource ? filterDataByFundingSource(data, fundingSource) : data;
+  callback(data);
 }
 
 export function filterDataByFundingSource(data, fundingSource) {

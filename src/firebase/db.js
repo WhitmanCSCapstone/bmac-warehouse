@@ -28,3 +28,9 @@ export const onceGetShipments = () =>
 
 export const onceGetStaff = () =>
     db.ref('0/persons').once('value');
+
+export const onceGetFundingSources = () =>
+    db.ref('4/fundingsources').once('value');
+
+export const setShipmentObj = (index, newData) =>
+    db.ref(`2/shipments/${index}/ship_items`).set(newData);

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import firebase from '../../firebase.js';
+import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import { Spin, Dropdown, Button, Icon, DatePicker, Radio, Menu } from 'antd';
 import { tableKeys,
@@ -55,15 +55,11 @@ class Reports extends React.Component {
 
   componentDidMount(){
     console.log('componentDidMount');
-    var database = firebase.database();
-    var ref = database.ref('4/fundingsources')
-    ref.on('value', (snapshot) => {
-      var data = snapshot.val();
-      data = cleanFundingSourcesData(data);
-      this.setState({
-        fundingSources: data
-      })
-    });;
+
+    db.onceGetFundingSources().then(snapshot => {
+      var data = cleanFundingSourcesData(snapshot.val());
+      this.setState({ fundingSources: data })
+    });
 
     this.updateTable();
   }
