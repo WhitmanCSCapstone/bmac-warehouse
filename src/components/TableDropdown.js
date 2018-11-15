@@ -23,7 +23,6 @@ var originalData = null;
 class TableDropdown extends React.Component {
   constructor(props){
     super(props);
-    console.log(props.index)
     this.state = {
       data: props.row,
       editable: false,
