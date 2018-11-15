@@ -34,3 +34,6 @@ export const onceGetFundingSources = () =>
 
 export const setShipmentObj = (index, newData) =>
     db.ref(`2/shipments/${index}/ship_items`).set(newData);
+
+export const setReceiptsObj = (index, newData) =>
+    db.ref(`6/contributions/${index}/receive_items`).set(newData);

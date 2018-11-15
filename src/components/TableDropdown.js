@@ -23,6 +23,7 @@ var originalData = null;
 class TableDropdown extends React.Component {
   constructor(props){
     super(props);
+    console.log(props.index)
     this.state = {
       data: props.row,
       editable: false,
@@ -82,7 +83,12 @@ class TableDropdown extends React.Component {
 
   onSave = () => {
     this.setState({editable: !this.state.editable})
-    db.setShipmentObj(this.props.index, this.state.data)
+    if(this.props.type === 'shipments'){
+      db.setShipmentObj(this.props.index, this.state.data)
+    }
+    else {
+      db.setReceiptsObj(this.props.index, this.state.data)
+    }
   }
 
   onCancel = () => {

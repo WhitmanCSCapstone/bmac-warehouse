@@ -76,6 +76,7 @@ class Receipts extends React.Component {
             SubComponent={row => {
               return <TableDropdown
                 row={row.original.receive_items}
+                index={this.state.data.indexOf(row.original)}
               />
             }}
             defaultPageSize={10}
