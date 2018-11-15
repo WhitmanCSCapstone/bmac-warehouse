@@ -1,9 +1,8 @@
 import React from 'react';
-import { Form, Icon, Input, Button, DatePicker, Select, Row, Col, Divider } from 'antd';
+import db from '../../firebase';
+import { Form, Icon, Input, Button, DatePicker, Select, Divider } from 'antd';
 
 const FormItem = Form.Item;
-
-const { MonthPicker, RangePicker, Weekpicker } = DatePicker;
 
 const { TextArea } = Input;
 
@@ -52,11 +51,26 @@ const styles = {
   },
 };
 
+var ref = null;
+
 class Forms extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
+      data: props.row,
       formDisplayToggle: false,
+      customerId: null,
+      fundsSource: null,
+      invoiceDate: null,
+      invoiceNo: null,
+      notes: null,
+      shipDate: null,
+      shipItems: [],
+      shipRate: null,
+      shipVia: null,
+      totalPrice: null,
+      totalWeight: null,
     }
   }
 
@@ -87,13 +101,8 @@ class Forms extends React.Component {
     });
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+  onSubmit = () => {
+    console.log(this.state)
   }
 
   onAddNewShipment = () => {
@@ -102,38 +111,49 @@ class Forms extends React.Component {
     })
   }
 
-  handleChange = (value) => {
-    console.log(`selected ${value}`);
+  onChange = (e, name) => {
+    console.log('Received values of form: ', name, e.target.value);
+    this.setState({
+      [name]: e.target.value,
+    })
   }
 
-  onChange = (date, dateString) => {
+  dateChange = (date, dateString) => {
     console.log(date, dateString);
+    this.setState({
+      shipDate: dateString,
+    })
+  }
+
+  handleShipChange = (value) => {
+    console.log(`selected ${value}`);
+    this.setState({
+      shipVia: value,
+    })
+  }
+
+  handleFundsChange = (value) => {
+    console.log(`selected ${value}`);
+    this.setState({
+      fundsSource: value,
+    })
   }
 
   render() {
 
-    const { formLayout } = this.state;
-
     const { getFieldDecorator, getFieldValue } = this.props.form;
-
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 6 },
-      },
-      justifyContent: 'space-evenly',
-    };
 
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
+    console.log('look here')
+    console.log(keys)
     const formItems = keys.map((k, index) => {
       return (
-        <div style={styles.sideways}>
+        <div key={k}
+          style={styles.sideways}>
           <FormItem
             {...(styles.item)}
-            // label={index === 0 ? 'Product' : ''}
             required={false}
-            key={k}
           >
             {getFieldDecorator(`names[${k}]`, {
               validateTrigger: ['onChange', 'onBlur'],
@@ -143,23 +163,26 @@ class Forms extends React.Component {
                 message: "Please input values or delete this field.",
               }],
             })(
-              <Input placeholder="Product Name" style={{ width: '80%', marginRight: 16 }} />
+              <Input placeholder="Product Name" style={{ width: '80%', marginRight: 16 }}/>
             )}
           </FormItem>
 
-          <FormItem {...styles.item1}>
+          <FormItem {...styles.item1}
+            required={false}>
             {getFieldDecorator('unitWeight')(
               <Input placeholder="Unit Weight" style={{ width: '60%', marginRight: 8 }} />
             )}
           </FormItem>
 
-          <FormItem {...styles.item1}>
+          <FormItem {...styles.item1}
+            required={false}>
             {getFieldDecorator('caseLots')(
               <Input placeholder="Case Lots" style={{ width: '60%', marginRight: 8 }} />
             )}
           </FormItem>
 
-          <FormItem {...styles.item1}>
+          <FormItem {...styles.item1}
+            required={false}>
             {getFieldDecorator('totalWeight')(
               <Input placeholder="Total Weight" style={{ width: '60%', marginRight: 8 }} />
             )}
@@ -180,10 +203,17 @@ class Forms extends React.Component {
     return (
       <div style={styles.container}>
 
-        <Button style={styles.button}
-          onClick={this.onAddNewShipment}>
-          Add New Shipment
+        {!this.state.formDisplayToggle ?
+          <Button style={styles.button}
+            onClick={this.onAddNewShipment}>
+            Add New Shipment
+          </Button>
+          :
+          <Button style={styles.button}
+            onClick={this.onAddNewShipment}>
+            Cancel Adding Shipment
         </Button>
+        }
 
         {!this.state.formDisplayToggle ? null :
           <Form style={styles.form}>
@@ -194,13 +224,14 @@ class Forms extends React.Component {
               {getFieldDecorator('shipDate', {
                 rules: [{ required: true, message: 'Please input the shipping date.' }],
               })(
-                <DatePicker onChange={this.onChange} placeholder="Ship Date" />
+                <DatePicker onChange={this.dateChange} placeholder="Ship Date" />
               )}
             </FormItem>
 
             <FormItem label='Ship To:'>
               {getFieldDecorator('shipTo', {
                 rules: [{ required: true, message: 'Please input the shipping destination.' }],
+                onChange: (e) => this.onChange(e, 'shipTo')
               })(
                 <Input style={{ width: 180 }} placeholder="Ship to:" />
               )}
@@ -208,10 +239,10 @@ class Forms extends React.Component {
 
             <div style={styles.sideways}>
               <FormItem label='Funds Source:'>
-                {getFieldDecorator('billedamt', {
-                  rules: [{ required: true, message: 'Please input the billed amount!' }],
+                {getFieldDecorator('fundsSource', {
+                  rules: [{ required: true, message: 'Please input the Funding Source!' }],
                 })(
-                  <Select placeholder="Funds Source" style={{ width: 150 }} onChange={this.handleChange}>
+                  <Select placeholder="Funds Source" style={{ width: 150 }} onChange={this.handleFundsChange}>
                     <Option value="BMAC">BMAC</Option>
                     <Option value="CSFP">CSFP</Option>
                     <Option value="donation">Donation</Option>
@@ -227,12 +258,12 @@ class Forms extends React.Component {
                 )}
 
               </FormItem>
-              <div style={styles.marginLeft}>
+              <div style={styles.margin}>
                 <FormItem label='Ship Via:'>
-                  {getFieldDecorator('billedamt', {
-                    rules: [{ required: true, message: 'Please input the billed amount!' }],
+                  {getFieldDecorator('shipVia', {
+                    rules: [{ required: true, message: 'Please input the shipping method!' }],
                   })(
-                    <Select placeholder="Ship Via" style={{ width: 150, marginLeft: '5%' }} onChange={this.handleChange}>
+                    <Select placeholder="Ship Via" style={{ width: 150, marginLeft: '5%' }} onChange={this.handleShipChange}>
                       <Option value="BMAC">BMAC</Option>
                       <Option value="customer">Customer</Option>
                       <Option value="other">Other</Option>
@@ -243,9 +274,10 @@ class Forms extends React.Component {
               </div>
             </div>
 
-            <Divider />
+            <Divider orientation="left">Ship Items</Divider>
 
             {formItems}
+
 
             <FormItem>
               <Button type="dashed" onClick={this.add} style={{ width: '20%' }}>
@@ -259,15 +291,17 @@ class Forms extends React.Component {
               <FormItem label='Rate:'>
                 {getFieldDecorator('rate', {
                   rules: [{ required: true, message: 'Please input the rate!' }],
+                  onChange: (e) => this.onChange(e, 'rate')
                 })(
                   <Input style={{ width: 180 }} placeholder="Rate" />
                 )}
               </FormItem>
 
-              <div style={styles.marginLeft}>
-                <FormItem label='Billed Amt:'>
+              <div style={styles.margin}>
+                <FormItem label='Billed Amount:'>
                   {getFieldDecorator('billedamt', {
                     rules: [{ required: true, message: 'Please input the billed amount!' }],
+                    onChange: (e) => this.onChange(e, 'billedAmt')
                   })(
                     <Input style={{ width: 180, marginLeft: '5%' }} placeholder="Billed Amount" />
                   )}
@@ -276,12 +310,20 @@ class Forms extends React.Component {
             </div>
 
             <FormItem label='Notes:'>
-              <TextArea rows={4} style={{ width: 400 }} placeholder="Notes"/>
+              {getFieldDecorator('notes', {
+                rules: [{ required: true, message: 'Please input the billed amount!' }],
+                onChange: (e) => this.onChange(e, 'notes')
+              })(
+                <TextArea rows={4} style={{ width: 400 }} placeholder="Notes" />
+              )}
+
             </FormItem>
 
             < div style={styles.button}>
               <FormItem>
-                <Button type="primary" htmlType="submit">Submit</Button>
+                <Button type="primary" htmlType="submit" onClick={this.onSubmit}>
+                  Submit
+                </Button>
               </FormItem>
             </div>
 
@@ -291,6 +333,5 @@ class Forms extends React.Component {
     );
   }
 }
-
 
 export default Form.create()(Forms);
