@@ -89,11 +89,11 @@ export const tableKeys = {
 }
 
 export const reportKeys = {
-  'shipments': ['product', 'ship_date', 'customer', 'weight'],
-  'receipts': ['product', 'receive_date', 'provider', 'weight'],
-  'products': [],
-  'customers': [],
-  'providers': [],
+  'Inventory Shipments': ['product', 'ship_date', 'customer_id', 'total_weight'],
+  'Inventory Receipts': ['product', 'receive_date', 'provider', 'weight'],
+  'Current Inventory': [],
+  'Current Customers': ['customer_id', 'ship_date', 'funds_source', 'total_weight'],
+  'Current Providers': [],
 }
 
 export const radioValue2ReportType = {
@@ -110,7 +110,7 @@ export const reportType2TableName = {
   'Inventory Shipments': 'shipments',
   'Inventory Receipts': 'receipts',
   'Current Inventory': 'products',
-  'Current Customers': 'customers',
+  'Current Customers': 'shipments', // sorts shipments by customers
   'Current Providers': 'providers',
 };
 
@@ -118,7 +118,7 @@ export const reportType2DateAccessor = {
   'Inventory Shipments': 'ship_date',
   'Inventory Receipts': 'recieve_date',
   'Current Inventory': 'initial_date',
-  'Current Customers': null,
+  'Current Customers': 'ship_date', // uses shipments table rather than customers table
   'Current Providers': null,
 };
 
@@ -126,7 +126,7 @@ export const reportType2FundingSourceRelavancy = {
   'Inventory Shipments': true,
   'Inventory Receipts': false,
   'Current Inventory': true,
-  'Current Customers': false,
+  'Current Customers': true,
   'Current Providers': false,
 };
 
@@ -134,7 +134,7 @@ export const reportType2DateRangeRelavancy = {
   'Inventory Shipments': true,
   'Inventory Receipts': true,
   'Current Inventory': false,
-  'Current Customers': false,
+  'Current Customers': true,
   'Current Providers': false,
 };
 

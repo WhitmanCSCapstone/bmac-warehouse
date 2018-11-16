@@ -54,8 +54,6 @@ class Reports extends React.Component {
   }
 
   componentDidMount(){
-    console.log('componentDidMount');
-
     db.onceGetFundingSources().then(snapshot => {
       var data = cleanFundingSourcesData(snapshot.val());
       this.setState({ fundingSources: data })
@@ -65,7 +63,6 @@ class Reports extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('component did update');
     if (this.state.reportTypeTableName !== prevState.reportTypeTableName
         || this.state.fundingSource !== prevState.fundingSource
         || this.state.dateRange !== prevState.dateRange) {
@@ -75,7 +72,6 @@ class Reports extends React.Component {
   }
 
   updateTable = () => {
-    console.log('updateTable fired');
     populateTableData(this.state.reportTypeTableName,
                       this.state.fundingSource,
                       this.state.dateRange,
@@ -84,26 +80,26 @@ class Reports extends React.Component {
   }
 
   createCSV = () => {
-    console.log('createCSV fired');
-    getCSVdata(this.state.data, this.state.reportTypeTableName, (dataCSV) => {this.setState({dataCSV: dataCSV}), console.log('just updated csv data')});
+    getCSVdata(this.state.data,
+               this.state.reportType,
+               (dataCSV) => {this.setState({dataCSV: dataCSV}),
+                             console.log('just updated csv data')
+               });
   }
 
   onClickFundingSource = (e) => {
-    console.log('onClickFundingSource fired');
     this.setState({
       fundingSource: e.key,
     });
   }
 
   clearFundingSource = () => {
-    console.log('clearFundingSource fired');
     this.setState({
       fundingSource: null,
     });
   }
 
   onReportTypeChange = (e) => {
-    console.log('onReportTypeChange fired');
     var val = e.target.value.toString();
     var reportType = radioValue2ReportType[val];
     var tableName = reportType2TableName[reportType];
@@ -120,22 +116,18 @@ class Reports extends React.Component {
   }
 
   onDateChange = (dateRange) => {
-    console.log('onDateChange fired');
     this.setState({
       dateRange: dateRange,
     });
   }
 
   onStatusChange = (e) => {
-    console.log('onStatusChange');
     this.setState({
       statusRadioValue: e.target.value,
     });
   }
 
   render() {
-
-    console.log('render fired');
 
     var menu = (
       <Menu>
@@ -165,7 +157,7 @@ class Reports extends React.Component {
             <Radio value={1}>Inventory Shipments</Radio>
             <Radio value={2}>Inventory Receipts</Radio>
             <Radio disabled={true} value={3}>Current Inventory</Radio>
-            <Radio disabled={true} value={4}>Current Customers</Radio>
+            <Radio value={4}>Current Customers</Radio>
             <Radio disabled={true} value={5}>Current Providers</Radio>
 
           </Radio.Group>
@@ -225,7 +217,7 @@ class Reports extends React.Component {
 
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
-          columns={reportKeys[this.state.reportTypeTableName].map(string => {
+          columns={reportKeys[this.state.reportType].map(string => {
               return({
                 Header: string,
                 accessor: string,

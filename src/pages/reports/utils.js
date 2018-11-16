@@ -1,8 +1,9 @@
 import Moment from 'moment';
 import { db } from '../../firebase';
-import { tableName2FirebaseCallback } from '../../constants/constants';
+import { tableName2FirebaseCallback,
+         reportKeys } from '../../constants/constants';
 
-function createDictOfShipmentsSortedByProduct(data) {
+function createDictOfShipmentsSortedByProperty(data, property_arg) {
   var dict = {};
   for (var i = 0; i < data.length; i++) {
     var obj = data[i];
@@ -11,14 +12,53 @@ function createDictOfShipmentsSortedByProduct(data) {
     if (items) {
       for (var n = 0; n < items.length; n++) {
         var item = items[n];
-        var product = item['product'];
-        if (product in dict) {
-          dict[product].push(obj);
+        var property = item[property_arg];
+        if (property in dict) {
+          dict[property].push(obj);
         } else {
-          dict[product] = [obj];
+          dict[property] = [obj];
         }
       }
     }
+  }
+  return dict;
+}
+
+function createDictOfShipmentsSortedByCustomers(data) {
+  var dict = {};
+  for (var i = 0; i < data.length; i++) {
+    var obj = data[i];
+    var customer_id = obj['customer_id'];
+    if (customer_id in dict) {
+      dict[customer_id].push(obj);
+    } else {
+      dict[customer_id] = [obj];
+    }
+  }
+  console.log(dict);
+  return dict;
+}
+
+function createArrayOfCustomersFromDict(dict, reportType) {
+  var array = [];
+  var keys = Object.keys(dict);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var objs = dict[key];
+    for (var n = 0; n < objs.length; n++) {
+      var obj = objs[n];
+      var element = filterObjKeys(obj, reportType);
+      array.push(element);
+    }
+  }
+  return array;
+}
+
+function filterObjKeys(obj, reportType) {
+  const keys = reportKeys[reportType];
+  var dict = {};
+  for (let key of keys) {
+    dict[key] = obj[key];
   }
   return dict;
 }
@@ -41,8 +81,8 @@ function createArrayOfShipmentsFromDict(dict) {
   return array;
 }
 
+// TODO: DRY this
 function createDictOfReceiptsSortedByProduct(data) {
-  console.log('createDictOfReceiptsSortedByProduct fired');
   var dict = {};
   for (var i = 0; i < data.length; i++) {
     var obj = data[i];
@@ -64,7 +104,6 @@ function createDictOfReceiptsSortedByProduct(data) {
 }
 
 function createArrayOfReceiptsFromDict(dict) {
-  console.log('createArrayOfReceiptsFromDict fired');
   var array = [];
   var keys = Object.keys(dict);
   for (var i = 0; i < keys.length; i++) {
@@ -82,31 +121,28 @@ function createArrayOfReceiptsFromDict(dict) {
   return array;
 }
 
-export function getCSVdata(data, tableName, callback) {
-  console.log('getCSVdata firing');
+export function getCSVdata(data, reportType, callback) {
   if (data) {
     var array = []
-    if(tableName === 'shipments'){
-      console.log('returning a shipments csv');
-      var dict = createDictOfShipmentsSortedByProduct(data);
+    if(reportType === 'Inventory Shipments'){
+      var dict = createDictOfShipmentsSortedByProperty(data, 'product');
       array = createArrayOfShipmentsFromDict(dict);
-    } else if (tableName === 'receipts') {
-      console.log('returning a receipts csv');
+    } else if (reportType === 'Inventory Receipts') {
       var dict = createDictOfReceiptsSortedByProduct(data);
       array = createArrayOfReceiptsFromDict(dict);
+    } else if (reportType === 'Current Customers') {
+      var dict = createDictOfShipmentsSortedByCustomers(data);
+      array = createArrayOfCustomersFromDict(dict, reportType);
     }
     callback(array);
   } else {
-    console.log('return []');
     callback([]);
   }
 }
 
 export async function populateTableData(reportTypeTableName, fundingSource, dateRange, date_accessor, callback) {
-  console.log('populating table data');
   var firebaseCallback = tableName2FirebaseCallback[reportTypeTableName];
   var data = await firebaseCallback().then(snapshot => snapshot.val());
-
   data = Array.isArray(data) ? data : Object.keys(data).map((i) => {return(data[i])});
   data = dateRange.length ? filterDataByDate(data, dateRange, date_accessor) : data;
   data = fundingSource ? filterDataByFundingSource(data, fundingSource) : data;
@@ -114,7 +150,6 @@ export async function populateTableData(reportTypeTableName, fundingSource, date
 }
 
 export function filterDataByFundingSource(data, fundingSource) {
-  console.log('filterDataByFundingSource fired');
   var newData = [];
   for (var i = 0; i < data.length; i++){
     var entry = data[i];
@@ -127,7 +162,6 @@ export function filterDataByFundingSource(data, fundingSource) {
 }
 
 export function filterDataByDate (data, dateRange, accessor) {
-  console.log('filterDataByDate fired');
   var newData = [];
   for (var i = 0; i < data.length; i++){
     var entry = data[i];
