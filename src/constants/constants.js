@@ -89,8 +89,8 @@ export const tableKeys = {
 }
 
 export const reportKeys = {
-  'Inventory Shipments': ['product', 'ship_date', 'customer_id', 'total_weight'],
-  'Inventory Receipts': ['product', 'receive_date', 'provider', 'weight'],
+  'Inventory Shipments': ['product', 'ship_date', 'customer_id', 'case_lots'],
+  'Inventory Receipts': ['product', 'recieve_date', 'provider_id', 'total_weight'],
   'Current Inventory': [],
   'Current Customers': ['customer_id', 'ship_date', 'funds_source', 'total_weight'],
   'Current Providers': [],
