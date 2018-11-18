@@ -27,7 +27,7 @@ import 'firebase/database';
  * */
 
 const devConfig = {
-  apiKey: "AIzaSyDKWBYrwFgg-klN6W8ResyPmFOmIAYaGeE",
+  apiKey: process.env.REACT_APP_API_KEY,
   authDomain: "bmac-2018.firebaseapp.com",
   databaseURL: "https://bmac-2018.firebaseio.com",
   projectId: "bmac-2018",
