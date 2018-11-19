@@ -8,6 +8,7 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
+import matchSorter from 'match-sorter';
 
 const keys = tableKeys['staff'];
 
@@ -40,10 +41,21 @@ class Staff extends React.Component {
           <ReactTable
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
+              if(string=='username'){
                 return({
                   Header: string,
                   accessor: string,
-                })
+                  filterable: true,
+                  filterAll: true,
+                  filterMethod: (filter, rows) =>
+                  matchSorter(rows, filter.value, { keys: ['username'] }),
+                })}
+                else{
+                  return({
+                    Header: string,
+                    accessor: string,
+                  })
+                }
             })}
             defaultPageSize={10}
             className="-striped -highlight"

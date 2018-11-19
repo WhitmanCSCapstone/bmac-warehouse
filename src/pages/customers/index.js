@@ -8,6 +8,8 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
+import matchSorter from 'match-sorter';
+
 
 const keys = tableKeys['customers'];
 
@@ -41,10 +43,24 @@ class Customers extends React.Component {
           <ReactTable
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
+              if(string === 'customer_id')
                 return({
-                  Header: string+'lol',
+                  Header: string,
                   accessor: string,
+                  filterMethod: (filter, rows) =>
+                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                  filterAll: true,
+                  filterable:true,
+
                 })
+                
+              else{
+                return({
+                  Header: string,
+                  accessor: string,
+                  
+                })
+              }
             })}
             defaultPageSize={10}
             className="-striped -highlight"
