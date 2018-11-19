@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-
+import { getReadableReceiptsTableData } from '../utils/receipts';
 export const tableKeys = {
 
   shipments: [
@@ -140,7 +140,7 @@ export const reportType2DateRangeRelavancy = {
 
 export const tableName2FirebaseCallback = {
   'shipments': db.onceGetShipments,
-  'receipts': db.onceGetReceipts,
+  'receipts': getReadableReceiptsTableData,
   'products': db.onceGetProducts,
   'customers': db.onceGetCustomers,
   'providers': db.onceGetProviders,

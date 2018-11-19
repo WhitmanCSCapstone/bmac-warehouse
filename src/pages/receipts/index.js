@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
+import { getReadableReceiptsTableData } from '../../utils/receipts';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
@@ -51,8 +51,8 @@ class Receipts extends React.Component {
   }
 
   componentDidMount(){
-    db.onceGetReceipts().then(snapshot =>
-      this.setState({ data: snapshot.val() })
+    getReadableReceiptsTableData().then(data =>
+      this.setState({ data: data.val() })
     );
   }
 
