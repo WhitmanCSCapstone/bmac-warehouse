@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button } from 'antd';
-import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 import img from '../blues4.jpg';
-import logo from '../bmac_logo.png';
 
 const styles = {
     splitScreen: {

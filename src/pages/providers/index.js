@@ -41,7 +41,7 @@ class Providers extends React.Component {
           <ReactTable
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if(string=='provider_id'){
+              if(string === 'provider_id'){
                 return({
                   Header: string,
                   accessor: string,

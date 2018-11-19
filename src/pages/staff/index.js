@@ -41,7 +41,7 @@ class Staff extends React.Component {
           <ReactTable
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if(string=='username'){
+              if(string === 'username'){
                 return({
                   Header: string,
                   accessor: string,
