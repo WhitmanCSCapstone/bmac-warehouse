@@ -27,7 +27,6 @@ class Home extends React.Component {
     this.state = {
       shipData: null,
       receiptsData: null,
-      receiptsData: null,
     }
   }
 

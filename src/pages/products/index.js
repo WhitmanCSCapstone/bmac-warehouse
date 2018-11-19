@@ -41,7 +41,7 @@ class Products extends React.Component {
           <ReactTable
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if(string == 'product_id'){
+              if(string === 'product_id'){
                 return({
                   Header: string,
                   accessor: string,

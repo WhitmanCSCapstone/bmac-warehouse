@@ -19,7 +19,6 @@ import Providers from '../pages/providers';
 import Customers from '../pages/customers';
 import Reports from '../pages/reports';
 import Help from '../pages/help';
-import SignOut from '../components/SignOut';
 
 import './Dashboard.css';
 import { Layout, Menu } from 'antd';
