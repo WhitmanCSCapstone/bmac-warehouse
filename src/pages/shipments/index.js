@@ -11,6 +11,7 @@ import Moment from 'moment';
 import TableDropdown from '../../components/TableDropdown';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
+import matchSorter from 'match-sorter';
 
 const keys = tableKeys['shipments'];
 
@@ -68,10 +69,21 @@ class Shipments extends React.Component {
             data={this.state.filteredData && this.state.dateRange.length ?
                   this.state.filteredData : this.state.data}
             columns={keys.map(string => {
+              if(string==='customer_id'){
                 return({
                   Header: string,
                   accessor: string,
+                  filterable: true,
+                  filterAll: true,
+                  filterMethod: (filter, rows) =>
+                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
                 })
+              }
+              else{
+                return({
+                  Header: string,
+                  accessor: string,
+                })}
             })}
             SubComponent={row => {
               return <TableDropdown
