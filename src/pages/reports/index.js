@@ -228,24 +228,6 @@ class Reports extends React.Component {
           className="-striped -highlight"
         />
 
-        <ReactTable
-          data={
-            this.state.data
-              ? this.state.reportType !== "Current Providers"
-              ? this.state.data
-              : Object.values(this.state.data)
-              : []
-          }
-          columns={tableKeys[this.state.reportTypeTableName].map(string => {
-              return({
-                Header: string,
-                accessor: string,
-              })
-          })}
-          defaultPageSize={10}
-          className="-striped -highlight"
-        />
-
       </div>
     );
   }
