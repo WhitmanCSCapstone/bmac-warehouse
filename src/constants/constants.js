@@ -93,7 +93,7 @@ export const reportKeys = {
   'Inventory Receipts': ['product', 'recieve_date', 'provider_id', 'total_weight'],
   'Current Inventory': [],
   'Current Customers': ['customer_id', 'ship_date', 'funds_source', 'total_weight'],
-  'Current Providers': [],
+  'Current Providers': ['provider_id', 'address', 'recieve_date', 'billed_amt', 'total_weight'],
 }
 
 export const radioValue2ReportType = {
@@ -111,7 +111,7 @@ export const reportType2TableName = {
   'Inventory Receipts': 'receipts',
   'Current Inventory': 'products',
   'Current Customers': 'shipments', // sorts shipments by customers
-  'Current Providers': 'providers',
+  'Current Providers': 'receipts', // sorts receipts by providers
 };
 
 export const reportType2DateAccessor = {
@@ -119,7 +119,7 @@ export const reportType2DateAccessor = {
   'Inventory Receipts': 'recieve_date',
   'Current Inventory': 'initial_date',
   'Current Customers': 'ship_date', // uses shipments table rather than customers table
-  'Current Providers': null,
+  'Current Providers': 'recieve_date', // uses reciepts table
 };
 
 export const reportType2FundingSourceRelavancy = {
@@ -135,15 +135,13 @@ export const reportType2DateRangeRelavancy = {
   'Inventory Receipts': true,
   'Current Inventory': false,
   'Current Customers': true,
-  'Current Providers': false,
+  'Current Providers': true,
 };
 
-export const tableName2FirebaseCallback = {
-  'shipments': db.onceGetShipments,
-  'receipts': getReadableReceiptsTableData,
-  'products': db.onceGetProducts,
-  'customers': db.onceGetCustomers,
-  'providers': db.onceGetProviders,
-  'persons': db.onceGetStaff,
-  'fundingsources': db.onceGetFundingSources,
+export const reportType2FirebaseCallback = {
+  'Inventory Shipments': db.onceGetShipments,
+  'Inventory Receipts': getReadableReceiptsTableData,
+  'Current Inventory': null,
+  'Current Customers': db.onceGetShipments,
+  'Current Providers': db.onceGetReceipts,
 };

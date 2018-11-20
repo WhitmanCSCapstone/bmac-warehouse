@@ -67,12 +67,13 @@ class Reports extends React.Component {
         || this.state.fundingSource !== prevState.fundingSource
         || this.state.dateRange !== prevState.dateRange) {
       this.updateTable();
-      //this.setState({dataCSV: null});
     }
   }
 
   updateTable = () => {
-    populateTableData(this.state.reportTypeTableName,
+    this.setState({dataCSV: null,
+                   data: null });
+    populateTableData(this.state.reportType,
                       this.state.fundingSource,
                       this.state.dateRange,
                       reportType2DateAccessor[this.state.reportType],
@@ -158,7 +159,7 @@ class Reports extends React.Component {
             <Radio value={2}>Inventory Receipts</Radio>
             <Radio disabled={true} value={3}>Current Inventory</Radio>
             <Radio value={4}>Current Customers</Radio>
-            <Radio disabled={true} value={5}>Current Providers</Radio>
+            <Radio value={5}>Current Providers</Radio>
 
           </Radio.Group>
 
@@ -195,21 +196,21 @@ class Reports extends React.Component {
 
           {
             this.state.data
-            ?
-            <Button type="primary" onClick={this.createCSV}>Create CSV</Button>
-            : <Button type="primary"> Create CSV <Spin indicator={antIcon} />
-            </Button>
+            ? <Button type="primary" onClick={this.createCSV}> Create CSV </Button>
+            : <Button type="primary"> Create CSV <Spin indicator={antIcon} /> </Button>
           }
 
           {
             this.state.dataCSV
-            ? <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
+            ?
+            <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
               <Button type="primary" icon="download">
                 CSV
               </Button>
             </CSVLink>
-            : <Button type="primary">
-              CSV <Spin indicator={antIcon} />
+            :
+            <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
+              CSV
             </Button>
           }
 
@@ -228,7 +229,13 @@ class Reports extends React.Component {
         />
 
         <ReactTable
-          data={this.state.data ? this.state.data : []}
+          data={
+            this.state.data
+              ? this.state.reportType !== "Current Providers"
+              ? this.state.data
+              : Object.values(this.state.data)
+              : []
+          }
           columns={tableKeys[this.state.reportTypeTableName].map(string => {
               return({
                 Header: string,

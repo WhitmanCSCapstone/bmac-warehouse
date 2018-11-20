@@ -15,7 +15,7 @@ export function getReadableReceiptsTableData() {
   });
 }
 
-function makeRecieptReadable(row, providers, counter) {
+function makeRecieptReadable(row, providers) {
   var uuid = row['provider_id'];
   var providerObj = providers[uuid];
   var name = null;

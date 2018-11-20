@@ -1,6 +1,6 @@
 import Moment from 'moment';
 import { db } from '../../firebase';
-import { tableName2FirebaseCallback,
+import { reportType2FirebaseCallback,
          reportKeys } from '../../constants/constants';
 
 function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
@@ -21,6 +21,56 @@ function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
     }
   }
   return dict;
+}
+
+
+function createDictOfReceiptsSortedbyProvider(data) {
+  return new Promise( async (resolve, reject) => {
+    var providers = await db.onceGetProviders().then(snapshot => snapshot.val() );
+    data = addProviderInfo2Receipts(data, providers);
+    var dict = {};
+    for (var i = 0; i < data.length; i++) {
+      var obj = data[i];
+      var uuid = obj['provider_id'];
+      if(uuid in dict){
+        dict[uuid].push(obj);
+      } else {
+        dict[uuid] = [];
+      }
+
+    }
+    resolve(dict);
+  });
+}
+
+function addProviderInfo2Receipts(data, providers) {
+  var newData = []
+  for(let receipt of data) {
+
+    var total_weight = 0;
+    var items = receipt['receive_items'];
+    if(items) {
+      for (let item of items) {
+        total_weight += Number(item['total_weight']);
+      }
+      receipt['total_weight'] = total_weight;
+    } else {
+      receipt['total_weight'] = 'NO WEIGHT GIVEN';
+    }
+
+    var uuid = receipt['provider_id'];
+    var obj = providers[uuid];
+    if(obj) {
+      receipt['address'] = obj['address'] + ' ' + obj['city'];
+      receipt['provider_id'] = obj['provider_id']
+    } else {
+      receipt['address'] = 'INVALID PROVIDER_ID GIVEN'
+      receipt['provider_id'] = 'INVALID PROVIDER_ID GIVEN'
+    }
+
+    newData.push(receipt);
+  }
+  return newData;
 }
 
 function create2DArrayFromDict(dict, reportType) {
@@ -59,7 +109,7 @@ function getVerboseItems(oldObj, items_accessor) {
   return newObj;
 }
 
-export function getCSVdata(data, reportType, callback) {
+export async function getCSVdata(data, reportType, callback) {
   if (data) {
     var array = []
     var dict = {}
@@ -69,6 +119,8 @@ export function getCSVdata(data, reportType, callback) {
       dict = createDictOfItemsSortedByProperty(data, 'product', 'receive_items');
     } else if (reportType === 'Current Customers') {
       dict = createDictOfItemsSortedByProperty(data, 'customer_id', 'ship_items');
+    } else if (reportType === 'Current Providers') {
+      dict = await createDictOfReceiptsSortedbyProvider(data).then( (dict) => dict);
     }
     array = create2DArrayFromDict(dict, reportType);
     callback(array);
@@ -77,16 +129,13 @@ export function getCSVdata(data, reportType, callback) {
   }
 }
 
-export async function populateTableData(reportTypeTableName,
+export async function populateTableData(reportType,
                                         fundingSource,
                                         dateRange,
                                         date_accessor,
                                         callback) {
-  var firebaseCallback = tableName2FirebaseCallback[reportTypeTableName];
+  var firebaseCallback = reportType2FirebaseCallback[reportType];
   var data = await firebaseCallback().then(snapshot => snapshot.val());
-  data = Array.isArray(data)
-       ? data
-       : Object.keys(data).map((i) => {return(data[i])});
   data = dateRange.length
        ? filterDataByDate(data, dateRange, date_accessor)
        : data;
