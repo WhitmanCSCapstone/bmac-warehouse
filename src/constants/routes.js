@@ -4,3 +4,4 @@ export const LANDING = '/';
 export const DASHBOARD = '/dashboard';
 export const ACCOUNT = '/account';
 export const PASSWORD_FORGET = '/pw-forget';
+export const HOME = '/dashboard/home';
