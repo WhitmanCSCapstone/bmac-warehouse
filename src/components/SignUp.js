@@ -7,6 +7,8 @@ import {
 import { auth, db } from '../firebase';
 import * as routes from '../constants/routes';
 
+import {Input, Form, Button} from 'antd';
+
 const SignUpPage = ({ history }) =>
       <div>
         <h1>SignUp</h1>
@@ -80,37 +82,37 @@ class SignUpForm extends Component {
               username === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
-              <input
+            <Form onSubmit={this.onSubmit}>
+              <Input
                 value={username}
                 onChange={event => this.setState(byPropKey('username', event.target.value))}
                 type="text"
                 placeholder="Full Name"
               />
-              <input
+              <Input
                 value={email}
                 onChange={event => this.setState(byPropKey('email', event.target.value))}
                 type="text"
                 placeholder="Email Address"
               />
-              <input
+              <Input
                 value={passwordOne}
                 onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
                 type="password"
                 placeholder="Password"
               />
-              <input
+              <Input
                 value={passwordTwo}
                 onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
                 type="password"
                 placeholder="Confirm Password"
               />
-              <button disabled={isInvalid} type="submit">
+              <Button disabled={isInvalid} htmlType="submit">
                 Sign Up
-              </button>
+              </Button>
 
               { error && <p>{error.message}</p> }
-            </form>
+            </Form>
         );
     }
 }

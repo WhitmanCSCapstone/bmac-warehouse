@@ -16,7 +16,7 @@ export const tableKeys = {
   ],
 
   customers: [
-    "customer_id",
+    "customer id",
     //"code",
     "address",
     //"city",

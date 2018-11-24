@@ -19,6 +19,7 @@ import Providers from '../pages/providers';
 import Customers from '../pages/customers';
 import Reports from '../pages/reports';
 import Help from '../pages/help';
+import Admin from '../pages/admin';
 
 import './Dashboard.css';
 import { Layout, Menu } from 'antd';
@@ -77,6 +78,7 @@ const pages = {
   customers: Customers,
   reports: Reports,
   help: Help,
+  admin: Admin,
 }
 
 class Dashboard extends React.Component {
