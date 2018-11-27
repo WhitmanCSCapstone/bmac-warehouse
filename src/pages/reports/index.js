@@ -19,6 +19,7 @@ import { populateTableData,
          cleanFundingSourcesData } from './utils';
 import { CSVLink, CSVDownload } from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
+import matchSorter from 'match-sorter'
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -219,10 +220,34 @@ class Reports extends React.Component {
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
+            console.log(string)
+            if(string==='customer_id' && this.state.reportType=='Inventory Shipments'){
+              return({
+                Header: string,
+                  accessor: string,
+                  filterable: true,
+                  filterAll: true,
+                  filterMethod: (filter, rows) =>
+                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                
+              })
+            }
+            if(string==='provider_id' && this.state.reportType==='Inventory Receipts'){
+              return({
+              Header: string,
+              accessor: string,
+              filterable: true,
+              filterAll: true,
+              filterMethod: (filter, rows) =>
+              matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+            })
+          }
+            else{
               return({
                 Header: string,
                 accessor: string,
               })
+            }
           })}
           defaultPageSize={10}
           className="-striped -highlight"
