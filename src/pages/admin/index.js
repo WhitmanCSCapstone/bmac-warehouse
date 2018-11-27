@@ -11,7 +11,7 @@ import withAuthorization from '../../components/withAuthorization';
 import {SignUpForm} from '../../components/SignUp';
 import {Input, Button} from 'antd';
 
-const keys = tableKeys['staff'];
+const keys = tableKeys['users'];
 
 const styles = {
     container: {
@@ -34,7 +34,7 @@ class Admin extends React.Component {
     }
     componentDidMount() {
         db
-            .onceGetStaff()
+            .onceGetUsers()
             .then(snapshot => this.setState({
                 data: snapshot.val()
             }));
@@ -56,12 +56,8 @@ class Admin extends React.Component {
                     <SignUpForm/>
                 </p>
                 <p>
-                    <h1>Delete Someone's Account</h1>
-                    <Input
-                        placeholder="User's Email"
-                        value={this.state.email}
-                        onChange={this.handleEmailChange}></Input>
-                    <Button type='danger' onClick={this.deleteUser}>Delete Account</Button>
+                    <h1>User List</h1>
+                    
                 </p>
                 {!this.state.data
                     ? <LoadingScreen/>
@@ -71,11 +67,19 @@ class Admin extends React.Component {
                         : []}
                         columns={keys.map(string => {
                         return ({Header: string, accessor: string})
-                    })}
+                    }).concat([{
+                        Header: null,
+                        accessor: null,
+                        Cell: row => (
+                            <div>
+                                <Button type='danger'> Delete User </Button>
+                                <Button type='primary'> Change Password </Button>
+                            </div>
+                        )
+                        }])}
                         defaultPageSize={10}
                         className="-striped -highlight"/>
-}               <p><h1>Change Someone's Password</h1>
-</p>
+}          
             </div>
         );
     }

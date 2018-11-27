@@ -86,6 +86,11 @@ export const tableKeys = {
     //"notes",
     //"password"
   ],
+
+  users: [
+    "email",
+    "username",
+  ],
 }
 
 export const reportKeys = {
