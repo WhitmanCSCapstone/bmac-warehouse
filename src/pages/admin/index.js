@@ -21,15 +21,16 @@ const styles = {
     }
 };
 var INITIAL_STATE = {
-    email: null,
-}
+    email: null
+}// to set it back to null on submit.
+
 
 class Admin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             data: null,
-            email: null,
+            email: null
         }
     }
     componentDidMount() {
@@ -40,16 +41,9 @@ class Admin extends React.Component {
             }));
     }
 
-    //What other functionality do we want on this page.
-    /*
-  var user = firebase.auth().currentUser;
-
-  user.delete().then(function() {
-    // User deleted.
-  }).catch(function(error) {
-    // An error happened.
-  });
-  */
+    deleteUser = () => {
+      
+       }
 
     handleEmailChange = (e) => {
         this.setState({email: e.target.value});
@@ -64,8 +58,11 @@ class Admin extends React.Component {
                 </p>
                 <p>
                     <h1>Delete Someone's Account</h1>
-                    <Input placeholder="User's Email" value={this.state.email} onChange={this.handleEmailChange}></Input>
-                    <Button type='danger'>Delete Account</Button>
+                    <Input
+                        placeholder="User's Email"
+                        value={this.state.email}
+                        onChange={this.handleEmailChange}></Input>
+                    <Button type='danger' onClick={this.deleteUser}>Delete Account</Button>
                 </p>
                 {!this.state.data
                     ? <LoadingScreen/>
@@ -78,8 +75,10 @@ class Admin extends React.Component {
                     })}
                         defaultPageSize={10}
                         className="-striped -highlight"/>
-}               <p><h1>Change Someone's Password</h1>
-</p>
+}
+                <p>
+                    <h1>Change Someone's Password</h1>
+                </p>
             </div>
         );
     }
