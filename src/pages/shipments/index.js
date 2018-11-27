@@ -18,7 +18,6 @@ import Forms from '../../pages/form';
 
 const keys = tableKeys['shipments'];
 
-const formItem = Form.Item;
 const styles = {
   container: {
     flexGrow: 1,
@@ -34,8 +33,9 @@ class Shipments extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [],
-      filteredData: [],
+      data: null,
+      filteredData: null,
+      dateRange: null,
     }
   }
 
@@ -44,13 +44,14 @@ class Shipments extends React.Component {
     for (var i = 0; i < this.state.data.length; i++){
       var entry = this.state.data[i]
       var entryDate = Moment(entry['ship_date'], 'YY-MM-DD:HH:mm')
-      if(entryDate >= dateRange[0] && entryDate >= dateRange[0]){
+      if(entryDate >= dateRange[0] && entryDate <= dateRange[1]){
         newData.push(entry)
       }
     }
     this.setState({
       filteredData: newData,
-    })
+      dateRange: dateRange,
+    }, function () {console.log(this.state.dateRange)})
   }
 
   componentDidMount(){
@@ -68,9 +69,10 @@ class Shipments extends React.Component {
         </div>
         <Forms/>
 
-        { !this.state.data.length ? <LoadingScreen/> :
+        { !this.state.data ? <LoadingScreen/> :
           <ReactTable
-            data={this.state.filteredData.length ? this.state.filteredData : this.state.data}
+            data={this.state.filteredData && this.state.dateRange.length ?
+                  this.state.filteredData : this.state.data}
             columns={keys.map(string => {
               if(string==='customer_id'){
                 return({
