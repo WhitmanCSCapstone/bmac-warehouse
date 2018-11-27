@@ -21,9 +21,8 @@ const styles = {
     }
 };
 var INITIAL_STATE = {
-    email: null
-}// to set it back to null on submit.
-
+    email: null,
+}
 
 class Admin extends React.Component {
     constructor(props) {
@@ -75,10 +74,8 @@ class Admin extends React.Component {
                     })}
                         defaultPageSize={10}
                         className="-striped -highlight"/>
-}
-                <p>
-                    <h1>Change Someone's Password</h1>
-                </p>
+}               <p><h1>Change Someone's Password</h1>
+</p>
             </div>
         );
     }
