@@ -9,6 +9,9 @@
 # production
 /build
 
+#SDK Admin
+bmac-bens-dev-firebase-adminsdk-wmsrw-0e76eb507a.json
+
 # misc
 .DS_Store
 .env.local

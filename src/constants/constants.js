@@ -88,8 +88,8 @@ export const tableKeys = {
   ],
 
   users: [
-    "email",
     "username",
+    "email",
   ],
 }
 

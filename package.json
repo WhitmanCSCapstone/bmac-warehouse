@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.9.3",
     "firebase": "^5.5.0",
+    "firebase-admin": "^6.3.0",
     "match-sorter": "^2.3.0",
     "moment": "^2.22.2",
     "react": "^16.5.1",
