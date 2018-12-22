@@ -11,6 +11,7 @@ import Moment from 'moment';
 import TableDropdown from '../../components/TableDropdown';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
+import { getReadableShipmentsTableData } from '../../utils/shipments';
 import matchSorter from 'match-sorter';
 
 const keys = tableKeys['shipments'];
@@ -52,8 +53,8 @@ class Shipments extends React.Component {
   }
 
   componentDidMount(){
-    db.onceGetShipments().then(snapshot =>
-      this.setState({ data: snapshot.val() })
+    getReadableShipmentsTableData().then(data =>
+      this.setState({ data: data.val() })
     );
   }
 

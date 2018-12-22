@@ -5,7 +5,7 @@ export function getReadableReceiptsTableData() {
     db.onceGetProviders().then(snapshot => {
       var providers = snapshot.val();
       db.onceGetReceipts().then(snapshot => {
-        var data = snapshot.val();
+        var data = Object.values(snapshot.val());
         data.map(row => makeRecieptReadable(row, providers));
         // this is to make it act like the Firebase Promises
         var obj = { val: () => data }

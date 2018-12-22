@@ -31,7 +31,7 @@ class Products extends React.Component {
 
   componentDidMount(){
     db.onceGetProducts().then(snapshot =>
-      this.setState({ data: snapshot.val() })
+      this.setState({ data: Object.values(snapshot.val()) })
     );
   }
 
@@ -51,7 +51,7 @@ class Products extends React.Component {
                   filterAll: true,
                   filterable:true,
                 })}
-              else{  
+              else{
                 return({
                   Header: string.replace('_',' ').split(' ')
                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1))

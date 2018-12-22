@@ -31,9 +31,11 @@ class Customers extends React.Component {
   }
 
   componentDidMount(){
-    db.onceGetCustomers().then(snapshot =>
-      this.setState({ data: snapshot.val() })
-    );
+    db.onceGetCustomers().then(snapshot => {
+      var data = snapshot.val();
+      data = Object.values(data);
+      this.setState({ data: data })
+    });
   }
 
 
@@ -54,14 +56,12 @@ class Customers extends React.Component {
                   filterable:true,
 
                 })
-                
               else{
                 return({
                   Header: string.replace('_',' ').split(' ')
                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
                   accessor: string,
-                  
                 })
               }
             })}

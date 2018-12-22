@@ -28,13 +28,13 @@ class Staff extends React.Component {
         }
     }
 
-    componentDidMount() {
-        db
-            .onceGetStaff()
-            .then(snapshot => this.setState({
-                data: snapshot.val()
-            }));
-    }
+  componentDidMount() {
+    db
+      .onceGetStaff()
+      .then(snapshot => this.setState({
+        data: Object.values(snapshot.val())
+      }));
+  }
 
     render() {
         return (
