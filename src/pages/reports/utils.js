@@ -109,7 +109,8 @@ function getVerboseItems(oldObj, items_accessor) {
   return newObj;
 }
 
-export async function getCSVdata(data, reportType, callback) {
+export async function getCSVdata(init_data, reportType, callback) {
+  var data = JSON.parse(JSON.stringify(init_data)) // deep clone
   if (data) {
     var array = []
     var dict = {}
@@ -136,6 +137,7 @@ export async function populateTableData(reportType,
                                         callback) {
   var firebaseCallback = reportType2FirebaseCallback[reportType];
   var data = await firebaseCallback().then(snapshot => snapshot.val());
+  data = typeof data === 'object' ? Object.values(data) : data;
   data = dateRange.length
        ? filterDataByDate(data, dateRange, date_accessor)
        : data;

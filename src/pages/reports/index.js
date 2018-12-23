@@ -56,7 +56,7 @@ class Reports extends React.Component {
 
   componentDidMount(){
     db.onceGetFundingSources().then(snapshot => {
-      var data = cleanFundingSourcesData(snapshot.val());
+      var data = cleanFundingSourcesData(Object.values(snapshot.val()));
       this.setState({ fundingSources: data })
     });
 
@@ -220,36 +220,33 @@ class Reports extends React.Component {
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
-            console.log(string)
-            if(string==='customer_id' && this.state.reportType==='Inventory Shipments'){
-              return({
-                Header: "Customer",
+              if(string === 'customer_id' && this.state.reportType === 'Inventory Shipments'){
+                return({
+                  Header: string,
                   accessor: string,
                   filterable: true,
                   filterAll: true,
                   filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
-                
-              })
-            }
-            if(string==='provider_id' && this.state.reportType==='Inventory Receipts'){
-              return({
-              Header: "Provider",
-              accessor: string,
-              filterable: true,
-              filterAll: true,
-              filterMethod: (filter, rows) =>
-              matchSorter(rows, filter.value, { keys: ['provider_id'] }),
-            })
-          }
-            else{
-              return({
-                Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
-                accessor: string,
-              })
-            }
+                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+
+                })
+              }
+              if(string === 'provider_id' && this.state.reportType === 'Inventory Receipts'){
+                return({
+                  Header: string,
+                  accessor: string,
+                  filterable: true,
+                  filterAll: true,
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                })
+              }
+              else{
+                return({
+                  Header: string,
+                  accessor: string,
+                })
+              }
           })}
           defaultPageSize={10}
           className="-striped -highlight"
