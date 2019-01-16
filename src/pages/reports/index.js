@@ -6,17 +6,21 @@ import React from 'react';
 import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import { Spin, Dropdown, Button, Icon, DatePicker, Radio, Menu } from 'antd';
-import { tableKeys,
-         reportKeys,
-         reportType2TableName,
-         reportType2DateAccessor,
-         reportType2FundingSourceRelavancy,
-         reportType2DateRangeRelavancy,
-         radioValue2ReportType } from '../../constants/constants';
-import { populateTableData,
-         getCSVdata,
-         filterDataByDate,
-         cleanFundingSourcesData } from './utils';
+import {
+  tableKeys,
+  reportKeys,
+  reportType2TableName,
+  reportType2DateAccessor,
+  reportType2FundingSourceRelavancy,
+  reportType2DateRangeRelavancy,
+  radioValue2ReportType
+} from '../../constants/constants';
+import {
+  populateTableData,
+  getCSVdata,
+  filterDataByDate,
+  cleanFundingSourcesData
+} from './utils';
 import { CSVLink, CSVDownload } from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter'
@@ -39,7 +43,7 @@ const styles = {
 };
 
 class Reports extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       reportType: 'Inventory Shipments',
@@ -51,10 +55,13 @@ class Reports extends React.Component {
       statusRadioValue: 6,
       fundingSources: [],
       dataCSV: null,
+      startValue: null,
+      endValue: null,
+      endOpen: true,
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     db.onceGetFundingSources().then(snapshot => {
       var data = cleanFundingSourcesData(snapshot.val());
       this.setState({ fundingSources: data })
@@ -65,28 +72,31 @@ class Reports extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.reportTypeTableName !== prevState.reportTypeTableName
-        || this.state.fundingSource !== prevState.fundingSource
-        || this.state.dateRange !== prevState.dateRange) {
+      || this.state.fundingSource !== prevState.fundingSource
+      || this.state.dateRange !== prevState.dateRange) {
       this.updateTable();
     }
   }
 
   updateTable = () => {
-    this.setState({dataCSV: null,
-                   data: null });
+    this.setState({
+      dataCSV: null,
+      data: null
+    });
     populateTableData(this.state.reportType,
-                      this.state.fundingSource,
-                      this.state.dateRange,
-                      reportType2DateAccessor[this.state.reportType],
-                      (data) => {this.setState({data: data}, console.log('just updated table data'))});
+      this.state.fundingSource,
+      this.state.dateRange,
+      reportType2DateAccessor[this.state.reportType],
+      (data) => { this.setState({ data: data }, console.log('just updated table data')) });
   }
 
   createCSV = () => {
     getCSVdata(this.state.data,
-               this.state.reportType,
-               (dataCSV) => {this.setState({dataCSV: dataCSV}),
-                             console.log('just updated csv data')
-               });
+      this.state.reportType,
+      (dataCSV) => {
+        this.setState({ dataCSV: dataCSV }),
+          console.log('just updated csv data')
+      });
   }
 
   onClickFundingSource = (e) => {
@@ -117,10 +127,28 @@ class Reports extends React.Component {
     });
   }
 
-  onDateChange = (dateRange) => {
+  onDateChange = (value) => {
+    var dateRange = [this.state.startValue, value];
     this.setState({
       dateRange: dateRange,
     });
+  }
+
+  onStartChange = (value) => {
+    this.setState({
+      startValue: value,
+      endOpen: false,
+    })
+    console.log("Startdate", value)
+  }
+
+  onEndChange = (value) => {
+    this.setState({
+      endValue: value,
+    })
+    console.log("endate", value)
+    this.onDateChange(value);
+
   }
 
   onStatusChange = (e) => {
@@ -131,14 +159,16 @@ class Reports extends React.Component {
 
   render() {
 
+    const { startValue, endValue } = this.state;
+
     var menu = (
       <Menu>
         {this.state.fundingSources.map((name) => {
-           return(
-             <Menu.Item key={name} onClick={this.onClickFundingSource}>
-               {name}
-             </Menu.Item>
-           )
+          return (
+            <Menu.Item key={name} onClick={this.onClickFundingSource}>
+              {name}
+            </Menu.Item>
+          )
         })}
         <Menu.Item key='None' onClick={this.clearFundingSource}>
           <strong>Any</strong>
@@ -148,13 +178,13 @@ class Reports extends React.Component {
 
     var fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
 
-    return(
+    return (
       <div style={styles.container}>
 
         <div style={styles.filters}>
           <Radio.Group onChange={this.onReportTypeChange}
-                       value={this.state.reportTypeRadioValue}
-                       style={styles.radio}>
+            value={this.state.reportTypeRadioValue}
+            style={styles.radio}>
 
             <Radio value={1}>Inventory Shipments</Radio>
             <Radio value={2}>Inventory Receipts</Radio>
@@ -165,8 +195,8 @@ class Reports extends React.Component {
           </Radio.Group>
 
           <Radio.Group onChange={this.onStatusChange}
-                       value={this.state.statusRadioValue}
-                       style={styles.radio}>
+            value={this.state.statusRadioValue}
+            style={styles.radio}>
 
             <Radio disabled={true} value={6}>Active</Radio>
             <Radio disabled={true} value={7}>Inactive/Discontinued</Radio>
@@ -180,8 +210,8 @@ class Reports extends React.Component {
                 <a className="ant-dropdown-link" href="#">
                   <Button disabled={fundingSourceDisabled}>
                     {this.state.fundingSource
-                     ? this.state.fundingSource
-                     : <span>Funding Source</span> } <Icon type="down" />
+                      ? this.state.fundingSource
+                      : <span>Funding Source</span>} <Icon type="down" />
                   </Button>
                 </a>
               </Dropdown>
@@ -189,29 +219,42 @@ class Reports extends React.Component {
           }
 
           {
-            <RangePicker onChange={this.onDateChange}
-                         value={this.state.dateRange}
-                         disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
-            />
+            // <RangePicker onChange={this.onDateChange}
+            //   value={this.state.dateRange}
+            //   disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
+            // />
+            <div>
+              <DatePicker
+                value={startValue}
+                placeholder="Start"
+                onChange={this.onStartChange}
+              />
+              <DatePicker
+                value={endValue}
+                placeholder="End"
+                onChange={this.onEndChange}
+                disabled={this.state.endOpen}
+              />
+            </div>
           }
 
           {
             this.state.data
-            ? <Button type="primary" onClick={this.createCSV}> Create CSV </Button>
-            : <Button type="primary"> Create CSV <Spin indicator={antIcon} /> </Button>
+              ? <Button type="primary" onClick={this.createCSV}> Create CSV </Button>
+              : <Button type="primary"> Create CSV <Spin indicator={antIcon} /> </Button>
           }
 
           {
             this.state.dataCSV
-            ?
-            <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
-              <Button type="primary" icon="download">
-                CSV
+              ?
+              <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
+                <Button type="primary" icon="download">
+                  CSV
               </Button>
-            </CSVLink>
-            :
-            <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
-              CSV
+              </CSVLink>
+              :
+              <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
+                CSV
             </Button>
           }
 
@@ -221,29 +264,29 @@ class Reports extends React.Component {
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
             console.log(string)
-            if(string==='customer_id' && this.state.reportType=='Inventory Shipments'){
-              return({
+            if (string === 'customer_id' && this.state.reportType == 'Inventory Shipments') {
+              return ({
                 Header: string,
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
+                accessor: string,
+                filterable: true,
+                filterAll: true,
+                filterMethod: (filter, rows) =>
                   matchSorter(rows, filter.value, { keys: ['customer_id'] }),
-                
+
               })
             }
-            if(string==='provider_id' && this.state.reportType==='Inventory Receipts'){
-              return({
-              Header: string,
-              accessor: string,
-              filterable: true,
-              filterAll: true,
-              filterMethod: (filter, rows) =>
-              matchSorter(rows, filter.value, { keys: ['provider_id'] }),
-            })
-          }
-            else{
-              return({
+            if (string === 'provider_id' && this.state.reportType === 'Inventory Receipts') {
+              return ({
+                Header: string,
+                accessor: string,
+                filterable: true,
+                filterAll: true,
+                filterMethod: (filter, rows) =>
+                  matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+              })
+            }
+            else {
+              return ({
                 Header: string,
                 accessor: string,
               })
