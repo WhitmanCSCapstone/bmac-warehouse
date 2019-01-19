@@ -170,11 +170,3 @@ export function filterDataByDate (data, dateRange, accessor) {
   }
   return newData;
 }
-
-export function cleanFundingSourcesData (data) {
-  var newData = [];
-  for (var i = 0; i < data.length; i++) {
-    newData.push(data[i]['id']);
-  }
-  return newData;
-}

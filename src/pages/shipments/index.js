@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { db } from '../../firebase';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Modal } from 'antd';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
@@ -36,6 +36,7 @@ class Shipments extends React.Component {
       data: null,
       filteredData: null,
       dateRange: null,
+      formModalVisible: false,
     }
   }
 
@@ -55,6 +56,10 @@ class Shipments extends React.Component {
   }
 
   componentDidMount(){
+    this.refreshTable()
+  }
+
+  refreshTable = () => {
     getReadableShipmentsTableData().then(data =>
       this.setState({ data: data.val() })
     );
@@ -67,7 +72,17 @@ class Shipments extends React.Component {
         <div>
           <RangePicker onChange={this.onDateChange} />
         </div>
-        <Forms/>
+
+        <Button type="primary"
+                onClick={ () => this.setState({ formModalVisible: true }) }>
+          Add New Shipment
+        </Button>
+
+        <Forms
+          formModalVisible={this.state.formModalVisible}
+          refreshTable={this.refreshTable}
+          onCancel={ () => this.setState({ formModalVisible: false }) }
+        />
 
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
@@ -76,27 +91,25 @@ class Shipments extends React.Component {
             columns={keys.map(string => {
               if(string==='customer_id'){
                 return({
-                  Header: "Customer",
+                  Header: string,
                   accessor: string,
                   filterable: true,
                   filterAll: true,
                   filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
                 })
               }
               else{
                 return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
+                  Header: string,
                   accessor: string,
                 })}
             })}
             SubComponent={row => {
-              return <TableDropdown
-                row={row.original.ship_items}
-                index={this.state.data.indexOf(row.original)}
-              />
+                return <TableDropdown
+                         row={row.original.ship_items}
+                             index={this.state.data.indexOf(row.original)}
+                />
             }}
             defaultPageSize={10}
             className="-striped -highlight"

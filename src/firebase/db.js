@@ -37,3 +37,6 @@ export const setShipmentObj = (index, newData) =>
 
 export const setReceiptsObj = (index, newData) =>
     db.ref(`6/contributions/${index}/receive_items`).set(newData);
+
+export const pushShipmentObj = (newData) =>
+    db.ref(`2/shipments/`).push(newData);

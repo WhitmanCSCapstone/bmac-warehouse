@@ -1,337 +1,266 @@
 import React from 'react';
 import { db } from '../../firebase';
-import { Form, Icon, Input, Button, DatePicker, Select, Divider } from 'antd';
-
-const FormItem = Form.Item;
+import { Icon, Input, Button, DatePicker, Select, Divider, Modal } from 'antd';
+import ShipmentItems from './ShipmentItems';
+import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
+import CustomerAutoComplete from './CustomerAutoComplete';
 
 const { TextArea } = Input;
 
 const Option = Select.Option;
 
 const styles = {
-  container: {
-    // backgroundColor: 'teal',
+  form: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'right',
-    alignSelf: 'left',
-    marginLeft: '5%',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
 
-  addbutton: {
-    display: 'flex',
+  formItem: {
+    width: '45%',
+    margin: '0px 1em 1em 1em',
   },
 
-  sideways: {
-    // backgroundColor : 'red',
+  datePicker: {
+    width: '100%',
+  },
+
+  topThird: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center',
   },
 
-  margin: {
-    marginLeft: '5%',
+  bottomThird: {
+    display: 'flex',
+    justifyContent: 'flex-start',
   },
 
-  item1: {
-    flexGrow: '1',
-  },
-
-  form: {
-    // backgroundColor: 'teal',
+  shipViaContainer: {
+    width: '45%',
+    margin: '0px 1em 1em 1em',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-
-  },
-
-  button: {
-    display: 'flex',
-    alignSelf: 'center'
   },
 };
 
 var ref = null;
 
 class Forms extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      data: props.row,
-      formDisplayToggle: false,
-      customerId: null,
-      fundsSource: null,
-      invoiceDate: null,
-      invoiceNo: null,
+      customer_id: null,
+      funds_source: null,
+      invoice_date: 'null',
+      invoice_no: 'null',
       notes: null,
-      shipDate: null,
-      shipItems: [],
-      shipRate: null,
-      shipVia: null,
-      totalPrice: null,
-      totalWeight: null,
+      ship_date: null,
+      ship_items: [{},{},{},{},{}],
+      ship_rate: null,
+      ship_via: null,
+      total_price: null,
+      total_weight: null,
     }
   }
 
-  remove = (k) => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    // We need at least one passenger
-    if (keys.length === 1) {
-      return;
+  onChange = (prop, val) => {
+    console.log('Received values of form: ', val, prop);
+    this.setState({
+      [prop]: val,
+    })
+  }
+
+  // TODO: DRY using this
+
+  onCustomerChange = (value) => {
+    this.setState({ customer_id: value })
+  }
+
+  onClickFundingSource = (value) => {
+    this.setState({ funds_source: value });
+  }
+
+  clearFundingSource = () => {
+    this.setState({ funds_source: null });
+  }
+
+  onShipViaChange = (value) => {
+    this.setState({ ship_via: value })
+  }
+
+  onRateChange = (value) => {
+    this.setState({ ship_rate: value })
+  }
+
+  onBilledAmtChange = (value) => {
+    this.setState({ total_price: value })
+  }
+
+  onNotesChange = (value) => {
+    this.setState({ notes: value })
+  }
+
+  onItemsChange = (prop, index, val) => {
+    var itemsCopy = this.state.ship_items.slice(0); // shallow clone
+    if(itemsCopy[index] === undefined) {
+      itemsCopy[index] = {[prop]: val};
+    } else {
+      itemsCopy[index][prop] = val;
     }
+    this.setState({ ship_items: itemsCopy });
 
-    // can use data-binding to set
-    form.setFieldsValue({
-      keys: keys.filter(key => key !== k),
+    var total_weight = 0;
+    for(var item of this.state.ship_items) {
+      var weight = parseInt(item['total_weight'])
+      total_weight += isNaN(weight) ? 0 : weight;
+    }
+    this.setState({ total_weight: total_weight.toString() });
+  }
+
+  deleteEmptyShipItems = () => {
+    var newItems = [];
+    for (let obj of this.state.ship_items){
+      if (Object.keys(obj).length !== 0 && obj.constructor === Object){
+        newItems.push(obj);
+      }
+    }
+    this.setState({ ship_items: newItems });
+  }
+
+  handleOk = () => {
+    this.props.onCancel();
+
+    this.deleteEmptyShipItems();
+
+    db.pushShipmentObj(this.state);
+
+    // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
+    this.props.refreshTable();
+
+    this.setState({
+      customer_id: null,
+      funds_source: null,
+      invoice_date: 'null',
+      invoice_no: 'null',
+      notes: null,
+      ship_date: null,
+      ship_items: [{},{},{},{},{}],
+      ship_rate: null,
+      ship_via: null,
+      total_price: null,
+      total_weight: null,
     });
+
   }
 
-  add = () => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(keys.length);
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      keys: nextKeys,
-    });
+  addShipmentItem = () => {
+    this.setState({ ship_items: [...this.state.ship_items, {}] });
   }
 
-  onSubmit = () => {
-    console.log(this.state)
-  }
-
-  onAddNewShipment = () => {
-    this.setState({
-      formDisplayToggle: !this.state.formDisplayToggle,
-    })
-  }
-
-  onChange = (e, name) => {
-    console.log('Received values of form: ', name, e.target.value);
-    this.setState({
-      [name]: e.target.value,
-    })
-  }
-
-  dateChange = (date, dateString) => {
-    console.log(date, dateString);
-    this.setState({
-      shipDate: dateString,
-    })
-  }
-
-  handleShipChange = (value) => {
-    console.log(`selected ${value}`);
-    this.setState({
-      shipVia: value,
-    })
-  }
-
-  handleFundsChange = (value) => {
-    console.log(`selected ${value}`);
-    this.setState({
-      fundsSource: value,
-    })
+  removeShipmentItem = (removeIndex) => {
+    var itemsCopy = this.state.ship_items.filter( (obj, objIndex) => objIndex != removeIndex )
+    this.setState({ ship_items: itemsCopy });
   }
 
   render() {
 
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    return (
 
-    getFieldDecorator('keys', { initialValue: [] });
-    const keys = getFieldValue('keys');
-    console.log('look here')
-    console.log(keys)
-    const formItems = keys.map((k, index) => {
-      return (
-        <div key={k}
-          style={styles.sideways}>
-          <FormItem
-            {...(styles.item)}
-            required={false}
-          >
-            {getFieldDecorator(`names[${k}]`, {
-              validateTrigger: ['onChange', 'onBlur'],
-              rules: [{
-                required: true,
-                whitespace: true,
-                message: "Please input values or delete this field.",
-              }],
-            })(
-              <Input placeholder="Product Name" style={{ width: '80%', marginRight: 16 }}/>
-            )}
-          </FormItem>
+      <Modal
+        title="Add New Shipment"
+        style={{ top: 20 }}
+        width={'50vw'}
+        destroyOnClose={true}
+        visible={this.props.formModalVisible}
+        okText='Submit'
+        onOk={this.handleOk}
+        onCancel={this.props.onCancel}
+      >
 
-          <FormItem {...styles.item1}
-            required={false}>
-            {getFieldDecorator('unitWeight')(
-              <Input placeholder="Unit Weight" style={{ width: '60%', marginRight: 8 }} />
-            )}
-          </FormItem>
+        <div style={styles.form}>
 
-          <FormItem {...styles.item1}
-            required={false}>
-            {getFieldDecorator('caseLots')(
-              <Input placeholder="Case Lots" style={{ width: '60%', marginRight: 8 }} />
-            )}
-          </FormItem>
+          <div style={styles.topThird}>
 
-          <FormItem {...styles.item1}
-            required={false}>
-            {getFieldDecorator('totalWeight')(
-              <Input placeholder="Total Weight" style={{ width: '60%', marginRight: 8 }} />
-            )}
-            {keys.length > 1 ? (
-              <Icon
-                className="dynamic-delete-button"
-                type="minus-circle-o"
-                disabled={keys.length === 1}
-                onClick={() => this.remove(k)}
+            <div style={styles.formItem}>
+              Date:
+              <DatePicker style={styles.datePicker}
+                          onChange={ (date) => this.onChange('ship_date', date.format('YY-MM-DD:HH:mm')) }
+                          placeholder="Ship Date" />
+            </div>
+
+            <div style={styles.formItem}>
+              Customer:
+              <CustomerAutoComplete onCustomerChange={ (val) => this.onCustomerChange(val) }/>
+            </div>
+
+            <div style={styles.formItem}>
+              Funding Source:
+              <FundsSourceDropdownMenu
+                disabled={false}
+                fundingSource={this.state.funds_source}
+                style={styles.fundsSourceDropdown}
+                onClick={this.onClickFundingSource}
+                clearFundingSource={this.clearFundingSource}
+                required={true}
               />
-            ) : null}
-          </FormItem>
+            </div>
+
+
+            <div style={styles.shipViaContainer}>
+              Ship Via:
+              <Select placeholder="Ship Via"
+                      onChange={this.onShipViaChange}>
+                <Option value="BMAC">BMAC</Option>
+                <Option value="Customer">Customer</Option>
+                <Option value="Other">Other</Option>
+              </Select>
+
+            </div>
+
+          </div>
+
+          <Divider orientation="left">Ship Items</Divider>
+
+          <ShipmentItems
+            onChange={this.onItemsChange}
+            ship_items={this.state.ship_items}
+            addShipmentItem={this.addShipmentItem}
+            removeShipmentItem={this.removeShipmentItem}
+          />
+
+          <Divider />
+
+          <div style={styles.bottomThird}>
+
+            <div style={styles.formItem}>
+              <Input
+                placeholder="Rate"
+                onChange={ (e) => this.onRateChange(e.target.value) }/>
+            </div>
+
+            <div style={styles.formItem}>
+              <Input
+                placeholder="Billed Amount"
+                onChange={ (e) => this.onBilledAmtChange(e.target.value) } />
+            </div>
+
+          </div>
+
+          <TextArea
+            rows={4}
+            placeholder="Notes"
+            onChange={ (e) => this.onNotesChange(e.target.value) }
+          />
 
         </div>
-      );
-    });
 
-    return (
-      <div style={styles.container}>
-
-        {!this.state.formDisplayToggle ?
-          <Button style={styles.button}
-            onClick={this.onAddNewShipment}>
-            Add New Shipment
-          </Button>
-          :
-          <Button style={styles.button}
-            onClick={this.onAddNewShipment}>
-            Cancel Adding Shipment
-        </Button>
-        }
-
-        {!this.state.formDisplayToggle ? null :
-          <Form style={styles.form}>
-            <FormItem>
-            </FormItem>
-
-            <FormItem label='Ship Date:'>
-              {getFieldDecorator('shipDate', {
-                rules: [{ required: true, message: 'Please input the shipping date.' }],
-              })(
-                <DatePicker onChange={this.dateChange} placeholder="Ship Date" />
-              )}
-            </FormItem>
-
-            <FormItem label='Ship To:'>
-              {getFieldDecorator('shipTo', {
-                rules: [{ required: true, message: 'Please input the shipping destination.' }],
-                onChange: (e) => this.onChange(e, 'shipTo')
-              })(
-                <Input style={{ width: 180 }} placeholder="Ship to:" />
-              )}
-            </FormItem>
-
-            <div style={styles.sideways}>
-              <FormItem label='Funds Source:'>
-                {getFieldDecorator('fundsSource', {
-                  rules: [{ required: true, message: 'Please input the Funding Source!' }],
-                })(
-                  <Select placeholder="Funds Source" style={{ width: 150 }} onChange={this.handleFundsChange}>
-                    <Option value="BMAC">BMAC</Option>
-                    <Option value="CSFP">CSFP</Option>
-                    <Option value="donation">Donation</Option>
-                    <Option value="EFAP">EFAP</Option>
-                    <Option value="EFAP FB">EFAP FB</Option>
-                    <Option value="FEMA">FEMA</Option>
-                    <Option value="gleanteam">Glean Team</Option>
-                    <Option value="nonfederal">Non-Federal</Option>
-                    <Option value="TEFAP">TEFAP</Option>
-                    <Option value="unitedway">United Way</Option>
-                    <Option value="other">Other</Option>
-                  </Select>
-                )}
-
-              </FormItem>
-              <div style={styles.margin}>
-                <FormItem label='Ship Via:'>
-                  {getFieldDecorator('shipVia', {
-                    rules: [{ required: true, message: 'Please input the shipping method!' }],
-                  })(
-                    <Select placeholder="Ship Via" style={{ width: 150, marginLeft: '5%' }} onChange={this.handleShipChange}>
-                      <Option value="BMAC">BMAC</Option>
-                      <Option value="customer">Customer</Option>
-                      <Option value="other">Other</Option>
-                    </Select>
-                  )}
-
-                </FormItem>
-              </div>
-            </div>
-
-            <Divider orientation="left">Ship Items</Divider>
-
-            {formItems}
-
-
-            <FormItem>
-              <Button type="dashed" onClick={this.add} style={{ width: '20%' }}>
-                <Icon type="plus" /> Add fields
-              </Button>
-            </FormItem>
-
-            <Divider />
-
-            <div style={styles.sideways}>
-              <FormItem label='Rate:'>
-                {getFieldDecorator('rate', {
-                  rules: [{ required: true, message: 'Please input the rate!' }],
-                  onChange: (e) => this.onChange(e, 'rate')
-                })(
-                  <Input style={{ width: 180 }} placeholder="Rate" />
-                )}
-              </FormItem>
-
-              <div style={styles.margin}>
-                <FormItem label='Billed Amount:'>
-                  {getFieldDecorator('billedamt', {
-                    rules: [{ required: true, message: 'Please input the billed amount!' }],
-                    onChange: (e) => this.onChange(e, 'billedAmt')
-                  })(
-                    <Input style={{ width: 180, marginLeft: '5%' }} placeholder="Billed Amount" />
-                  )}
-                </FormItem>
-              </div>
-            </div>
-
-            <FormItem label='Notes:'>
-              {getFieldDecorator('notes', {
-                rules: [{ required: true, message: 'Please input the billed amount!' }],
-                onChange: (e) => this.onChange(e, 'notes')
-              })(
-                <TextArea rows={4} style={{ width: 400 }} placeholder="Notes" />
-              )}
-
-            </FormItem>
-
-            < div style={styles.button}>
-              <FormItem>
-                <Button type="primary" htmlType="submit" onClick={this.onSubmit}>
-                  Submit
-                </Button>
-              </FormItem>
-            </div>
-
-          </Form>}
-
-      </div>
+      </Modal>
     );
   }
 }
 
-export default Form.create()(Forms);
+export default Forms;

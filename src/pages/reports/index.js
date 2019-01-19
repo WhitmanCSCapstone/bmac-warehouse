@@ -18,6 +18,7 @@ import { populateTableData,
 import { CSVLink} from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter'
+import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -49,17 +50,11 @@ class Reports extends React.Component {
       dateRange: [],
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
-      fundingSources: [],
       dataCSV: null,
     }
   }
 
   componentDidMount(){
-    db.onceGetFundingSources().then(snapshot => {
-      var data = cleanFundingSourcesData(Object.values(snapshot.val()));
-      this.setState({ fundingSources: data })
-    });
-
     this.updateTable();
   }
 
@@ -89,16 +84,8 @@ class Reports extends React.Component {
                });
   }
 
-  onClickFundingSource = (e) => {
-    this.setState({
-      fundingSource: e.key,
-    });
-  }
-
-  clearFundingSource = () => {
-    this.setState({
-      fundingSource: null,
-    });
+  onClickFundingSource = (val) => {
+    this.setState({ fundingSource: val });
   }
 
   onReportTypeChange = (e) => {
@@ -131,21 +118,6 @@ class Reports extends React.Component {
 
   render() {
 
-    var menu = (
-      <Menu>
-        {this.state.fundingSources.map((name) => {
-           return(
-             <Menu.Item key={name} onClick={this.onClickFundingSource}>
-               {name}
-             </Menu.Item>
-           )
-        })}
-        <Menu.Item key='None' onClick={this.clearFundingSource}>
-          <strong>Any</strong>
-        </Menu.Item>
-      </Menu>
-    )
-
     var fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
 
     return(
@@ -173,20 +145,12 @@ class Reports extends React.Component {
 
           </Radio.Group>
 
-          {
-
-            <div>
-              <Dropdown disabled={fundingSourceDisabled} overlay={menu}>
-                <a className="ant-dropdown-link" href="Link">
-                  <Button disabled={fundingSourceDisabled}>
-                    {this.state.fundingSource
-                     ? this.state.fundingSource
-                     : <span>Funding Source</span> } <Icon type="down" />
-                  </Button>
-                </a>
-              </Dropdown>
-            </div>
-          }
+          <FundsSourceDropdownMenu
+            disabled={fundingSourceDisabled}
+            fundingSource={this.state.fundingSource}
+            onClick={this.onClickFundingSource}
+            required={false}
+          />
 
           {
             <RangePicker onChange={this.onDateChange}
