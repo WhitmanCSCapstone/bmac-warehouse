@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "ajv": "^6.7.0",
     "antd": "^3.9.3",
+    "fast-crc32c": "^1.0.4",
     "firebase": "^5.5.0",
-    "firebase-admin": "^6.3.0",
+    "firebase-admin": "^6.5.1",
+    "hash-stream-validation": "^0.2.1",
     "match-sorter": "^2.3.0",
     "moment": "^2.22.2",
     "react": "^16.5.1",

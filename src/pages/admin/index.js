@@ -4,15 +4,14 @@ import ReactTable from 'react-table';
 import {Button, Modal} from 'antd';
 
 import {tableKeys} from '../../constants/constants';
-
 import withAuthorization from '../../components/withAuthorization';
 import AddUser from '../../components/AddUser';
 import PasswordChangeModal from '../../components/PasswordChangeModal';
 import LoadingScreen from '../../components/LoadingScreen';
 
 //ADMIN ACCOUNT INITIALIZATION
-import * as admin from "firebase-admin";
 /*
+
 var serviceAccount = require('../../../src/bmac-bens-dev-firebase-adminsdk-wmsrw-1f41938601.json');
 admin.initializeApp({
     credential: admin
@@ -20,15 +19,18 @@ admin.initializeApp({
         .cert(serviceAccount),
     databaseURL: 'https://<BMAC-BENS-DEV>.firebaseio.com'
 });
-*/
+
+var admin = require('firebase-admin');
+//import admin from 'firebase-admin';
 admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: 'bmac-bens-dev',
-      client_email: "firebase-adminsdk-wmsrw@bmac-bens-dev.iam.gserviceaccount.com",
-      private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDdlmE1UMYY0zLi\nuANncOD/FfACKv2QsbMZxi3yTkazYN7UPIpEq4sI0B/s1//p7j7VIg5WuF9pmH8v\nW6oc4bWtxiGRgGZY7VvYsbJy7gp/VdAhlzqG33vpcWbP7HJTH4qRy5xkKeaTCe7L\nKF4pC/jCcEECLlgUsgSFXHuIXkQ4LCUcSk4wFEatKlY9tE5ghH3qbnOaTAOL5/z8\nnSoFSkRUpr4In/oRA0Ekk9z/Ok3PPPRleZqDUZdn6g8E6JToj/wy4Pq1NX3lmD28\nN3V6/cPeSRHiA60nKza0I9Oi2A+7q3MSbak1b0tLR+LMy7Ch/LK2D5KO2jhB1Jv6\ndtxdLWu/AgMBAAECggEAZ4hk4QFdnanIg9AQnxtJtUXtv0WQ9jNhCHDldOqH9DYV\nxzqGLDGuo66CzCncQ9PyfakM5A3/XppHCrycjiQTvB7v/kjtCS3WFThptXNtajOR\nLLC5Qt1WyysWK55BiH8bQqXM66v8NMWWUkwJOsqCL289oKRAuWK35AvjGENbQpbW\nsqwh6GBWtTI3gzjBVSvUMt8OB02XeZJhuEOsUOPkm9rUpE8SKjr3YLSYhgCRxS0Y\ns+7lqMGOmP8AkhAkhuwS5FR1cKQdXkb3YQhAJ3rF8EiFCF48Dbq6wUs3+Djp/qZA\nACDXzCJ5tDNq21OT6Nj8Dg4gHWAu0JVcllF8ugG6mQKBgQD+JY4fvbo3WLOoVYos\n6YA1GKjV7Dg3XE/DuRrUqtJl8QcgCQ+0CsBRGpQCPHNEEwJ8V1MI/Zyo0mN6UJHM\nSuzNryK0PegORLUUtkoxejxyA3n+/JUFnDzdc+3QtvIacJcJCYrhHby5NhNPfG8x\nNPyg+Ki+fqHOfX+JnfcjQaqymwKBgQDfNAra6jgog9VjD+HLAOjmxcofeofy4l84\njDTv/z9dpJzUPRS0ZxSqs6EwcLh58M6qCoaQhZ8RH8ZKMFMEP8NjFKYkHOGnwY53\nFUM9vCjiIsl6Z931q3ZzKuAzB/s92xM4uyL48RzSnlaEhtdzSp2HDQgjcsb0SlAH\nb+cJ+ws7rQKBgQD7DFoCXMZwGb0OkcD2cInm6T8OYlN9zEA21Mj+PuerL5acPJc4\ngE5NT3XZZ6FtI2IXNaOeg/eWhI0jrCb5qSGWZGRhq61pOtGtbgyIJ3lCHtEJ4rPK\nYPV2xCetPqqVF5b6pGR9z4Q3aIVWxVKJRxAuarM1yZ1IfovXgyU3vIxD9QKBgQCJ\nSwHCVn/kq/L91C8XJ6AbE16Yrk4hYI0hw1xso5zehPrSsh+iOCXGOmfT3AIdP7pf\nbcoH66lEZz8ZM1BdNLuCnpjzbbB/99ch+Lo7pxmev7cey/UDwExD2wO9YBNyoObZ\n5oJEjkskYrDlI+wyxprPD30KEPfAHFXNvU9oHDt0oQKBgQDpbINwKgZQH++qQi21\n1PjUZCJ9v9x2+hDaNjxHCvcB5OxP33SOXqbUadrIQx1Kkql2MQ6NSJmtdMpJ2JPK\nsQE6IkQUkS7a/Ifv86oTpxGGGWqP+eNKk8yKEB4/7m1vRPq2WyHZBEYz9wJuGOZU\n16R3a4ltePCGDKgv8apy9/v7yg==\n-----END PRIVATE KEY-----\n",
+      projectId: "bmac-bens-dev",
+      clientEmail: "firebase-adminsdk-wmsrw@bmac-bens-dev.iam.gserviceaccount.com",
+      privateKey:  "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCrH5PVFku2URF+\nD64jx+g7jTdrW8WF0mUnXNUkLrrGUTwysb9ODW/yUj12+e0wYBRiqgCpOPWym/8c\n8zwyCrOE0xzlTq66CLFf5hZhFOA6/31Fa7Pzh9+XxrP9iqJUJFdvXk648nPHd0Ci\n2tCsd/3a38NVPNMF0JgzGAx4YaGk9j55LR735m7N9KXyv3Py4WUgwBXX94ZfYxyd\nRG6/qkcZvjuRr2fcdZmPXtiOZ6/j9vkMhRBocDnRiHBABh95L6mk08bcIq6w06nr\n0mYusutG71Wxdmd86DWbwPD01buG7X1AdDS4rKdDrZcDDTpVzbF+dqtCLKciWdKR\noBhhgw+pAgMBAAECggEABt9Op0dSZ3+NDj+dthrnsxLjqQHPYSWUZvlp0hP3hQel\n5+DJeVOy6AZ2E2FBOEOW31QAZmC5haXmv9BDvdGTc6gBUEhhyL+Y36xclXiacpAd\nuoQd6YUOnW3Z1GVlCcVIXCUA0G656DFcOjYYsjZ4Q89093yTpSIDPMO7BiTLR7Xu\nz6tzwMzvZeyEC6WN8hfJPmfcqA4AtoWa1Z7EinI++xiMG3LIvasm8/1mi17cFxLZ\nd5+LSBOVB92NsqfC7ESeybJibqykbVV6/Jd7vxA9G7J5dsu1/jHd4TmmnZw34hKQ\nK0oXW9a9OqCmM/pG289pql9hea8i7IQ/nhrA+gL7oQKBgQDv38gX2LjJk77ck+Wv\n4OBz6A9/Ir7tlZAKAiEhrdJXqzv/BUOpCKGAtHTckbj0xt7cvnmo8EOuJVOGuoCK\nLdvlFOXLSF7YdQVPicgl8Nj6eH7Fjz5uYxTsbyNy994n9GZdt2mPOXbmrGLeYmI8\naYPKWZdfqARkOI7kOf7zhSPXIQKBgQC2oJlgZ1G2Nskp62gOmi2Frea3GPOsjzDa\n6E76Y5aBtfS6KOuVSIR+SiwRtS1Tj2uFMEi7RcmK76X9aZP4jzXq/fHq4+7qcm4O\nksXw/2l+Goe2fbA5/IiXKRYZ6ZxxZD4X7Sr08AZhmGj9z9kTThE5OI5WEGnp3AZj\nVMKuQnoPiQKBgQDWagz8q985aBSCLL1yAiv/zx4TAabyze7r0010QmCztr8xTK5X\nKPzcA/I1uxg9zIonfSdYiDOnNXw9APanDSjy00Q4+l61U5zEpR9AMtJwyUZgJ5Oh\nrnVkhk+Ek+WDh2X9PVZhDPeoZ80UhZLT92kzdfPmMFSElT286c5oNMl9oQKBgC5H\nxJaJmEt01sWowlXw/FhEGZOM3zN7lgXjmSAa3KlCUyJZ/Fl4ZxsZ8NEL+NCUJ8s4\n0TWkGc77rDTr7HOw1xkWAZhk6sa++OT4jPDlyPYMAxhcAaywMm0cHF20tdCGdrXZ\nhGlN6lARL4oiggBCaFr32ho1TqHVAElr0WoXrpcBAoGBAJ3sB6AdX3xnKd/gjvUa\nQvQMvtCk5la3xnLRmxCoM2q/0k0nm70m1/8J3X39WIkjve8+o6gUGlRxOaJWulLg\nvZp1B2nsGt7D0enVhQ4JcITEe6wjjZ1vHf9GhZbostuKcoh5/Mp7rPUyWtsg61nT\nIkGKRx08s6SdcsbHyg0TaS6o\n-----END PRIVATE KEY-----\n",
     }),
     databaseURL: 'https://<BMAC-BENS-DEV>.firebaseio.com'
   });
+  */
 
 //Reference to constants for column headers.
 const keys = tableKeys['users'];
@@ -37,7 +39,10 @@ const styles = {
     container: {
         flexGrow: 1,
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        background: '#fff', 
+        padding: 24, 
+        minHeight: 280 
     }
 };
 
@@ -74,6 +79,7 @@ class Admin extends React.Component {
             okType: 'danger',
             cancelText: 'No',
             onOk() {
+                /*
                 //With the user's email look up the unique ID.
                 admin
                     .auth()
@@ -91,12 +97,12 @@ class Admin extends React.Component {
                                 console.log("Error deleting user:", error);
                             });
 
-                    })
+                    }) 
                     .catch(function (error) {
                         console.log("Error fetching user data:", error);
 
                     });
-
+*/
             },
             onCancel() {
                 console.log('Cancel');
@@ -111,30 +117,21 @@ class Admin extends React.Component {
 */
 
     showModal = () => {
-        this.setState({visiblePasswordChange: true});
-    }
-
-    handleOk = (e) => {
-        console.log(e);
-        this.setState({visiblePasswordChange: false});
-    }
-
-    handleCancel = (e) => {
-        console.log(e);
-        this.setState({visiblePasswordChange: false});
+        return;
     }
 
     render() {
         return (
+           
             <div style={styles.container}>
-                <p>
+                
                     <h1>Create Account</h1>
                     <AddUser/>
-                </p>
-                <p>
+               
+                
                     <h1>User List</h1>
 
-                </p>
+                
                 {!this.state.data
                     ? <LoadingScreen/>
                     : <ReactTable
