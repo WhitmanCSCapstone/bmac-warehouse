@@ -20,6 +20,8 @@ const styles = {
     flexGrow: 1,
     display: "flex",
     flexDirection: "column",
+    padding: 24,
+
   },
 };
 
