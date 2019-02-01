@@ -72,7 +72,7 @@ class Shipments extends React.Component {
             columns={keys.map(string => {
               if(string==='customer_id'){
                 return({
-                  Header: string,
+                  Header: "Customer",
                   accessor: string,
                   filterable: true,
                   filterAll: true,
@@ -82,7 +82,9 @@ class Shipments extends React.Component {
               }
               else{
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                 })}
             })}
