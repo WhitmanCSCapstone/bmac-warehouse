@@ -6,8 +6,7 @@ import React from 'react';
 import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import { Spin, Dropdown, Button, Icon, DatePicker, Radio, Menu } from 'antd';
-import { tableKeys,
-         reportKeys,
+import { reportKeys,
          reportType2TableName,
          reportType2DateAccessor,
          reportType2FundingSourceRelavancy,
@@ -15,9 +14,8 @@ import { tableKeys,
          radioValue2ReportType } from '../../constants/constants';
 import { populateTableData,
          getCSVdata,
-         filterDataByDate,
          cleanFundingSourcesData } from './utils';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink} from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter'
 
@@ -86,7 +84,7 @@ class Reports extends React.Component {
   createCSV = () => {
     getCSVdata(this.state.data,
                this.state.reportType,
-               (dataCSV) => {this.setState({dataCSV: dataCSV}),
+               (dataCSV) => {this.setState({dataCSV: dataCSV})
                              console.log('just updated csv data')
                });
   }
@@ -179,7 +177,7 @@ class Reports extends React.Component {
 
             <div>
               <Dropdown disabled={fundingSourceDisabled} overlay={menu}>
-                <a className="ant-dropdown-link" href="#">
+                <a className="ant-dropdown-link" href="Link">
                   <Button disabled={fundingSourceDisabled}>
                     {this.state.fundingSource
                      ? this.state.fundingSource
@@ -223,7 +221,7 @@ class Reports extends React.Component {
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
             console.log(string)
-            if(string==='customer_id' && this.state.reportType=='Inventory Shipments'){
+            if(string==='customer_id' && this.state.reportType==='Inventory Shipments'){
               return({
                 Header: "Customer",
                   accessor: string,
