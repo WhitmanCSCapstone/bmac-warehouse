@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {Form, Icon, Input, Button, Alert} from 'antd';
 import {PasswordForgetLink} from './PasswordForget';
+import {Link} from 'react-router-dom';
 import {auth} from '../firebase';
 import * as routes from '../constants/routes';
 import img from '../blues4.jpg';
@@ -39,7 +40,11 @@ const styles = {
 
     prettyBottom: {
         marginBottom: '3%'
-    }
+    },
+
+    errorBox: {
+        paddingBottom: '2%'
+    },
 };
 
 const SignInPage = ({history}) => <div>
@@ -111,8 +116,9 @@ class SignInForm extends Component {
 
         return (
             <div>
-                {error && <Alert showIcon type='error' message={error.message}></Alert>}
-
+                <div style={styles.errorBox}>
+                {error && <Alert showIcon type='error' message={"Could not log in with these credentials."}></Alert>}
+                </div>
                 <Form onSubmit={this.onSubmit}>
                 
                     <Input
@@ -144,6 +150,10 @@ class SignInForm extends Component {
     }
 }
 
+const ReturnToSignIn = () => <p>
+    <Link to={routes.SIGN_IN}>To Sign In</Link>
+</p>;
+
 export default withRouter(SignInPage);
 
-export {SignInForm};
+export {SignInForm, ReturnToSignIn};
