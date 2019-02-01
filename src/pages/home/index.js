@@ -71,10 +71,16 @@ class Home extends React.Component {
           <ReactTable
             data={this.state.shipData ? this.state.shipData : []}
             columns={shipKeys.map(string => {
+              if(string === 'customer_id')
                 return({
-                  Header: string,
-                  accessor: string,
-                })
+                  Header: "Customer",
+                  accessor: string,})
+                  else{
+                    return({
+                    Header: "Ship Date",
+                    accessor: string,
+                  })}
+                
             })}
             defaultPageSize={this.state.shipData.length}
             className="-striped -highlight"
@@ -89,7 +95,9 @@ class Home extends React.Component {
             data={this.state.receiptsData ? this.state.receiptsData : []}
             columns={receiptKeys.map(string => {
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                 })
             })}

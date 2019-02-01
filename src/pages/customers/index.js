@@ -46,7 +46,7 @@ class Customers extends React.Component {
             columns={keys.map(string => {
               if(string === 'customer_id')
                 return({
-                  Header: string,
+                  Header:"Customer",
                   accessor: string,
                   filterMethod: (filter, rows) =>
                   matchSorter(rows, filter.value, { keys: ['customer_id'] }),
@@ -57,7 +57,9 @@ class Customers extends React.Component {
                 
               else{
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                   
                 })

@@ -44,7 +44,7 @@ class Products extends React.Component {
             columns={keys.map(string => {
               if(string === 'product_id'){
                 return({
-                  Header: string,
+                  Header: "Product",
                   accessor: string,
                   filterMethod: (filter, rows) =>
                   matchSorter(rows, filter.value, { keys: ['product_id'] }),
@@ -53,7 +53,9 @@ class Products extends React.Component {
                 })}
               else{  
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                 })}
             })}

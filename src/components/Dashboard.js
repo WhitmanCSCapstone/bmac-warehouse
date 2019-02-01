@@ -71,7 +71,6 @@ const styles = {
 
 const pages = {
     home: Home,
-    about: About,
     shipments: Shipments,
     receipts: Receipts,
     products: Products,
@@ -79,7 +78,8 @@ const pages = {
     providers: Providers,
     customers: Customers,
     reports: Reports,
-    help: Help
+    about: About,
+    help: Help,   
 }
 
 class Dashboard extends React.Component {
