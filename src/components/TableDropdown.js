@@ -1,7 +1,6 @@
 import React from 'react';
 import { db } from '../firebase';
 import ReactTable from 'react-table';
-import EditableTable from 'react-table';
 
 const styles = {
   container: {
