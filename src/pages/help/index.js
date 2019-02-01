@@ -7,6 +7,7 @@ import withAuthorization from '../../components/withAuthorization';
 
 const styles = {
   container: {
+    padding: 24,
   },
 };
 

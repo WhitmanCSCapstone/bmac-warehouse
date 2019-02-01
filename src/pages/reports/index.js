@@ -28,6 +28,8 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
+    padding: 24,
+
   },
   filters: {
     display: 'flex',
