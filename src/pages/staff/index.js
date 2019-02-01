@@ -8,7 +8,6 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import {tableKeys} from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 
 const keys = tableKeys['staff'];
 
