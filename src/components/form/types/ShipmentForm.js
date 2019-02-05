@@ -1,9 +1,9 @@
 import React from 'react';
-import { db } from '../../firebase';
-import { Icon, Input, Button, DatePicker, Select, Divider, Modal } from 'antd';
-import ShipmentItems from './ShipmentItems';
-import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
-import CustomerAutoComplete from './CustomerAutoComplete';
+import { db } from '../../../firebase';
+import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import ProductItems from '../ProductItems';
+import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
+import CustomerAutoComplete from '../CustomerAutoComplete';
 
 const { TextArea } = Input;
 
@@ -49,7 +49,7 @@ const styles = {
 
 var ref = null;
 
-class Forms extends React.Component {
+class ShipmentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -225,11 +225,11 @@ class Forms extends React.Component {
 
           <Divider orientation="left">Ship Items</Divider>
 
-          <ShipmentItems
+          <ProductItems
             onChange={this.onItemsChange}
-            ship_items={this.state.ship_items}
-            addShipmentItem={this.addShipmentItem}
-            removeShipmentItem={this.removeShipmentItem}
+            items={this.state.ship_items}
+            addProductItem={this.addShipmentItem}
+            removeProductItem={this.removeShipmentItem}
           />
 
           <Divider />
@@ -263,4 +263,4 @@ class Forms extends React.Component {
   }
 }
 
-export default Forms;
+export default ShipmentForm;

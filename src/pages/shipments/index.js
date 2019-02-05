@@ -14,7 +14,7 @@ import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import { getReadableShipmentsTableData } from '../../utils/shipments';
 import matchSorter from 'match-sorter';
-import Forms from '../../components/form';
+import ShipmentForm from '../../components/form/types/ShipmentForm';
 
 const keys = tableKeys['shipments'];
 
@@ -78,7 +78,7 @@ class Shipments extends React.Component {
           Add New Shipment
         </Button>
 
-        <Forms
+        <ShipmentForm
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }

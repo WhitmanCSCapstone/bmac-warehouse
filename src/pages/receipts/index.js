@@ -6,12 +6,13 @@ import React from 'react';
 import { getReadableReceiptsTableData } from '../../utils/receipts';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
-import { DatePicker } from 'antd';
+import { Button, DatePicker } from 'antd';
 import Moment from 'moment';
 import TableDropdown from '../../components/TableDropdown';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
+import ReceiptForm from '../../components/form/types/ReceiptForm';
 
 const keys = tableKeys['receipts'];
 
@@ -34,6 +35,7 @@ class Receipts extends React.Component {
       data: null,
       filteredData: null,
       dateRange: null,
+      formModalVisible: true,
     }
   }
 
@@ -53,6 +55,10 @@ class Receipts extends React.Component {
   }
 
   componentDidMount(){
+    this.refreshTable()
+  }
+
+  refreshTable = () => {
     getReadableReceiptsTableData().then(data =>
       this.setState({ data: data.val() })
     );
@@ -66,34 +72,43 @@ class Receipts extends React.Component {
           <RangePicker onChange={this.onDateChange} />
         </div>
 
+        <Button type="primary"
+                onClick={ () => this.setState({ formModalVisible: true }) }>
+          Add New Receipt
+        </Button>
+
+        <ReceiptForm
+          formModalVisible={this.state.formModalVisible}
+          refreshTable={this.refreshTable}
+          onCancel={ () => this.setState({ formModalVisible: false }) }
+        />
+
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
             data={this.state.filteredData && this.state.dateRange.length ?
                   this.state.filteredData : this.state.data}
             columns={keys.map(string => {
-              if(string === 'provider_id'){
-                return({
-                  Header: "Provider",
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['provider_id'] }),
-                })
-              }
-              else{
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
-                  accessor: string,
-                })}
+                if(string === 'provider_id'){
+                  return({
+                    Header: string,
+                    accessor: string,
+                    filterable: true,
+                    filterAll: true,
+                    filterMethod: (filter, rows) =>
+                      matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                  })
+                }
+                else{
+                  return({
+                    Header: string,
+                    accessor: string,
+                  })}
             })}
             SubComponent={row => {
-              return <TableDropdown
-                row={row.original.receive_items}
-                index={this.state.data.indexOf(row.original)}
-              />
+                return <TableDropdown
+                         row={row.original.receive_items}
+                             index={this.state.data.indexOf(row.original)}
+                />
             }}
             defaultPageSize={10}
             className="-striped -highlight"

@@ -31,7 +31,7 @@ const styles = {
 
 };
 
-class ShipmentItems extends React.Component {
+class ProductItems extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -43,8 +43,8 @@ class ShipmentItems extends React.Component {
       <div style={styles.container}>
 
         {
-          !this.props.ship_items ? null :
-          this.props.ship_items.map((obj, index) => {
+          !this.props.items ? null :
+          this.props.items.map((obj, index) => {
             return (
               <div key={index}
                    style={styles.row}>
@@ -80,13 +80,13 @@ class ShipmentItems extends React.Component {
                   />
                 </div>
 
-                {this.props.ship_items.length > 1 ? (
+                {this.props.items.length > 1 ? (
                    <Icon
                      className="dynamic-delete-button"
                      style={styles.icon}
                      type="minus-circle-o"
-                     disabled={this.props.ship_items.length === 1}
-                     onClick={ () => this.props.removeShipmentItem(index) }
+                     disabled={this.props.items.length === 1}
+                     onClick={ () => this.props.removeProductItem(index) }
                    />
                 ) : null}
 
@@ -96,7 +96,7 @@ class ShipmentItems extends React.Component {
         }
 
         <div style={styles.formItem}>
-          <Button type="dashed" onClick={this.props.addShipmentItem}>
+          <Button type="dashed" onClick={this.props.addProductItem}>
             <Icon type="plus" /> Add fields
           </Button>
         </div>
@@ -107,4 +107,4 @@ class ShipmentItems extends React.Component {
 }
 
 
-export default ShipmentItems;
+export default ProductItems;
