@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
-import { Form, Icon, Input, Button, Modal } from 'antd';
+import { Button } from 'antd';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';

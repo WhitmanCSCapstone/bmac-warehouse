@@ -162,7 +162,7 @@ class ShipmentForm extends React.Component {
   }
 
   removeShipmentItem = (removeIndex) => {
-    var itemsCopy = this.state.ship_items.filter( (obj, objIndex) => objIndex != removeIndex )
+    var itemsCopy = this.state.ship_items.filter( (obj, objIndex) => objIndex !== removeIndex )
     this.setState({ ship_items: itemsCopy });
   }
 

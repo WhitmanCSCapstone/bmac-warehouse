@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { db } from '../firebase';
-import { Dropdown, Button, Icon, Menu, Select } from 'antd';
+import { Select } from 'antd';
 
 const Option = Select.Option;
 

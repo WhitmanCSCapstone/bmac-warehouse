@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
-import { Spin, Dropdown, Button, Icon, DatePicker, Radio, Menu } from 'antd';
+import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
 import { reportKeys,
          reportType2TableName,
          reportType2DateAccessor,
@@ -13,8 +12,7 @@ import { reportKeys,
          reportType2DateRangeRelavancy,
          radioValue2ReportType } from '../../constants/constants';
 import { populateTableData,
-         getCSVdata,
-         cleanFundingSourcesData } from './utils';
+         getCSVdata } from './utils';
 import { CSVLink} from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter'

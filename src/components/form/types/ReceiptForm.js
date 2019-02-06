@@ -7,8 +7,6 @@ import ProviderAutoComplete from '../ProviderAutoComplete';
 
 const { TextArea } = Input;
 
-const Option = Select.Option;
-
 const styles = {
   form: {
     display: 'flex',
