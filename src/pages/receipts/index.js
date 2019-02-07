@@ -35,7 +35,7 @@ class Receipts extends React.Component {
       data: null,
       filteredData: null,
       dateRange: null,
-      formModalVisible: true,
+      formModalVisible: false,
     }
   }
 
