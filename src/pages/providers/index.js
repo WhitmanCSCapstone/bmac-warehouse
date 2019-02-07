@@ -9,6 +9,9 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
+import ProviderForm from '../../components/form/types/ProviderForm';
+import { Button, DatePicker } from 'antd';
+
 
 const keys = tableKeys['providers'];
 
@@ -27,6 +30,9 @@ class Providers extends React.Component {
     super(props);
     this.state = {
       data: null,
+      filteredData: null,
+      dateRange: null,
+      formModalVisible: false,
     }
   }
 
@@ -41,6 +47,17 @@ class Providers extends React.Component {
   render() {
     return(
       <div style={styles.container}>
+
+        <Button type="primary"
+                onClick={ () => this.setState({ formModalVisible: true }) }>
+          Add New Provider
+        </Button>
+
+        <ProviderForm
+          formModalVisible={this.state.formModalVisible}
+          refreshTable={this.refreshTable}
+          onCancel={ () => this.setState({ formModalVisible: false }) }
+        />
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
             data={this.state.data ? this.state.data : []}
