@@ -15,7 +15,6 @@ const styles = {
         overflow: 'hidden'
     },
 
-    sameLine: {}
 };
 
 class ProviderInfo extends React.Component {

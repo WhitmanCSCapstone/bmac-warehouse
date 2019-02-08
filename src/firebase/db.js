@@ -8,6 +8,8 @@ export const doCreateUser = (id, username, email) =>
         email,
     });
 
+ //Database API   
+
 export const onceGetUsers = () =>
     db.ref('users').once('value');
 
@@ -43,3 +45,6 @@ export const pushShipmentObj = (newData) =>
 
 export const pushReceiptObj = (newData) =>
   db.ref(`6/contributions/`).push(newData);
+
+export const pushProviderObj = (newData) =>
+    db.ref('3/providers/').push(newData);
