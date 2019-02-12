@@ -152,6 +152,7 @@ class Reports extends React.Component {
 
           {
             <RangePicker onChange={this.onDateChange}
+                         format={'MM/DD/YYYY'}
                          value={this.state.dateRange}
                          disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
             />

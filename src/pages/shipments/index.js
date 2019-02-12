@@ -69,7 +69,10 @@ class Shipments extends React.Component {
       <div style={styles.container}>
 
         <div>
-          <RangePicker onChange={this.onDateChange} />
+          <RangePicker
+            onChange={this.onDateChange}
+            format={'MM/DD/YYYY'}
+          />
         </div>
 
         <Button type="primary"
