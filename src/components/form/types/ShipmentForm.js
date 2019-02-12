@@ -188,7 +188,7 @@ class ShipmentForm extends React.Component {
             <div style={styles.formItem}>
               Date:
               <DatePicker style={styles.datePicker}
-                          onChange={ (date) => this.onChange('ship_date', date.format('YY-MM-DD:HH:mm')) }
+                          onChange={ (date) => this.onChange('ship_date', date.format('MM/DD/YYYY')) }
                           placeholder="Ship Date" />
             </div>
 
