@@ -4,6 +4,7 @@ import { Input, DatePicker, Select, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import CustomerAutoComplete from '../CustomerAutoComplete';
+import Moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -69,6 +70,10 @@ class ShipmentForm extends React.Component {
     super(props);
     this.state = this.defaultState
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({ ...this.props.rowData });
     }
   }
 
@@ -183,12 +188,16 @@ class ShipmentForm extends React.Component {
               <DatePicker style={styles.datePicker}
                           onChange={ (date) => this.onChange('ship_date', date.format('MM/DD/YYYY')) }
                           format={'MM/DD/YYYY'}
+                          defaultValue={this.props.rowData ? Moment(this.props.rowData.ship_date) : undefined}
                           placeholder="Ship Date" />
             </div>
 
             <div style={styles.formItem}>
               Customer:
-              <CustomerAutoComplete onCustomerChange={ (val) => this.onCustomerChange(val) }/>
+              <CustomerAutoComplete
+                onCustomerChange={ (val) => this.onCustomerChange(val) }
+                rowData={this.props.rowData}
+              />
             </div>
 
             <div style={styles.formItem}>
@@ -200,6 +209,7 @@ class ShipmentForm extends React.Component {
                 onClick={this.onClickFundingSource}
                 clearFundingSource={this.clearFundingSource}
                 required={true}
+                rowData={this.props.rowData}
               />
             </div>
 
@@ -207,6 +217,7 @@ class ShipmentForm extends React.Component {
             <div style={styles.shipViaContainer}>
               Ship Via:
               <Select placeholder="Ship Via"
+                      defaultValue={this.props.rowData ? this.props.rowData.ship_via : undefined }
                       onChange={this.onShipViaChange}>
                 <Option value="BMAC">BMAC</Option>
                 <Option value="Customer">Customer</Option>
@@ -233,12 +244,14 @@ class ShipmentForm extends React.Component {
             <div style={styles.formItem}>
               <Input
                 placeholder="Rate"
+                defaultValue={this.props.rowData ? this.props.rowData.ship_rate : undefined }
                 onChange={ (e) => this.onRateChange(e.target.value) }/>
             </div>
 
             <div style={styles.formItem}>
               <Input
                 placeholder="Billed Amount"
+                defaultValue={this.props.rowData ? this.props.rowData.total_price : undefined }
                 onChange={ (e) => this.onBilledAmtChange(e.target.value) } />
             </div>
 
@@ -246,6 +259,7 @@ class ShipmentForm extends React.Component {
 
           <TextArea
             rows={4}
+            defaultValue={this.props.rowData ? this.props.rowData.notes : undefined }
             placeholder="Notes"
             onChange={ (e) => this.onNotesChange(e.target.value) }
           />

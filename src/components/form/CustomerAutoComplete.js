@@ -52,6 +52,7 @@ class CustomerAutoComplete extends React.Component {
     return(
       <AutoComplete
         dataSource={this.state.names}
+        defaultValue={this.props.rowData ? this.props.rowData.customer_id : undefined }
         style={styles.container}
         onChange={ this.onChange }
         placeholder="Customer"
