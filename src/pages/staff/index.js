@@ -1,7 +1,3 @@
-/**
- *  A component
- */
-
 import React from 'react';
 import {db} from '../../firebase';
 import ReactTable from 'react-table';
@@ -24,17 +20,18 @@ class Staff extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null
+            data: null,
+            formModalVisible: false,
         }
     }
 
-  componentDidMount() {
-    db
-      .onceGetStaff()
-      .then(snapshot => this.setState({
-        data: Object.values(snapshot.val())
-      }));
-  }
+    componentDidMount() {
+        db
+            .onceGetStaff()
+            .then(snapshot => this.setState({
+                data: Object.values(snapshot.val())
+            }));
+    }
 
     render() {
         return (

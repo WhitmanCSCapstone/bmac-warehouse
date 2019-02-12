@@ -43,15 +43,15 @@ class ProviderForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            provider_name: null,
+            provider_id: null,
             address: null,
             city: null,
-            us_state: null,
+            state: null,
             zip: null,
             county: null,
-            contact_phone: null,
-            contact_name: null,
-            contact_email: null
+            phone: null,
+            contact: null,
+            email: null
         }
     }
 
