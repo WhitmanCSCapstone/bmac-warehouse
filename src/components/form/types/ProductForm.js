@@ -80,9 +80,13 @@ class ProductForm extends React.Component {
         this.setState({minimum_stock: value})
     }
     onDateChange = (value) => {
+<<<<<<< HEAD
         if (value!=null){
             this.setState({initial_date: value.format('M/D/Y')})
         } 
+=======
+        this.setState({initial_date: value})
+>>>>>>> checkpoint for product form. still need to fix date. also fixed constants to display values in providers table
     }
     onStatusChange = (value) => {
         this.setState({status: value})
