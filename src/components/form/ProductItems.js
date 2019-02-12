@@ -41,14 +41,19 @@ class ProductItems extends React.Component {
   render() {
     return(
       <div style={styles.container}>
-
+      <div style={{display: 'inline-block', width: '50%'}}>Product</div>
+      <div style={{display: 'inline-block', width: '17%'}}>Unit Weight</div>
+      <div style={{display: 'inline-block', width: '15%'}}>Case Lots</div>
+      <div style={{display: 'inline-block', width: '18%'}}>Total Weight</div>
         {
           !this.props.items ? null :
           this.props.items.map((obj, index) => {
             return (
               <div key={index}
                    style={styles.row}>
+
                 <div style={styles.productItem}>
+                
                   <ProductAutoComplete
                     onChange={this.props.onChange}
                     value={obj['product']}
