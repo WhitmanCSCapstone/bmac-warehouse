@@ -165,6 +165,7 @@ class ReceiptForm extends React.Component {
             <div style={styles.formItem}>
               Date:
               <DatePicker style={styles.datePicker}
+                          format={'MM/DD/YYYY'}
                           onChange={ (date) => this.onChange('recieve_date', date.format('MM/DD/YYYY')) }
                           placeholder="Receive Date" />
             </div>
