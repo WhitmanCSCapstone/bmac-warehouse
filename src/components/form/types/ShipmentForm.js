@@ -50,20 +50,25 @@ const styles = {
 var ref = null;
 
 class ShipmentForm extends React.Component {
+
+  defaultState = {
+    customer_id: null,
+    funds_source: null,
+    invoice_date: 'null',
+    invoice_no: 'null',
+    notes: null,
+    ship_date: null,
+    ship_items: [{},{},{},{},{}],
+    ship_rate: null,
+    ship_via: null,
+    total_price: null,
+    total_weight: null,
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      customer_id: null,
-      funds_source: null,
-      invoice_date: 'null',
-      invoice_no: 'null',
-      notes: null,
-      ship_date: null,
-      ship_items: [{},{},{},{},{}],
-      ship_rate: null,
-      ship_via: null,
-      total_price: null,
-      total_weight: null,
+    this.state = this.defaultState
+  }
     }
   }
 
@@ -141,19 +146,7 @@ class ShipmentForm extends React.Component {
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
 
-    this.setState({
-      customer_id: null,
-      funds_source: null,
-      invoice_date: 'null',
-      invoice_no: 'null',
-      notes: null,
-      ship_date: null,
-      ship_items: [{},{},{},{},{}],
-      ship_rate: null,
-      ship_via: null,
-      total_price: null,
-      total_weight: null,
-    });
+    this.setState({ ...this.defaultState });
 
   }
 
