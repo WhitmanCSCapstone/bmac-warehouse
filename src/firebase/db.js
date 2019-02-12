@@ -48,3 +48,6 @@ export const pushReceiptObj = (newData) =>
 
 export const pushProviderObj = (newData) =>
     db.ref('3/providers/').push(newData);
+
+export const pushProductObj = (newData)=> 
+    db.ref('5/products').push(newData);
