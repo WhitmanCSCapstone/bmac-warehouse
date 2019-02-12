@@ -56,17 +56,17 @@ export const tableKeys = {
   ],
 
   providers: [
-    "provider_name",
+    "provider_id",
     //"code",
     //"type",
     "address",
     //"city",
-    //"us_state",
+    //"state",
     //"zip",
     //"county",
-    //"contact_name",
-    "contact_phone",
-    //"contact_email",
+    //"contact",
+    "phone",
+    //"email",
     //"status",
     //"notes"
   ],
