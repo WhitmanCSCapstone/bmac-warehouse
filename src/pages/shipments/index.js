@@ -36,6 +36,7 @@ class Shipments extends React.Component {
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
+      rowData: null,
     }
   }
 
@@ -76,7 +77,10 @@ class Shipments extends React.Component {
         </div>
 
         <Button type="primary"
-                onClick={ () => this.setState({ formModalVisible: true }) }>
+                onClick={ () => this.setState({
+                    formModalVisible: true,
+                    rowData: null
+                }) }>
           Add New Shipment
         </Button>
 
@@ -84,28 +88,35 @@ class Shipments extends React.Component {
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
+          rowData={ this.state.rowData }
         />
 
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
+            getTrProps={(state, rowInfo) => ({
+                onClick: () => this.setState({
+                  rowData: rowInfo.original,
+                  formModalVisible: true,
+                })
+            })}
             data={this.state.filteredData && this.state.dateRange.length ?
                   this.state.filteredData : this.state.data}
             columns={keys.map(string => {
-              if(string==='customer_id'){
-                return({
-                  Header: string,
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
-                })
-              }
-              else{
-                return({
-                  Header: string,
-                  accessor: string,
-                })}
+                if(string==='customer_id'){
+                  return({
+                    Header: string,
+                    accessor: string,
+                    filterable: true,
+                    filterAll: true,
+                    filterMethod: (filter, rows) =>
+                      matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                  })
+                }
+                else{
+                  return({
+                    Header: string,
+                    accessor: string,
+                  })}
             })}
             SubComponent={row => {
                 return <TableDropdown

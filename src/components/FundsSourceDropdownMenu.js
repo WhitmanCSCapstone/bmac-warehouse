@@ -46,6 +46,7 @@ class FundsSourceDropdownMenu extends React.Component {
       <Select onChange={(value) => this.props.onClick(value)}
               disabled={this.props.disabled}
               style={styles.select}
+              defaultValue={this.props.rowData ? this.props.rowData.funds_source : undefined }
               placeholder='Funding Source'>
         {this.state.fundingSources.map((name) => {
            return(
