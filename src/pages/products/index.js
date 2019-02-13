@@ -13,7 +13,6 @@ import ProductForm from '../../components/form/types/ProductForm';
 import {Button} from 'antd';
 
 
-
 const keys = tableKeys['products'];
 
 const styles = {
@@ -40,13 +39,7 @@ class Products extends React.Component {
 
   refreshTable = () => {
     db.onceGetProducts().then(snapshot =>
-      this.setState({ data: Object.values(snapshot.val()) }));
-      this.refreshTable();
-  }
-
-  refreshTable = () => {
-    getProductsTableData().then(data =>
-      this.setState({ data: data.val() })
+      this.setState({ data: Object.values(snapshot.val()) })
     );
   }
 
