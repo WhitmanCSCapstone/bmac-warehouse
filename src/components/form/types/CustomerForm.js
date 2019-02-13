@@ -132,7 +132,7 @@ class CustomerForm extends React.Component {
                 onCancel={this.props.onCancel}>
 
                 <div style={styles.form}>
-
+                <div style={styles.topThird}>
                     <div style={styles.formItem}>
                         Customer Name:
                         <Input
@@ -142,7 +142,7 @@ class CustomerForm extends React.Component {
                     </div>
 
                     <Divider orientation="left">Customer Information</Divider>
-                    <div style={styles.topThird}>
+                   
                         <div style={styles.formItem}>
                             Address:
                             <Input
@@ -185,7 +185,7 @@ class CustomerForm extends React.Component {
                                 onChange={(e) => this.onEmailChange(e.target.value)}/>
                         </div>
                     </div>
-                    <Divider orientation="left">Status</Divider>
+                    <Divider/>
                     Status:
                     <Select
                         placeholder="Status"
