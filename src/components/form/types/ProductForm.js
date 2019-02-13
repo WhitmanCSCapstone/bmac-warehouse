@@ -80,7 +80,9 @@ class ProductForm extends React.Component {
         this.setState({minimum_stock: value})
     }
     onDateChange = (value) => {
-        this.setState({initial_date: value})
+        if (value!=null){
+            this.setState({initial_date: value.format('M/D/Y')})
+        } 
     }
     onStatusChange = (value) => {
         this.setState({status: value})
@@ -181,8 +183,10 @@ class ProductForm extends React.Component {
                             Initial Date:
                             <DatePicker
                                 style={styles.datePicker}
-                                onChange={(date) => this.onChange('initial_date', date.format('YY-MM-DD:HH:mm'))}
-                                placeholder="Initial Date"/>
+                                onChange={(date) => this.onDateChange(date)}
+                                placeholder="Initial Date"
+                                allowClear={false}/>
+                                
                         </div>
                         <div style={styles.formItem}>
                             Minimum Stock:
