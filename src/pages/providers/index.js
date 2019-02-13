@@ -10,8 +10,7 @@ import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ProviderForm from '../../components/form/types/ProviderForm';
-import { Button, DatePicker } from 'antd';
-import {getProvidersTableData} from '../../utils/providers.js';
+import { Button } from 'antd';
 
 
 const keys = tableKeys['providers'];
@@ -40,15 +39,15 @@ class Providers extends React.Component {
   componentDidMount(){
       this.refreshTable()
     };
-  
+
+    refreshTable = () => {
+      db.onceGetProviders().then(snapshot =>
+        this.setState({ data: Object.values(snapshot.val()) })
+      );
+    }
 
   
-  refreshTable = () => {
-    getProvidersTableData().then(data =>
-      this.setState({ data: data.val() })
-    );
-  }
-
+  
   render() {
     return(
       <div style={styles.container}>

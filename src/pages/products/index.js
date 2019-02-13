@@ -11,7 +11,6 @@ import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ProductForm from '../../components/form/types/ProductForm';
 import {Button} from 'antd';
-import {getProductsTableData} from '../../utils/product';
 
 
 const keys = tableKeys['products'];
@@ -39,8 +38,8 @@ class Products extends React.Component {
   }
 
   refreshTable = () => {
-    getProductsTableData().then(data =>
-      this.setState({ data: data.val() })
+    db.onceGetProducts().then(snapshot =>
+      this.setState({ data: Object.values(snapshot.val()) })
     );
   }
 

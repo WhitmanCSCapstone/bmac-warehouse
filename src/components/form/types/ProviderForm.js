@@ -61,7 +61,7 @@ class ProviderForm extends React.Component {
         this.setState({zip: value})
     }
     onNameChange = (value) => {
-        this.setState({provider_name: value})
+        this.setState({provider_id: value})
     }
     onAddressChange = (value) => {
         this.setState({address: value})
@@ -70,19 +70,19 @@ class ProviderForm extends React.Component {
         this.setState({city: value})
     }
     onStateChange = (value) => {
-        this.setState({us_state: value})
+        this.setState({state: value})
     }
     onCountyChange = (value) => {
         this.setState({county: value})
     }
     onContactPhoneChange = (value) => {
-        this.setState({contact_phone: value})
+        this.setState({phone: value})
     }
     onContactNameChange = (value) => {
-        this.setState({contact_name: value})
+        this.setState({name: value})
     }
     onContactEmailChange = (value) => {
-        this.setState({contact_email: value})
+        this.setState({email: value})
     }
     onClickFundingSource = (value) => {
         this.setState({payment_source: value});
@@ -91,7 +91,7 @@ class ProviderForm extends React.Component {
         this.setState({payment_source: null});
     }
     onProviderNameChange = (value) => {
-        this.setState({provider_name: value})
+        this.setState({provider_id: value})
     }
     onNameChange = (value) => {
         this.setState({name: value})
@@ -117,15 +117,15 @@ class ProviderForm extends React.Component {
         this.props.refreshTable();
 
         this.setState({
-            provider_name: null,
+            provider_id: null,
             address: null,
             city: null,
-            us_state: null,
+            state: null,
             zip: null,
             county: null,
-            contact_phone: null,
-            contact_name: null,
-            contact_email: null
+            phone: null,
+            contact: null,
+            email: null
         }); 
     }
 
