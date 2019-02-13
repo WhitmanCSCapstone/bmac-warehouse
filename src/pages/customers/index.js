@@ -9,6 +9,8 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
+import {Button} from 'antd';
+import CustomerForm from '../../components/form/types/CustomerForm';
 
 
 const keys = tableKeys['customers'];
@@ -27,21 +29,34 @@ class Customers extends React.Component {
     super(props);
     this.state = {
       data: null,
+      formModalVisible:false,
     }
   }
 
-  componentDidMount(){
-    db.onceGetCustomers().then(snapshot => {
-      var data = snapshot.val();
-      data = Object.values(data);
-      this.setState({ data: data })
-    });
-  }
+ 
+componentDidMount(){
+    this.refreshTable();
+}
+
+refreshTable = () => {
+  db.onceGetCustomers().then(snapshot =>
+    this.setState({ data: Object.values(snapshot.val()) })
+  );
+}
 
 
   render() {
     return(
       <div style={styles.container}>
+      <Button type="primary"
+                onClick={ () => this.setState({ formModalVisible: true }) }>
+          Add New Customer
+        </Button>
+        <CustomerForm
+          formModalVisible={this.state.formModalVisible}
+          refreshTable={this.refreshTable}
+          onCancel={ () => this.setState({ formModalVisible: false }) }
+        />
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
             data={this.state.data ? this.state.data : []}
