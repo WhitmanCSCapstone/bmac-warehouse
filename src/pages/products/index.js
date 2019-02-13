@@ -35,8 +35,6 @@ class Products extends React.Component {
   }
 
   componentDidMount(){
-    db.onceGetProducts().then(snapshot =>
-      this.setState({ data: Object.values(snapshot.val()) }));
       this.refreshTable();
   }
 

@@ -38,13 +38,9 @@ class Providers extends React.Component {
   }
 
   componentDidMount(){
-    db.onceGetProviders().then(snapshot => {
-      var data = snapshot.val();
-      data = Object.values(data);
-      this.setState({ data: data })
       this.refreshTable()
-    });
-  }
+    };
+  
 
   
   refreshTable = () => {
