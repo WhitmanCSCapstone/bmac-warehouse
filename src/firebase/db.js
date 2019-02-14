@@ -54,4 +54,7 @@ export const pushProductObj = (newData)=>
 
 export const pushCustomerObj = (newData)=> 
     db.ref('1/customers').push(newData);
+
+export const pushStaffObj = (newData) =>
+    db.ref('users').push(newData);
     

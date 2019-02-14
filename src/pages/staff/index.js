@@ -4,6 +4,8 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import {tableKeys} from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
+import {Button} from 'antd';
+import StaffForm from '../../components/form/types/StaffForm';
 
 const keys = tableKeys['staff'];
 
@@ -36,6 +38,15 @@ class Staff extends React.Component {
     render() {
         return (
             <div style={styles.container}>
+             <Button type="primary"
+                onClick={ () => this.setState({ formModalVisible: true }) }>
+                Add New User
+                </Button>
+                <StaffForm
+                formModalVisible={this.state.formModalVisible}
+                refreshTable={this.refreshTable}
+                onCancel={ () => this.setState({ formModalVisible: false }) }/>
+                
                 {!this.state.data
                     ? <LoadingScreen/>
                     : <ReactTable
