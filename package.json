@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.9.3",
     "firebase": "^5.5.0",
+    "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.5.3",
     "match-sorter": "^2.3.0",
     "moment": "^2.22.2",
