@@ -1,6 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Button, Input, DatePicker, Select, Divider, Modal } from 'antd';
+import * as jspdf from 'jspdf';
+import { Input, DatePicker, Select, Divider, Modal, Button } from 'antd';
 import ProductItems from '../ProductItems';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import CustomerAutoComplete from '../CustomerAutoComplete';
@@ -9,6 +10,8 @@ import Moment from 'moment';
 const { TextArea } = Input;
 
 const Option = Select.Option;
+
+const pdf = new jspdf();
 
 const styles = {
   form: {
@@ -146,6 +149,17 @@ class ShipmentForm extends React.Component {
 
   }
 
+  handlePdf = () => {
+    console.log("Test");
+    // @param 1 - Coordinate (in units declared at inception of PDF document) against left edge of the page
+    // @param 2 - Coordinate (in units declared at inception of PDF document) against upper edge of the page
+    // @param 3 - String or array of strings to be added to the page. Each line is shifted one line down per font, spacing settings declared before this call.
+    pdf.text(10, 10, `Sample PDF`);
+    // save the PDF document (downloadable)
+    pdf.save();
+
+  }
+
   addShipmentItem = () => {
     var emptyRow = {
       'product': undefined,
@@ -186,6 +200,7 @@ class ShipmentForm extends React.Component {
         visible={this.props.formModalVisible}
         onCancel={this.props.onCancel}
         footer={[
+          <Button key="savepdf" type="primary" onClick={this.handlePdf}>Save Invoice</Button>,
           <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
           <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
           <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
