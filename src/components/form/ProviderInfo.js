@@ -1,21 +1,24 @@
 import React from 'react';
 import {Icon, Input, Button} from 'antd';
 
+
+//Styles
 const styles = {
-    container: {
+
+
+    form: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        alignContent: 'center'
+        justifyContent: 'center'
     },
 
     formItem: {
-        margin: '0em 0.5em 0.5em 0em',
-        overflow: 'hidden'
+        width: '45%',
+        margin: '0px 1em 1em 1em'
     },
-
 };
+
 
 class ProviderInfo extends React.Component {
     constructor(props) {
@@ -27,7 +30,7 @@ class ProviderInfo extends React.Component {
 
     render() {
         return (
-            <div style={styles.container}>
+            <div style={styles.form}>
 
                 <div style={styles.formItem}>
                     Address:

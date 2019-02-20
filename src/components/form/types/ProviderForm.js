@@ -146,14 +146,12 @@ class ProviderForm extends React.Component {
                 onCancel={this.props.onCancel}>
 
                 <div style={styles.form}>
-                    <div style={styles.topThird}>
                         <div style={styles.formItem}>
                             Provider Name:
                             <Input
                                 placeholder="Provider Name"
                                 onChange={(e) => this.onProviderNameChange(e.target.value)}/>
                         </div>
-                    </div>
 
                     <Divider orientation="left">Contact Information</Divider>
                     <ProviderInfo
@@ -167,7 +165,9 @@ class ProviderForm extends React.Component {
                         onContactPhoneChange={this.onContactPhoneChange}/> 
 
                     <Divider/>
-                    Status:
+                    
+                    <div style={styles.formItem}>
+                    Status:<br/>
                     <Select
                         placeholder="Status"
                         style={{
@@ -177,17 +177,13 @@ class ProviderForm extends React.Component {
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
                     </Select>
-
-                    <div style={styles.bottomThird}>
-
-                        <div style={styles.formItem}></div>
-
                     </div>
-
+                    <div style={styles.formItem}>
                     <TextArea
                         rows={4}
                         placeholder="Notes"
                         onChange={(e) => this.onNotesChange(e.target.value)}/>
+                        </div>
 
                 </div>
 
