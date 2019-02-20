@@ -43,7 +43,7 @@ class Receipts extends React.Component {
     var newData = []
     for (var i = 0; i < this.state.data.length; i++){
       var entry = this.state.data[i]
-      var entryDate = Moment(entry['recieve_date'], 'YY-MM-DD:HH:mm')
+      var entryDate = Moment(entry['recieve_date'], 'MM/DD/YYYY')
       if(entryDate >= dateRange[0] && entryDate <= dateRange[1]){
         newData.push(entry)
       }
