@@ -163,7 +163,7 @@ export function filterDataByDate (data, dateRange, accessor) {
   var newData = [];
   for (var i = 0; i < data.length; i++){
     var entry = data[i];
-    var entryDate = Moment(entry[accessor], 'YY-MM-DD:HH:mm');
+    var entryDate = Moment(entry[accessor], 'MM/DD/YYYY');
     if(entryDate >= dateRange[0] && entryDate <= dateRange[1]){
       newData.push(entry);
     }
