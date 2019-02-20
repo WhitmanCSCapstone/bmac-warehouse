@@ -16,6 +16,11 @@ export const tableKeys = {
     //"notes"
   ],
 
+  users: [
+    "username",
+    "email",
+  ],
+
   customers: [
     "customer_id",
     //"code",

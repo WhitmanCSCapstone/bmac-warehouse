@@ -1,6 +1,6 @@
 import React from 'react';
 import {db} from '../../../firebase';
-import {Input, Select, Divider, Modal, DatePicker} from 'antd';
+import {Input, Select, Divider, Modal} from 'antd';
 
 //This is for the notes section.
 const {TextArea} = Input;
