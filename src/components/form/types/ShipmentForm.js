@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import { Button, Input, DatePicker, Select, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import CustomerAutoComplete from '../CustomerAutoComplete';
@@ -168,6 +168,12 @@ class ShipmentForm extends React.Component {
     this.setState({ ship_items: itemsCopy });
   }
 
+  handleDelete = () => {
+    db.deleteShipmentObj(this.props.rowData.uniq_id);
+    this.props.onCancel()
+    this.props.refreshTable();
+  }
+
   render() {
 
     return (
@@ -178,9 +184,12 @@ class ShipmentForm extends React.Component {
         width={'50vw'}
         destroyOnClose={true}
         visible={this.props.formModalVisible}
-        okText='Submit'
-        onOk={this.handleOk}
         onCancel={this.props.onCancel}
+        footer={[
+          <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
+          <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
+          <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
+        ]}
       >
 
         <div style={styles.form}>

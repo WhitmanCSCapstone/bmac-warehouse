@@ -38,6 +38,10 @@ export const setShipmentObj = (index, newData) => {
     db.ref(`2/shipments/${index}`).set(newData);
 }
 
+export const deleteShipmentObj = (index) => {
+    db.ref(`2/shipments/${index}`).remove();
+}
+
 export const setReceiptsObj = (index, newData) =>
     db.ref(`6/contributions/${index}/receive_items`).set(newData);
 
