@@ -57,7 +57,6 @@ class Products extends React.Component {
           onCancel={ () => this.setState({ formModalVisible: false }) }
         />
 
-        {console.log(this.state.data)}
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
             data={this.state.data ? this.state.data : []}
