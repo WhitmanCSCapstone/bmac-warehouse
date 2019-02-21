@@ -53,7 +53,7 @@ class ProductItems extends React.Component {
                    style={styles.row}>
 
                 <div style={styles.productItem}>
-                
+                  {index==0 ? "Product" : "     "}
                   <ProductAutoComplete
                     onChange={this.props.onChange}
                     value={obj['product']}
@@ -62,6 +62,7 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
+                  {index==0 ? "Unit Weight" : "     "}
                   <Input
                     placeholder="Unit Weight"
                     value={obj['unit_weight']}
@@ -70,6 +71,7 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
+                  {index==0 ? "Case Lots" : "     "}
                   <Input
                     placeholder="Case Lots"
                     value={obj['case_lots']}
@@ -78,6 +80,7 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
+                  {index==0 ? "Total Weight" : "     "}
                   <Input
                     placeholder="Total Weight"
                     value={obj['total_weight']}
