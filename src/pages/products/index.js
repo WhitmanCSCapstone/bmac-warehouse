@@ -56,6 +56,8 @@ class Products extends React.Component {
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
         />
+
+        {console.log(this.state.data)}
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
             data={this.state.data ? this.state.data : []}
@@ -69,6 +71,14 @@ class Products extends React.Component {
                   filterAll: true,
                   filterable:true,
                 })}
+
+              else if(string === 'unit_weight'){
+                return({
+                  Header: "Unit Weight",
+                  id: string,
+                  accessor: d => isNaN(Number(d.unit_weight)) ? 0 : Number(d.unit_weight),
+                })}
+
               else{
                 return({
                   Header: string.replace('_',' ').split(' ')
