@@ -8,7 +8,7 @@ export const doCreateUser = (id, username, email) =>
         email,
     });
 
- //Database API   
+ //Database API
 
 export const onceGetUsers = () =>
     db.ref('users').once('value');
@@ -34,14 +34,22 @@ export const onceGetStaff = () =>
 export const onceGetFundingSources = () =>
     db.ref('4/fundingsources').once('value');
 
-export const setShipmentObj = (index, newData) =>
-    db.ref(`2/shipments/${index}/ship_items`).set(newData);
+export const setShipmentObj = (index, newData) => {
+    db.ref(`2/shipments/${index}`).set(newData);
+}
 
 export const setReceiptsObj = (index, newData) =>
     db.ref(`6/contributions/${index}/receive_items`).set(newData);
 
-export const pushShipmentObj = (newData) =>
-    db.ref(`2/shipments/`).push(newData);
+export const pushShipmentObj = (newData) => {
+    db.ref('2/shipments')
+      .push(newData)
+      .then((snapshot) => {
+        const uniq_id = snapshot.key;
+        newData['uniq_id'] = uniq_id;
+        db.ref(`2/shipments/${uniq_id}`).set(newData);
+      })
+}
 
 export const pushReceiptObj = (newData) =>
   db.ref(`6/contributions/`).push(newData);

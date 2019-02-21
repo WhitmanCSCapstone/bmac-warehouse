@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { db } from '../../firebase';
 import { Button } from 'antd';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
@@ -37,6 +38,7 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
+      customers: null,
     }
   }
 
@@ -57,12 +59,25 @@ class Shipments extends React.Component {
 
   componentDidMount(){
     this.refreshTable()
+
+    db.onceGetCustomers().then(snapshot => {
+      var data = snapshot.val();
+      this.setState({ customers: data });
+    })
+  }
+
+  readableCustomerCell = (rowData) => {
+    var hash = rowData.original['customer_id'];
+    var obj = this.state.customers[hash];
+    var name = obj ? obj['customer_id'] : 'INVALID CUSTOMER_ID';
+    return <span>{name}</span>
   }
 
   refreshTable = () => {
-    getReadableShipmentsTableData().then(data =>
-      this.setState({ data: data.val() })
-    );
+    db.onceGetShipments().then(snapshot => {
+      var data = Object.values(snapshot.val());
+      this.setState({ data: data });
+    });
   }
 
   render() {
@@ -79,7 +94,7 @@ class Shipments extends React.Component {
         <Button type="primary"
                 onClick={ () => this.setState({
                     formModalVisible: true,
-                    rowData: null
+                    rowData: null,
                 }) }>
           Add New Shipment
         </Button>
@@ -91,7 +106,7 @@ class Shipments extends React.Component {
           rowData={ this.state.rowData }
         />
 
-        { !this.state.data ? <LoadingScreen/> :
+        { !this.state.data || !this.state.customers ? <LoadingScreen/> :
           <ReactTable
             getTrProps={(state, rowInfo) => ({
                 onClick: () => this.setState({
@@ -106,6 +121,7 @@ class Shipments extends React.Component {
                   return({
                     Header: string,
                     accessor: string,
+                    Cell: this.readableCustomerCell,
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>

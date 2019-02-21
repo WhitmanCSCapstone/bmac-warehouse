@@ -57,37 +57,31 @@ class ShipmentForm extends React.Component {
     funds_source: null,
     invoice_date: 'null',
     invoice_no: 'null',
-    notes: null,
+    notes: undefined,
     ship_date: null,
     ship_items: [{},{},{},{},{}],
-    ship_rate: null,
-    ship_via: null,
-    total_price: null,
+    ship_rate: undefined,
+    ship_via: undefined,
+    total_price: undefined,
     total_weight: null,
+    uniq_id: null,
   };
 
   constructor(props) {
     super(props);
-    this.state = this.defaultState
+    this.state = { ...this.defaultState, ...props.rowData }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
-      this.setState({ ...this.props.rowData });
+      this.setState({ ...this.defaultState, ...this.props.rowData });
     }
   }
 
   onChange = (prop, val) => {
-    console.log('Received values of form: ', val, prop);
     this.setState({
       [prop]: val,
     })
-  }
-
-  // TODO: DRY using this
-
-  onCustomerChange = (value) => {
-    this.setState({ customer_id: value })
   }
 
   onClickFundingSource = (value) => {
@@ -98,20 +92,8 @@ class ShipmentForm extends React.Component {
     this.setState({ funds_source: null });
   }
 
-  onShipViaChange = (value) => {
-    this.setState({ ship_via: value })
-  }
-
-  onRateChange = (value) => {
-    this.setState({ ship_rate: value })
-  }
-
-  onBilledAmtChange = (value) => {
-    this.setState({ total_price: value })
-  }
-
-  onNotesChange = (value) => {
-    this.setState({ notes: value })
+  onTextChange = (prop, val) => {
+    this.setState({ [prop]: val });
   }
 
   onItemsChange = (prop, index, val) => {
@@ -125,28 +107,37 @@ class ShipmentForm extends React.Component {
 
     var total_weight = 0;
     for(var item of this.state.ship_items) {
-      var weight = parseInt(item['total_weight'])
+      var stringWeight = item ? item['total_weight'] : '0';
+      var weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
   }
 
-  deleteEmptyShipItems = () => {
-    var newItems = [];
-    for (let obj of this.state.ship_items){
-      if (Object.keys(obj).length !== 0 && obj.constructor === Object){
-        newItems.push(obj);
-      }
-    }
-    this.setState({ ship_items: newItems });
+  deleteEmptyShipItems = (shipItems) => {
+    var filteredItems = shipItems.filter( obj => {
+      return obj != undefined && obj['product'] !== undefined;
+    })
+    return filteredItems;
   }
 
   handleOk = () => {
     this.props.onCancel();
 
-    this.deleteEmptyShipItems();
+    var emptiedShipItems = this.deleteEmptyShipItems(this.state.ship_items);
+    var newData = JSON.parse(JSON.stringify(this.state));
 
-    db.pushShipmentObj(this.state);
+    newData['ship_items'] = emptiedShipItems;
+
+    var row = this.props.rowData
+
+    if (row) {
+      // if we are editing a shipment, set in place
+      db.setShipmentObj(row.uniq_id, newData);
+    } else {
+      // else we are creating a new entry
+      db.pushShipmentObj(newData);
+    }
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
@@ -156,7 +147,20 @@ class ShipmentForm extends React.Component {
   }
 
   addShipmentItem = () => {
-    this.setState({ ship_items: [...this.state.ship_items, {}] });
+    var emptyRow = {
+      'product': undefined,
+      'unit_weight': undefined,
+      'case_lots': undefined,
+      'total_weight': undefined,
+    };
+
+    var newShipItems = this.state.ship_items
+                           .concat(emptyRow)
+                           .filter( elem => {
+                             return elem != undefined;
+                           });
+
+    this.setState({ ship_items: newShipItems });
   }
 
   removeShipmentItem = (removeIndex) => {
@@ -188,14 +192,19 @@ class ShipmentForm extends React.Component {
               <DatePicker style={styles.datePicker}
                           onChange={ (date) => this.onChange('ship_date', date.format('MM/DD/YYYY')) }
                           format={'MM/DD/YYYY'}
-                          defaultValue={this.props.rowData ? Moment(this.props.rowData.ship_date) : undefined}
+                          key={`shipdate:${this.state.ship_date}`}
+                          defaultValue={
+                            this.state.ship_date
+                                      ? Moment(this.state.ship_date, 'MM/DD/YYYY')
+                                      : this.state.ship_date
+                          }
                           placeholder="Ship Date" />
             </div>
 
             <div style={styles.formItem}>
               Customer:
               <CustomerAutoComplete
-                onCustomerChange={ (val) => this.onCustomerChange(val) }
+                onCustomerChange={ (val) => this.onChange('customer_id', val) }
                 rowData={this.props.rowData}
               />
             </div>
@@ -217,8 +226,11 @@ class ShipmentForm extends React.Component {
             <div style={styles.shipViaContainer}>
               Ship Via:
               <Select placeholder="Ship Via"
-                      defaultValue={this.props.rowData ? this.props.rowData.ship_via : undefined }
-                      onChange={this.onShipViaChange}>
+                      value={this.state.ship_via}
+                      onChange={ (val) => {
+                          console.log('val:', val);
+                          this.onChange('ship_via', val)
+                      } }>
                 <Option value="BMAC">BMAC</Option>
                 <Option value="Customer">Customer</Option>
                 <Option value="Other">Other</Option>
@@ -244,24 +256,26 @@ class ShipmentForm extends React.Component {
             <div style={styles.formItem}>
               <Input
                 placeholder="Rate"
-                defaultValue={this.props.rowData ? this.props.rowData.ship_rate : undefined }
-                onChange={ (e) => this.onRateChange(e.target.value) }/>
+                value={this.state.ship_rate}
+                onChange={ (e) => this.onTextChange('ship_rate', e.target.value) }
+              />
             </div>
 
             <div style={styles.formItem}>
               <Input
                 placeholder="Billed Amount"
-                defaultValue={this.props.rowData ? this.props.rowData.total_price : undefined }
-                onChange={ (e) => this.onBilledAmtChange(e.target.value) } />
+                value={this.state.total_price}
+                onChange={ (e) => this.onTextChange('total_price', e.target.value) }
+              />
             </div>
 
           </div>
 
           <TextArea
             rows={4}
-            defaultValue={this.props.rowData ? this.props.rowData.notes : undefined }
+            value={this.state.notes}
             placeholder="Notes"
-            onChange={ (e) => this.onNotesChange(e.target.value) }
+            onChange={ (e) => this.onTextChange('notes', e.target.value) }
           />
 
         </div>
