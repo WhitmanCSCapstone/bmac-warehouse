@@ -12,7 +12,6 @@ import Moment from 'moment';
 import TableDropdown from '../../components/TableDropdown';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
-import { getReadableShipmentsTableData } from '../../utils/shipments';
 import matchSorter from 'match-sorter';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
 

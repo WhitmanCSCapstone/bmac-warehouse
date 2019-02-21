@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import { Input, DatePicker, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import ProviderAutoComplete from '../ProviderAutoComplete';

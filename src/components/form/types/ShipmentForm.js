@@ -116,7 +116,7 @@ class ShipmentForm extends React.Component {
 
   deleteEmptyShipItems = (shipItems) => {
     var filteredItems = shipItems.filter( obj => {
-      return obj != undefined && obj['product'] !== undefined;
+      return obj !== undefined && obj['product'] !== undefined;
     })
     return filteredItems;
   }
@@ -157,7 +157,7 @@ class ShipmentForm extends React.Component {
     var newShipItems = this.state.ship_items
                            .concat(emptyRow)
                            .filter( elem => {
-                             return elem != undefined;
+                             return elem !== undefined;
                            });
 
     this.setState({ ship_items: newShipItems });

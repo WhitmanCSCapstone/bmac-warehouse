@@ -1,6 +1,5 @@
 import React from 'react';
 import Moment from 'moment';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
