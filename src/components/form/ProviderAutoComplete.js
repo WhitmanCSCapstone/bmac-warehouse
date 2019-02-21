@@ -12,46 +12,32 @@ class ProviderAutoComplete extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [],
-      selectedHash: null,
+      dataSourceTypeItemList: null,
     }
   }
 
   componentDidMount(){
     db.onceGetProviders().then(snapshot => {
-
       var data = snapshot.val();
-      var names = [];
-      var dictionary = {};
-      for(let [key, value] of Object.entries(data)){
-
+      var dataSourceTypeItemList = [];
+      for(let [key, value] of Object.entries(data)) {
         let name = value['provider_id'];
-
-        if(name in dictionary || name === ""){
-          console.log(`theres a dupe or an empty string in the providers table that should be deleted, here's its provider_id value: ${name}`);
-        } else {
-          dictionary[name] = key;
-          names.push(name);
-        }
+        dataSourceTypeItemList.push({value: key, text: name});
       }
-
       this.setState({
-        dictionary: dictionary,
-        names: names,
+        dataSourceTypeItemList: dataSourceTypeItemList,
       });
-
     });
   }
 
   onChange = (val) => {
-    var hash = this.state.dictionary[val];
-    this.props.onProviderChange('provider_id', hash);
+    this.props.onProviderChange('provider_id', val);
   }
 
   render() {
     return(
       <AutoComplete
-        dataSource={this.state.names}
+        dataSource={this.state.dataSourceTypeItemList}
         style={styles.container}
         onChange={ this.onChange }
         placeholder="Provider"
