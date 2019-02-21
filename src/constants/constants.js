@@ -13,7 +13,8 @@ export const tableKeys = {
     //"total_price",
     //"invoice_date",
     //"invoice_no",
-    //"notes"
+    //"notes",
+    //"uniq_id",
   ],
 
   users: [
@@ -33,7 +34,8 @@ export const tableKeys = {
     "phone",
     //"email",
     //"status",
-    //"notes"
+    //"notes",
+    //"uniq_id",
   ],
 
   receipts: [
@@ -41,7 +43,8 @@ export const tableKeys = {
     "recieve_date",
     "payment_source",
     "billed_amt",
-    "notes"
+    "notes",
+    //"uniq_id",
   ],
 
   products: [
@@ -57,7 +60,8 @@ export const tableKeys = {
     //"current_stock",
     //"inventory_date",
     "status",
-    //"notes"
+    //"notes",
+    //"uniq_id",
   ],
 
   providers: [
@@ -73,7 +77,8 @@ export const tableKeys = {
     "phone",
     //"email",
     //"status",
-    //"notes"
+    //"notes",
+    //"uniq_id",
   ],
 
   staff: [
@@ -85,12 +90,13 @@ export const tableKeys = {
     //"city",
     //"zip",
     "phone1",
-   // "phone2",
+    // "phone2",
     "email",
     //"type",
     //"status",
     //"notes",
-    //"password"
+    //"password",
+    //"uniq_id",
   ],
 }
 

@@ -35,7 +35,15 @@ class ProductItems extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      items: null,
     }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (state.items !== props.items) {
+      return { items: props.items };
+    }
+    return null;
   }
 
   render() {
@@ -46,8 +54,8 @@ class ProductItems extends React.Component {
       <div style={{display: 'inline-block', width: '15%'}}>Case Lots</div>
       <div style={{display: 'inline-block', width: '18%'}}>Total Weight</div>
         {
-          !this.props.items ? null :
-          this.props.items.map((obj, index) => {
+          !this.state.items ? null :
+          this.state.items.map((obj, index) => {
             return (
               <div key={index}
                    style={styles.row}>
@@ -56,7 +64,7 @@ class ProductItems extends React.Component {
                   {index==0 ? "Product" : "     "}
                   <ProductAutoComplete
                     onChange={this.props.onChange}
-                    value={obj['product']}
+                    value={obj ? obj['product'] : undefined}
                     index={index}
                   />
                 </div>
@@ -65,7 +73,7 @@ class ProductItems extends React.Component {
                   {index==0 ? "Unit Weight" : "     "}
                   <Input
                     placeholder="Unit Weight"
-                    value={obj['unit_weight']}
+                    value={obj ? obj['unit_weight'] : undefined}
                     onChange={ e => this.props.onChange('unit_weight', index, e.target.value) }
                   />
                 </div>
@@ -74,7 +82,7 @@ class ProductItems extends React.Component {
                   {index==0 ? "Case Lots" : "     "}
                   <Input
                     placeholder="Case Lots"
-                    value={obj['case_lots']}
+                    value={obj ? obj['case_lots'] : undefined}
                     onChange={ e => this.props.onChange('case_lots', index, e.target.value) }
                   />
                 </div>
@@ -83,17 +91,17 @@ class ProductItems extends React.Component {
                   {index==0 ? "Total Weight" : "     "}
                   <Input
                     placeholder="Total Weight"
-                    value={obj['total_weight']}
+                    value={obj ? obj['total_weight'] : undefined}
                     onChange={ e => this.props.onChange('total_weight', index, e.target.value) }
                   />
                 </div>
 
-                {this.props.items.length > 1 ? (
+                {this.state.items.length > 1 ? (
                    <Icon
                      className="dynamic-delete-button"
                      style={styles.icon}
                      type="minus-circle-o"
-                     disabled={this.props.items.length === 1}
+                     disabled={this.state.items.length === 1}
                      onClick={ () => this.props.removeProductItem(index) }
                    />
                 ) : null}

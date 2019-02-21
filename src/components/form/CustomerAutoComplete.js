@@ -14,6 +14,7 @@ class CustomerAutoComplete extends React.Component {
     this.state = {
       dataSourceTypeItemList: [],
       dictionary: {},
+      defaultValue: null,
     }
   }
 
@@ -33,6 +34,7 @@ class CustomerAutoComplete extends React.Component {
       this.setState({
         dataSourceTypeItemList: dataSourceTypeItemList,
         dictionary: dictionary,
+        defaultValue: this.props.rowData ? dictionary[this.props.rowData.customer_id] : null,
       });
 
     });
@@ -46,6 +48,7 @@ class CustomerAutoComplete extends React.Component {
     return(
       <AutoComplete
         dataSource={this.state.dataSourceTypeItemList}
+        defaultValue={this.state.defaultValue}
         key={this.state.defaultValue}
         style={styles.container}
         onChange={ this.onChange }
