@@ -1,15 +1,20 @@
 import React from 'react';
 import { Divider, Modal, Alert} from 'antd';
 import {auth, db} from '../../../firebase';
-import {Input} from 'antd';
+import firebase from 'firebase';
+import {Input, Select} from 'antd';
+import * as ROLES from '../../../constants/roles';
+
+
+const Option = Select.Option;
 
 //Styles
 const styles = {
     form: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        justifyContent: 'flex-start',
     },
 
     formItem: {
@@ -17,19 +22,6 @@ const styles = {
         margin: '0px 1em 1em 1em'
     },
 
-    topThird: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        flexWrap: 'wrap',
-        alignContent: 'center'
-    },
-
-    bottomThird: {
-        display: 'flex',
-        justifyContent: 'flex-start'
-    },
-    
     errorMessage: {
         display: 'flex',
         width: '100%'
@@ -51,35 +43,41 @@ class StaffForm extends React.Component {
             email: '',
             passwordOne: '',
             passwordTwo: '',
-            error: null
+            error: null,
+            role: ''
         }
     }
 
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
-        const {username, email, passwordOne, passwordTwo} = this.state;
-
+        const {username, email, passwordOne, passwordTwo, role} = this.state;
+        const roles = [];
         const isInvalid = passwordOne !== passwordTwo || passwordOne === '' || email === '' || username === '';
-
+        
+        if (role=='Admin') {
+            roles.push(ROLES.ADMIN);
+          }
         if (!isInvalid) {
             auth
-                .doCreateUserWithEmailAndPassword(email, passwordOne)
+                .doCreateUserWithEmailAndPassword(email, passwordOne) // Creates user in auth platform.
                 .then(authUser => {
 
                     // Create a user in your own accessible Firebase Database too
                     db
-                        .doCreateUser(authUser.user.uid, username, email)
+                        .doCreateUser(authUser.user.uid, username, email, role)
                         .then(() => {
                             this.setState({
                                 username: '',
                                 email: '',
                                 passwordOne: '',
                                 passwordTwo: '',
-                                error: null
+                                error: null,
+                                role: '',
                             });
                             this
                                 .props
                                 .onCancel();
+                            this.props.refreshTable();
                         })
                         .catch(error => {
                             this.setState(byPropKey('error', error));
@@ -93,6 +91,10 @@ class StaffForm extends React.Component {
         } 
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous this.props.refreshTable();
+    }
+
+    onStatusChange = (value) => {
+        this.setState({role: value})
     }
 
     render() {
@@ -119,23 +121,40 @@ class StaffForm extends React.Component {
                 onCancel={this.props.onCancel}>
                 <div style={styles.form}>
                     <div style={styles.formItem}>
+                    Username:
                         <Input
                             value={username}
                             onChange={event => this.setState(byPropKey('username', event.target.value))}
                             type="text"
-                            placeholder="Full Name"/>
+                            placeholder="Username"/>
                     </div>
+                    
                     <div style={styles.formItem}>
+                    Email:
                         <Input
                             value={email}
                             onChange={event => this.setState(byPropKey('email', event.target.value))}
                             type="text"
                             placeholder="Email Address"/>
                     </div>
+                    <div style={styles.formItem}>
+                    Role:<br/>
+                    <Select
+                        placeholder="Role"
+                        style={{
+                        width: 120
+                    }}
+                        onChange={this.onStatusChange}>
+                        <Option value="Admin">Admin</Option>
+                        <Option value="Standard">Standard</Option>
+
+                    </Select>
+                    </div>
+                   
                     <Divider orientation="left">Password</Divider>
 
                     <div style={styles.formItem}>
-
+                    Password:
                         <Input
                             value={passwordOne}
                             onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
@@ -143,6 +162,7 @@ class StaffForm extends React.Component {
                             placeholder="Password"/>
                     </div>
                     <div style={styles.formItem}>
+                    Confirm Password:
                         <Input
                             value={passwordTwo}
                             onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}

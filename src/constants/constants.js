@@ -20,6 +20,7 @@ export const tableKeys = {
   users: [
     "username",
     "email",
+    "role",
   ],
 
   customers: [

@@ -2,10 +2,11 @@
 
 // User API
 
-export const doCreateUser = (id, username, email) =>
+export const doCreateUser = (id, username, email, role) =>
     db.ref(`users/${id}`).set({
         username,
         email,
+        role,
     });
 
  //Database API
