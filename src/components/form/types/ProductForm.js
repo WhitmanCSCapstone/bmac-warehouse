@@ -15,7 +15,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        justifyContent: 'flex-start'
     },
 
     formItem: {

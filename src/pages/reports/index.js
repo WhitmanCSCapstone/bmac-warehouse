@@ -185,7 +185,9 @@ class Reports extends React.Component {
           columns={reportKeys[this.state.reportType].map(string => {
               if(string === 'customer_id' && this.state.reportType === 'Inventory Shipments'){
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                   filterable: true,
                   filterAll: true,
@@ -196,7 +198,9 @@ class Reports extends React.Component {
               }
               if(string === 'provider_id' && this.state.reportType === 'Inventory Receipts'){
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                   filterable: true,
                   filterAll: true,
@@ -206,7 +210,9 @@ class Reports extends React.Component {
               }
               else{
                 return({
-                  Header: string,
+                  Header: string.replace('_',' ').split(' ')
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
                   accessor: string,
                 })
               }
