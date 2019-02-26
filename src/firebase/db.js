@@ -17,6 +17,9 @@ export const onceGetUsers = () =>
 export const onceGetCustomers = () =>
     db.ref('1/customers').once('value');
 
+export const onceGetSpecificCustomer = (hash) =>
+    db.ref(`1/customers/` + hash).once('value');
+
 export const onceGetProducts = () =>
     db.ref('5/products').once('value');
 
