@@ -112,7 +112,7 @@ class SignInForm extends Component {
     render() {
         const {email, password, error} = this.state;
 
-        const isInvalid = password === '' || email === '';
+        //const isInvalid = password === '' || email === '';
 
         return (
             <div>
@@ -136,7 +136,7 @@ class SignInForm extends Component {
                         type="password"
                         placeholder="Password"/>
                     <Button
-                        disabled={isInvalid}
+                        //disabled={isInvalid}
                         onClick={this.onSubmit}
                         type="primary"
                         htmlType="submit"
