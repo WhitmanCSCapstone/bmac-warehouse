@@ -1,10 +1,15 @@
 import React from 'react';
+import {Form, Icon, Input, Button, Alert} from 'antd';
 
 function Landing(){
   return(
     <div>
-      <h1>BMAC-Warehouse Landing Page</h1>
-      <p><a href='SignIn'>Login</a> to the app</p>
+      <br/><br/><br/>
+      <center>
+      <img src="http://rfhresourceguide.org/Content/cmsImages/logo.jpg"/>
+      <h1>Warehouse Management Page</h1>
+      <a href='SignIn'><Button  type="primary" htmlType="submit">Continue</Button></a>
+      </center>
     </div>
   );
 }
