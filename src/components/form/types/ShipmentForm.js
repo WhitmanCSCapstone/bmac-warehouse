@@ -184,8 +184,7 @@ class ShipmentForm extends React.Component {
 
       pdf.setFont('helvetica');
       pdf.setFontSize('12');
-      pdf.text(10, 10, `Sample PDF`);
-      pdf.text(10, 15, 'Invoice No:');
+      pdf.text(10, 15, 'Invoice No:' + this.state.ship_date);
       pdf.text(10, 20, 'Ship Date: ' + this.state.ship_date);
       pdf.text(70, 20, 'Ship Via: ' + this.state.ship_via);
       pdf.text(130, 20, 'Funds Source: ' + this.state.funds_source);
@@ -193,6 +192,8 @@ class ShipmentForm extends React.Component {
       pdf.text(15, 45, customerName);
       pdf.text(15, 50, fullAddress);
       pdf.text(15, 60, 'Items Shipped:');
+      var noOfItems = this.state.ship_items.size();
+      console.log(noOfItems);
       pdf.text(30, 70, String(this.state.ship_items));
 
       pdf.text(10, 180, 'Rate: ' + this.state.ship_rate);
@@ -233,7 +234,7 @@ class ShipmentForm extends React.Component {
       console.log(customerName);
 
       pdf.setFontSize(12).setFontType('normal');
-      pdf.text(10, 110, 'Invoice no: ' + this.state.invoice_no);
+      pdf.text(10, 110, 'Invoice no: ' + this.state.ship_date);
       pdf.text(130, 110, 'Funds Source: ' + this.state.funds_source);
       pdf.text(10, 120, 'Ship Date: ' + this.state.ship_date);
       pdf.text(70, 120, 'Ship Via: ' + this.state.ship_via);
