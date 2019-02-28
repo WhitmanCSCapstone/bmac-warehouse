@@ -55,10 +55,17 @@ class Products extends React.Component {
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
+          rowData={ this.state.rowData }
         />
 
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
+          getTrProps={(state, rowInfo) => ({
+            onClick: () => this.setState({
+              rowData: rowInfo.original,
+              formModalVisible: true,
+            })
+            })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if(string === 'product_id'){

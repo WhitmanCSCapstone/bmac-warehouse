@@ -43,22 +43,31 @@ const styles = {
 
 //Provider Form Component
 class ProductForm extends React.Component {
-    constructor(props) {
+
+    defaultState = {
+        product_id: null,
+        funding_source: null,
+        unit_weight: null,
+        unit_price: null,
+        initial_date: null,
+        initial_stock: null,
+        minimum_stock: null,
+        history: null,
+        current_stock: null,
+        inventory_date: null,
+        status: null
+      };
+
+      constructor(props) {
         super(props);
-        this.state = {
-            product_id: null,
-            funding_source: null,
-            unit_weight: null,
-            unit_price: null,
-            initial_date: null,
-            initial_stock: null,
-            minimum_stock: null,
-            history: null,
-            current_stock: null,
-            inventory_date: null,
-            status: null
+        this.state = { ...this.defaultState, ...props.rowData }
+      }
+
+      componentDidUpdate(prevProps, prevState) {
+        if (this.props.rowData !== prevProps.rowData) {
+          this.setState({ ...this.defaultState, ...this.props.rowData });
         }
-    }
+      }
 
     // TODO: DRY using this Functions to update state on change of each input field.
     onProductNameChange = (value) => {
@@ -95,11 +104,21 @@ class ProductForm extends React.Component {
     }
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData
+
+        if (row) {
+            // if we are editing a shipment, set in place
+            db.setProductObj(row.uniq_id, newData);
+          } else {
+            // else we are creating a new entry
+            db.pushProductObj(newData);
+          }
+
         this
             .props
             .onCancel();
         
-        db.pushProductObj(this.state);
 
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
@@ -107,19 +126,7 @@ class ProductForm extends React.Component {
             .props
             .refreshTable();
 
-        this.setState({
-            product_id: null,
-            funding_source: null,
-            unit_weight: null,
-            unit_price: null,
-            initial_date: null,
-            initial_stock: null,
-            minimum_stock: null,
-            history: null,
-            current_stock: null,
-            inventory_date: null,
-            status: null
-        });
+        this.setState({ ...this.defaultState });
     }
 
     render() {

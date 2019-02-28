@@ -64,6 +64,10 @@ export const pushProviderObj = (newData) =>
 
 export const pushProductObj = (newData)=> 
     db.ref('5/products').push(newData);
+  
+export const setProductObj = (index, newData) => {
+    db.ref(`5/products/${index}`).set(newData);
+    }    
 
 export const pushCustomerObj = (newData)=> 
     db.ref('1/customers').push(newData);
