@@ -7,7 +7,7 @@ function Landing(){
       <br/><br/><br/>
       <center>
       <img src="http://rfhresourceguide.org/Content/cmsImages/logo.jpg"/>
-      <h1>Warehouse Management Page</h1>
+      <h1>Warehouse Management Portal</h1>
       <a href='SignIn'><Button  type="primary" htmlType="submit">Continue</Button></a>
       </center>
     </div>
