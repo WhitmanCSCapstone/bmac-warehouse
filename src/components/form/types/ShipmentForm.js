@@ -210,22 +210,20 @@ class ShipmentForm extends React.Component {
       var y = 105;
       var total_case_lots = 0, shipment_weight = 0;
       for (var i = 0; i < clean_ship_items.length; i++) {
-        pdf.text(30, y, String(clean_ship_items[i].product));
-        pdf.text(90, y, String(clean_ship_items[i].unit_weight));
-        pdf.text(115, y, String(clean_ship_items[i].case_lots));
-        pdf.text(140, y, String(clean_ship_items[i].total_weight));
+        (clean_ship_items[i].product) ? pdf.text(30, y, String(clean_ship_items[i].product)) : pdf.text(30, y, "-");
+        (clean_ship_items[i].unit_weight) ? pdf.text(90, y, String(clean_ship_items[i].unit_weight)) : pdf.text(90, y, "-");
+        (clean_ship_items[i].case_lots) ? pdf.text(115, y, String(clean_ship_items[i].case_lots)) : pdf.text(115, y, "-");
+        (clean_ship_items[i].total_weight) ? pdf.text(140, y, String(clean_ship_items[i].total_weight)) : pdf.text(140, y, "-");
         y += 5;
         total_case_lots += parseInt(clean_ship_items[i].case_lots);
         shipment_weight += parseInt(clean_ship_items[i].total_weight);
       }
       pdf.setFontType('bold');
       pdf.text(90, y+5, 'Totals: ');
-      pdf.text(115, y, String(total_case_lots));
-      pdf.text(140, y, String(shipment_weight));
+      pdf.text(115, y+5, String(total_case_lots));
+      pdf.text(140, y+5, String(shipment_weight));
       pdf.text(155, y+5, 'pounds');
       pdf.setFontType('normal');
-
-      // pdf.text(30, 70, String(this.state.ship_items[0].product));
       pdf.setFontType('italic');
       pdf.text(10, y+20, 'Rate: ' + this.state.ship_rate);
       pdf.text(70, y+20, 'Billed Amount: ' + this.state.total_price);
