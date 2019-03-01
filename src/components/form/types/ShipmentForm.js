@@ -250,7 +250,7 @@ class ShipmentForm extends React.Component {
       var zip = customerObj.child('zip').val();
       var fullAddress = city + ', ' + state + ', ' + zip;
 
-      pdf.setFont('Helvetica').setFontSize(32).setFontType('italic');
+      pdf.setFont('Helvetica').setFontSize(28).setFontType('italic');
       pdf.text(10, 60, 'Ship To: ');
       pdf.text(50, 70, customerName);
       pdf.text(50, 80, address);
