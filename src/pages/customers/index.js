@@ -7,6 +7,7 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
+import TableDropdown from '../../components/TableDropdown';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import {Button} from 'antd';
@@ -30,6 +31,7 @@ class Customers extends React.Component {
     this.state = {
       data: null,
       formModalVisible:false,
+      rowData: null,
     }
   }
 
@@ -49,16 +51,23 @@ refreshTable = () => {
     return(
       <div style={styles.container}>
       <Button type="primary"
-                onClick={ () => this.setState({ formModalVisible: true }) }>
+                onClick={ () => this.setState({ formModalVisible: true, rowData: null}) }>
           Add New Customer
         </Button>
         <CustomerForm
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
+          rowData ={ this.state.rowData }
         />
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
+            getTrProps={(state, rowInfo) => ({
+                onClick: () => this.setState({
+                  rowData: rowInfo.original,
+                  formModalVisible: true,
+                })
+            })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if(string === 'customer_id')
@@ -80,6 +89,12 @@ refreshTable = () => {
                 })
               }
             })}
+            SubComponent={row => {
+                return <TableDropdown
+                         //row={row.original.ship_items}
+                             //index={this.state.data.indexOf(row.original)}
+                />
+            }}
             defaultPageSize={10}
             className="-striped -highlight"
           />
