@@ -37,84 +37,64 @@ const styles = {
 };
 
 class CustomerForm extends React.Component {
+
+    defaultState = {
+        customer_id: null,
+        address: null,
+        city: null,
+        state: null,
+        zip: null,
+        county: null,
+        contact: null,
+        phone: null,
+        email: null,
+        status: null,
+        notes: null,
+        uniq_id: null,        
+    };
+
     constructor(props) {
         super(props);
-        this.state = {
-            customer_id: null,
-            address: null,
-            city: null,
-            state: null,
-            zip: null,
-            county: null,
-            contact: null,
-            phone: null,
-            email: null,
-            status: null,
-            notes: null
-        }
+        this.state = { ...this.defaultState, ...props.rowData }
     }
-    //Listeners
-    onCustomerNameChange = (value) => {
-        this.setState({customer_id: value})
+
+    componentDidUpdate(prevProps, prevState) {
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({ ...this.defaultState, ...this.props.rowData });
+      }
     }
-    onAddressChange = (value) => {
-        this.setState({address: value})
+
+    onChange = (prop, val) => {
+    this.setState({
+      [prop]: val,
+      })
     }
-    onCityChange = (value) => {
-        this.setState({city: value})
-    }
-    onStateChange = (value) => {
-        this.setState({state: value})
-    }
-    onZipChange = (value) => {
-        this.setState({zip: value})
-    }
-    onCountyChange = (value) => {
-        this.setState({county: value})
-    }
-    onContactChange = (value) => {
-        this.setState({contact: value})
-    }
-    onPhoneChange = (value) => {
-        this.setState({phone: value})
-    }
-    onEmailChange = (value) => {
-        this.setState({email: value})
-    }
+
     onStatusChange = (value) => {
         this.setState({status: value})
-    }
-    onNotesChange = (value) => {
-        this.setState({notes: value})
     }
 
     //Ok Click
     handleOk = () => {
-        this
-            .props
-            .onCancel();
 
-        db.pushCustomerObj(this.state);
+        //TODO: fix bug of editing customer just added creating new customer
+        this.props.onCancel();
+
+        var newData = JSON.parse(JSON.stringify(this.state));
+
+        var row = this.props.rowData;
+
+        if(row) {
+            db.setCustomerObj(row.uniq_id, newData);
+        } else {
+            db.pushCustomerObj(this.state);
+        }
 
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
-        this
-            .props
-            .refreshTable();
+        this.props.refreshTable();
 
-        this.setState({
-            customer_id: null,
-            address: null,
-            city: null,
-            state: null,
-            zip: null,
-            county: null, //is an entry in database but not used in old or new forms, will leave here in case ever needs to be used.
-            contact: null,
-            phone: null,
-            email: null,
-            status: null,
-            notes: null
-        });
+        this.setState({...this.defaultState});
     }
 
     render() {
@@ -137,7 +117,10 @@ class CustomerForm extends React.Component {
                         Customer Name:
                         <Input
                             placeholder="Customer Name"
-                            onChange={(e) => this.onCustomerNameChange(e.target.value)}/>
+                            onChange={(e) => this.onChange('customer_id', e.target.value)}
+                            rowData={this.props.rowData}
+                            value={this.state.customer_id}
+                            />
 
                     </div>
 
@@ -147,42 +130,58 @@ class CustomerForm extends React.Component {
                             Address:
                             <Input
                                 placeholder="Address"
-                                onChange={(e) => this.onAddressChange(e.target.value)}/>
+                                onChange={(e) => this.onChange('address', e.target.value)}
+                                rowData={this.props.rowData}
+                                value={this.state.address}/>
 
                         </div>
 
                         <div style={styles.formItem}>
                             City:
-                            <Input placeholder="City" onChange={(e) => this.onCityChange(e.target.value)}/>
+                            <Input placeholder="City" 
+                                   onChange={(e) => this.onChange('city', e.target.value)}
+                                   rowData={this.props.rowData}
+                                   value={this.state.city}/>
                         </div>
                         <div style={styles.formItem}>
                             State:
                             <Input
                                 placeholder="State"
-                                onChange={(e) => this.onStateChange(e.target.value)}/>
+                                onChange={(e) => this.onChange('state', e.target.value)}
+                                rowData={this.props.rowData}
+                                value={this.state.state}/>
                         </div>
                         <div style={styles.formItem}>
                             ZIP:
-                            <Input placeholder="ZIP" onChange={(e) => this.onZipChange(e.target.value)}/>
+                            <Input placeholder="ZIP" 
+                                   onChange={(e) => this.onChange('zip', e.target.value)}
+                                   rowData={this.props.rowData}
+                                   value={this.state.zip}/>
                         </div>
                         <div style={styles.formItem}>
                             Contact Phone:
                             <Input
                                 placeholder="Contact Phone"
-                                onChange={(e) => this.onPhoneChange(e.target.value)}/>
+                                onChange={(e) => this.onChange('phone', e.target.value)}
+                                rowData={this.props.rowData}
+                                value={this.state.phone}/>
 
                         </div>
                         <div style={styles.formItem}>
                             Contact Person:
                             <Input
                                 placeholder="Contact Person"
-                                onChange={(e) => this.onContactChange(e.target.value)}/>
+                                onChange={(e) => this.onChange('contact', e.target.value)}
+                                rowData={this.props.rowData}
+                                value={this.state.contact}/>
                         </div>
                         <div style={styles.formItem}>
                             Contact Email:
                             <Input
                                 placeholder="Contact Email"
-                                onChange={(e) => this.onEmailChange(e.target.value)}/>
+                                onChange={(e) => this.onChange('email', e.target.value)}
+                                rowData={this.props.rowData}
+                                value={this.state.email}/>
                         </div>
                     </div>
                     <Divider/>
@@ -190,9 +189,11 @@ class CustomerForm extends React.Component {
                     <Select
                         placeholder="Status"
                         style={{
-                        width: 120
-                    }}
-                        onChange={this.onStatusChange}>
+                            width: 120
+                        }}
+                        onChange={this.onStatusChange}
+                        rowData={this.props.rowData}
+                        value={this.state.status}>
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
 
@@ -206,7 +207,9 @@ class CustomerForm extends React.Component {
                     <TextArea
                         rows={4}
                         placeholder="Notes"
-                        onChange={(e) => this.onNotesChange(e.target.value)}/>
+                        onChange={(e) => this.onChange('notes', e.target.value)}
+                        rowData={this.props.rowData}
+                        value={this.state.notes}/>
                     
                 </div>
 
