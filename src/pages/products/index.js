@@ -30,16 +30,30 @@ class Products extends React.Component {
     super(props);
     this.state = {
       data: null,
+      rowData:null,
+      products:null,
     }
   }
 
   componentDidMount(){
       this.refreshTable();
+
+      
   }
 
   refreshTable = () => {
-    db.onceGetProducts().then(snapshot =>
+    db.onceGetProducts().then(snapshot => {
+      var data = snapshot.val();
+      Object.entries(data).map((entry) => {
+        let uniq_id = entry[0]
+        let value = entry[1]
+        if(!value.uniq_id){
+          db.deleteProductObj(uniq_id)
+        }
+      })
+
       this.setState({ data: Object.values(snapshot.val()) })
+    }
     );
   }
 
@@ -47,7 +61,7 @@ class Products extends React.Component {
     return(
       <div style={styles.container}>
       <Button type="primary"
-                onClick={ () => this.setState({ formModalVisible: true }) }>
+                onClick={ () => this.setState({ formModalVisible: true, rowData:null }) }>
           Add New Product
         </Button>
 

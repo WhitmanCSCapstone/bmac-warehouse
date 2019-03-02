@@ -62,9 +62,21 @@ export const pushReceiptObj = (newData) =>
 export const pushProviderObj = (newData) =>
     db.ref('3/providers/').push(newData);
 
-export const pushProductObj = (newData)=> 
-    db.ref('5/products').push(newData);
+
+export const pushProductObj = (newData) => {
+    db.ref('5/products')
+          .push(newData)
+          .then((snapshot) => {
+            const uniq_id = snapshot.key;
+            newData['uniq_id'] = uniq_id;
+            db.ref(`5/products/${uniq_id}`).set(newData);
+          })
+    }    
   
+export const deleteProductObj = (index) => {
+        db.ref(`5/products/${index}`).remove();
+   }
+
 export const setProductObj = (index, newData) => {
     db.ref(`5/products/${index}`).set(newData);
     }    
