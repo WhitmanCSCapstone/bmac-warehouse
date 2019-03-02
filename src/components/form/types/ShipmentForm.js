@@ -156,16 +156,12 @@ class ShipmentForm extends React.Component {
   handlePdf = () => {
     const pdf = new jspdf();
     db.onceGetSpecificCustomer(this.state.customer_id).then( (customerObj) => {
-      console.log(customerObj);
       var customerName = customerObj.child('customer_id').val();
       var address = customerObj.child('address').val();
       var city = customerObj.child('city').val();
       var state = customerObj.child('state').val();
       var zip = customerObj.child('zip').val();
       var fullAddress = address + ', ' + city + ', ' + state + ', ' + zip;
-
-      console.log(this.state.customer_id);
-      console.log(customerName, fullAddress);
 
       pdf.setFont('helvetica');
       pdf.setFontSize('20');
@@ -238,7 +234,6 @@ class ShipmentForm extends React.Component {
       pdf.text(50, 70, customerName);
       pdf.text(50, 80, address);
       pdf.text(50, 90, fullAddress);
-      console.log(customerName);
 
       pdf.setFontSize(12).setFontType('normal');
       pdf.text(10, 110, 'Invoice no: ' + this.state.ship_date);
@@ -345,7 +340,6 @@ class ShipmentForm extends React.Component {
               <Select placeholder="Ship Via"
                       value={this.state.ship_via}
                       onChange={ (val) => {
-                          console.log('val:', val);
                           this.onChange('ship_via', val)
                       } }>
                 <Option value="BMAC">BMAC</Option>
