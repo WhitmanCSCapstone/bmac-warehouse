@@ -12,8 +12,6 @@ const { TextArea } = Input;
 
 const Option = Select.Option;
 
-// const pdf = new jspdf();
-
 const styles = {
   form: {
     display: 'flex',
@@ -156,22 +154,9 @@ class ShipmentForm extends React.Component {
   // @param 2 - Coordinate (in units declared at inception of PDF document) against upper edge of the page
   // @param 3 - String or array of strings to be added to the page. Each line is shifted one line down per font, spacing settings declared before this call.
   handlePdf = () => {
-    console.log("Test");
-    // const input = document.getElementById('divtoprint');
-    // html2canvas(input)
-    // .then((canvas) => {
-    //   const canvasImage = canvas.toDataURL('image/png');
-    //   pdf.addImage(canvasImage, 'JPEG', 5, 5, 205, 292);
-    //   pdf.save("download.pdf");
-    // })
-
-    console.log('hello')
     const pdf = new jspdf();
     db.onceGetSpecificCustomer(this.state.customer_id).then( (customerObj) => {
-      // var name = customerObj['customer_id'];
-      // var address = customerObj
       console.log(customerObj);
-      // var customerName = customerObj['customer_id'];
       var customerName = customerObj.child('customer_id').val();
       var address = customerObj.child('address').val();
       var city = customerObj.child('city').val();
