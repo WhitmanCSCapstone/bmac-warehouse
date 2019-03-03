@@ -99,9 +99,7 @@ class ProductForm extends React.Component {
     onStatusChange = (value) => {
         this.setState({status: value})
     }
-    onClickFundingSource = (value) =>{
-        this.setState({funding_source: value})
-    }
+
     onNotesChange = (value) =>{
         this.setState({notes: value})
     }
@@ -115,10 +113,8 @@ class ProductForm extends React.Component {
 
         if (row) {
             // if we are editing a shipment, set in place
-            console.log('editing')
             db.setProductObj(row.uniq_id, newData);
           } else {
-              console.log('new entry')
             // else we are creating a new entry
             db.pushProductObj(newData);
           }
@@ -164,14 +160,14 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Funding Source:
                             <FundsSourceDropdownMenu
+                                rowData={this.props.rowData}
                                 disabled={false}
                                 fundingSource={this.state.funding_source}
                                 style={styles.fundsSourceDropdown}
                                 onClick={this.onClickFundingSource}
                                 clearFundingSource={this.clearFundingSource}
                                 required={true}
-                                rowData={this.props.rowData}
-                                defaultValue={this.props.rowData ? this.props.rowData.funds_source : undefined }                                />
+                            />
                                 
                         </div>
                         
