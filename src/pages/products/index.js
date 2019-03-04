@@ -11,6 +11,7 @@ import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ProductForm from '../../components/form/types/ProductForm';
 import {Button} from 'antd';
+import Moment from 'moment';
 
 
 const keys = tableKeys['products'];
@@ -70,7 +71,25 @@ class Products extends React.Component {
                   filterAll: true,
                   filterable:true,
                 })}
-
+              if(string === 'initial_date'){
+                  return({
+                    id: "initial_date",
+                    Header: string.replace('_',' ').split(' ')                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .join(' '),
+                    accessor: d => {
+                    return Moment(d.initial_date)
+                    .local()
+                    .format("MM/DD/YYYY") },
+                    filterable: true,
+                    filterAll: true,
+                    sortMethod: (a, b) => {
+                    a = new Date(a).getTime();
+                    b = new Date(b).getTime();
+                       return b > a ? 1 : -1;
+                                          }
+                    })
+              }       
               else if(string === 'unit_weight'){
                 return({
                   Header: "Unit Weight",

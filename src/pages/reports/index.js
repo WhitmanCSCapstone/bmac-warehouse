@@ -17,6 +17,7 @@ import { CSVLink} from "react-csv";
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter'
 import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
+import Moment from 'moment';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -208,6 +209,25 @@ class Reports extends React.Component {
                     matchSorter(rows, filter.value, { keys: ['provider_id'] }),
                 })
               }
+              if(string === 'ship_date'){
+                  return({
+                    id: "ship_date",
+                    Header: string.replace('_',' ').split(' ')                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .join(' '),
+                    accessor: d => {
+                    return Moment(d.ship_date)
+                    .local()
+                    .format("MM/DD/YYYY") },
+                    filterable: true,
+                    filterAll: true,
+                    sortMethod: (a, b) => {
+                    a = new Date(a).getTime();
+                    b = new Date(b).getTime();
+                       return b > a ? 1 : -1;
+                                          }
+                    })
+              }              
               else{
                 return({
                   Header: string.replace('_',' ').split(' ')
