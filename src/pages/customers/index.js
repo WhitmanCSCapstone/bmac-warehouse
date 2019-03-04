@@ -7,7 +7,6 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
-import TableDropdown from '../../components/TableDropdown';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import {Button} from 'antd';
@@ -90,9 +89,7 @@ refreshTable = () => {
               }
             })}
             SubComponent={row => {
-                return <TableDropdown
-                         //row={row.original.ship_items}
-                             //index={this.state.data.indexOf(row.original)}
+                return <ReactTable
                 />
             }}
             defaultPageSize={10}
