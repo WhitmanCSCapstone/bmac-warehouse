@@ -168,13 +168,14 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Funding Source:
                             <FundsSourceDropdownMenu
-                                rowData={this.props.rowData}
                                 disabled={false}
                                 fundingSource={this.state.funding_source}
                                 style={styles.fundsSourceDropdown}
                                 onClick={this.onClickFundingSource}
                                 clearFundingSource={this.clearFundingSource}
                                 required={true}
+                                rowData={this.props.rowData}
+                                key={`fundssource:${this.state.funding_source}`}
                             />
                                 
                         </div>
