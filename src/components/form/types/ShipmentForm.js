@@ -332,6 +332,7 @@ class ShipmentForm extends React.Component {
                 clearFundingSource={this.clearFundingSource}
                 required={true}
                 rowData={this.props.rowData}
+                key={`fundssource:${this.state.funds_source}`}
               />
             </div>
 
