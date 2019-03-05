@@ -2,6 +2,7 @@ import React from 'react';
 import {db} from '../../../firebase';
 import {Input, Select, Divider, Modal, DatePicker} from 'antd';
 import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
+import Moment from 'moment';
 
 
 //This is for the notes section.
@@ -43,22 +44,33 @@ const styles = {
 
 //Provider Form Component
 class ProductForm extends React.Component {
-    constructor(props) {
+
+    defaultState = {
+        product_id: null,
+        funding_source: null,
+        unit_weight: null,
+        unit_price: null,
+        initial_date: null,
+        initial_stock: null,
+        minimum_stock: null,
+        history: null,
+        current_stock: null,
+        inventory_date: null,
+        status: null,
+        uniq_id: null,
+        notes: null,
+      };
+
+      constructor(props) {
         super(props);
-        this.state = {
-            product_id: null,
-            funding_source: null,
-            unit_weight: null,
-            unit_price: null,
-            initial_date: null,
-            initial_stock: null,
-            minimum_stock: null,
-            history: null,
-            current_stock: null,
-            inventory_date: null,
-            status: null
+        this.state = { ...this.defaultState, ...props.rowData }
+      }
+
+      componentDidUpdate(prevProps, prevState) {
+        if (this.props.rowData !== prevProps.rowData) {
+          this.setState({ ...this.defaultState, ...this.props.rowData });
         }
-    }
+      }
 
     // TODO: DRY using this Functions to update state on change of each input field.
     onProductNameChange = (value) => {
@@ -90,36 +102,36 @@ class ProductForm extends React.Component {
     onClickFundingSource = (value) =>{
         this.setState({funding_source: value})
     }
+
+      clearFundingSource = () => {
+        this.setState({ funding_source: null });
+      }
     onNotesChange = (value) =>{
         this.setState({notes: value})
     }
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
-        this
-            .props
-            .onCancel();
-        
-        db.pushProductObj(this.state);
+
+        this.props.onCancel();
+
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData
+
+        if (row) {
+            // if we are editing a shipment, set in place
+            console.log('editing')
+            db.setProductObj(row.uniq_id, newData);
+          } else {
+              console.log('new entry')
+            // else we are creating a new entry
+            db.pushProductObj(newData);
+          }
 
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
-        this
-            .props
-            .refreshTable();
+        this.props.refreshTable();
 
-        this.setState({
-            product_id: null,
-            funding_source: null,
-            unit_weight: null,
-            unit_price: null,
-            initial_date: null,
-            initial_stock: null,
-            minimum_stock: null,
-            history: null,
-            current_stock: null,
-            inventory_date: null,
-            status: null
-        });
+        this.setState({ ...this.defaultState });
     }
 
     render() {
@@ -143,8 +155,11 @@ class ProductForm extends React.Component {
                     <div style={styles.formItem}>
                         Product Name:
                         <Input
+                            rowData={this.props.rowData}
+                            value={this.state.product_id}
                             placeholder="Product Name"
                             onChange={(e) => this.onProductNameChange(e.target.value)}/>
+                            
 
                     </div>
 
@@ -154,43 +169,63 @@ class ProductForm extends React.Component {
                             Funding Source:
                             <FundsSourceDropdownMenu
                                 disabled={false}
-                                fundingSource={this.state.funds_source}
+                                fundingSource={this.state.funding_source}
                                 style={styles.fundsSourceDropdown}
                                 onClick={this.onClickFundingSource}
                                 clearFundingSource={this.clearFundingSource}
-                                required={true}/>
+                                required={true}
+                                rowData={this.props.rowData}
+                                key={`fundssource:${this.state.funding_source}`}
+                            />
+                                
                         </div>
                         
                         <div style={styles.formItem}>
                             Unit Weight:
                             <Input
+                                rowData={this.props.rowData}
+                                value={this.state.unit_weight}
                                 placeholder="Unit Weight"
                                 onChange={(e) => this.onWeightChange(e.target.value)}/>
                         </div>
                         <div style={styles.formItem}>
                             Unit Price:
                             <Input
+                                rowData={this.props.rowData}
+                                value={this.state.unit_price}
                                 placeholder="Unit Price"
                                 onChange={(e) => this.onPriceChange(e.target.value)}/>
                         </div>
                         <div style={styles.formItem}>
                             Initial Stock:
                             <Input
+                                rowData={this.props.rowData}
+                                value={this.state.initial_stock}
                                 placeholder="Initial Stock"
                                 onChange={(e) => this.onInitialStockChange(e.target.value)}/>
                         </div>
                         <div style={styles.formItem}>
                             Initial Date:
                             <DatePicker
+                                rowData={this.props.rowData}
                                 style={styles.datePicker}
                                 onChange={(date) => this.onDateChange(date)}
                                 placeholder="Initial Date"
-                                allowClear={false}/>
+                                allowClear={false}
+                                key={`initialdate:${this.state.initial_date}`}
+                                defaultValue={
+                                    this.state.initial_date
+                                              ? Moment(this.state.initial_date, 'MM/DD/YYYY')
+                                              : this.state.initial_date
+                                  }/>
+                                
                                 
                         </div>
                         <div style={styles.formItem}>
                             Minimum Stock:
                             <Input
+                                rowData={this.props.rowData}
+                                value={this.state.minimum_stock}
                                 placeholder="Initial Stock"
                                 onChange={(e) => this.onMinimumStockChange(e.target.value)}/>
                         </div>
@@ -202,7 +237,11 @@ class ProductForm extends React.Component {
                         style={{
                         width: 120
                     }}
-                        onChange={this.onStatusChange}>
+                        onChange={this.onStatusChange}
+                        rowData={this.props.rowData}
+                        value={this.state.status}
+                        >
+                        
                         <Option value="Active">Active</Option>
                         <Option value="Discontinued">Discontinued</Option>
 
@@ -215,6 +254,8 @@ class ProductForm extends React.Component {
                     </div>
 
                     <TextArea
+                        value={this.state.notes}
+                        rowData={this.props.rowData}
                         rows={4}
                         placeholder="Notes"
                         onChange={(e) => this.onNotesChange(e.target.value)}/>
