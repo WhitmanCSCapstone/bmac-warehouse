@@ -1,6 +1,6 @@
 import React from 'react';
 import {db} from '../../../firebase';
-import {Input, Select, Divider, Modal, DatePicker} from 'antd';
+import {Input, Select, Divider, Modal, DatePicker, Button} from 'antd';
 import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
 import Moment from 'moment';
 
@@ -134,6 +134,12 @@ class ProductForm extends React.Component {
         this.setState({ ...this.defaultState });
     }
 
+    handleDelete = () => {
+        db.deleteProductObj(this.props.rowData.uniq_id);
+        this.props.onCancel()
+        this.props.refreshTable();
+      }
+
     render() {
 
         return (
@@ -147,9 +153,12 @@ class ProductForm extends React.Component {
                 destroyOnClose={true}
                 visible={this.props.formModalVisible}
                 okText='Submit'
-                onOk={this.handleOk}
-                onCancel={this.props.onCancel}>
-
+                onCancel={this.props.onCancel}
+                footer={[
+                    <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
+                    <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
+                    <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
+                 ]}>
                 <div style={styles.form}>
 
                     <div style={styles.formItem}>
