@@ -99,7 +99,13 @@ class ProductForm extends React.Component {
     onStatusChange = (value) => {
         this.setState({status: value})
     }
+    onClickFundingSource = (value) =>{
+        this.setState({funding_source: value})
+    }
 
+      clearFundingSource = () => {
+        this.setState({ funding_source: null });
+      }
     onNotesChange = (value) =>{
         this.setState({notes: value})
     }
@@ -113,8 +119,10 @@ class ProductForm extends React.Component {
 
         if (row) {
             // if we are editing a shipment, set in place
+            console.log('editing')
             db.setProductObj(row.uniq_id, newData);
           } else {
+              console.log('new entry')
             // else we are creating a new entry
             db.pushProductObj(newData);
           }
