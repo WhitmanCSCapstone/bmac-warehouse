@@ -21,7 +21,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     padding: 24,
-    formModalVisible: false,
+    
   },
 };
 
@@ -32,6 +32,7 @@ class Products extends React.Component {
       data: null,
       rowData:null,
       products:null,
+      formModalVisible: false,
     }
   }
 
@@ -42,18 +43,8 @@ class Products extends React.Component {
   }
 
   refreshTable = () => {
-    db.onceGetProducts().then(snapshot => {
-      var data = snapshot.val();
-      Object.entries(data).map((entry) => {
-        let uniq_id = entry[0]
-        let value = entry[1]
-        if(!value.uniq_id){
-          db.deleteProductObj(uniq_id)
-        }
-      })
-
+    db.onceGetProducts().then(snapshot => 
       this.setState({ data: Object.values(snapshot.val()) })
-    }
     );
   }
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import {db} from '../../../firebase';
-import {Input, Select, Divider, Modal} from 'antd';
-import ProviderInfo from '../ProviderInfo';
+import {Input, Select, Divider, Modal, Button} from 'antd';
 
 
 //This is for the notes section.
@@ -15,7 +14,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        justifyContent: 'flex-start'
     },
 
     formItem: {
@@ -37,26 +36,45 @@ const styles = {
     }
 };
 
-
 //Provider Form Component
 class ProviderForm extends React.Component {
+
+    defaultState = {
+        provider_id: null,
+        address: null,
+        city: null,
+        state: null,
+        zip: null,
+        county: null,
+        phone: null,
+        contact: null,
+        email: null
+    }
     constructor(props) {
         super(props);
         this.state = {
-            provider_id: null,
-            address: null,
-            city: null,
-            state: null,
-            zip: null,
-            county: null,
-            phone: null,
-            contact: null,
-            email: null
+            ...this.defaultState,
+            ...props.rowData
+        }
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.rowData !== prevProps.rowData) {
+            this.setState({
+                ...this.defaultState,
+                ...this.props.rowData
+            });
         }
     }
 
     // TODO: DRY using this
+    //onChange = (prop, val) => {
+      //  this.setState({
+        //  prop: val,
+       // })
+      //}
+    
     //Functions to update state on change of each input field.
+    // TODO: Remove if onChange works.
     onZipChange = (value) => {
         this.setState({zip: value})
     }
@@ -69,17 +87,17 @@ class ProviderForm extends React.Component {
     onCityChange = (value) => {
         this.setState({city: value})
     }
-    onStateChange = (value) => {
-        this.setState({state: value})
-    }
     onCountyChange = (value) => {
         this.setState({county: value})
+    }
+    onStateChange = (value) => {
+        this.setState({state: value})
     }
     onContactPhoneChange = (value) => {
         this.setState({phone: value})
     }
     onContactNameChange = (value) => {
-        this.setState({name: value})
+        this.setState({contact: value})
     }
     onContactEmailChange = (value) => {
         this.setState({email: value})
@@ -89,12 +107,6 @@ class ProviderForm extends React.Component {
     }
     clearPaymentSource = () => {
         this.setState({payment_source: null});
-    }
-    onProviderNameChange = (value) => {
-        this.setState({provider_id: value})
-    }
-    onNameChange = (value) => {
-        this.setState({name: value})
     }
     onNotesChange = (value) => {
         this.setState({notes: value})
@@ -109,27 +121,35 @@ class ProviderForm extends React.Component {
         this
             .props
             .onCancel();
-        console.log(this.state);
-        db.pushProviderObj(this.state);
 
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData
+        if (row) {
+            db.setProviderObj(row.uniq_id, newData)
+        } else {
+            db.pushProviderObj(this.state);
+        }
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
-        this.props.refreshTable();
+        this
+            .props
+            .refreshTable();
 
         this.setState({
-            provider_id: null,
-            address: null,
-            city: null,
-            state: null,
-            zip: null,
-            county: null,
-            phone: null,
-            contact: null,
-            email: null
-        }); 
+            ...this.defaultState
+        });
     }
-
- 
+    
+    //Used to handle deleting the object being observed in the Modal.
+    handleDelete = () => {
+        db.deleteProviderObj(this.props.rowData.uniq_id);
+        this
+            .props
+            .onCancel()
+        this
+            .props
+            .refreshTable();
+    }
 
     render() {
 
@@ -137,53 +157,122 @@ class ProviderForm extends React.Component {
 
             <Modal
                 title="Add New Provider"
-                style={{top: 20}}
+                style={{
+                top: 20
+            }}
                 width={'50vw'}
                 destroyOnClose={true}
                 visible={this.props.formModalVisible}
                 okText='Submit'
                 onOk={this.handleOk}
-                onCancel={this.props.onCancel}>
+                onCancel={this.props.onCancel}
+                footer={[ 
+                <Button key = "delete" disabled = {this.props.rowData? false: true}type = "danger" onClick = {this.handleDelete}> Delete</Button>,
+                <Button key = "Cancel" onClick={this.props.onCancel}>Cancel</Button >, 
+                < Button key = "submit" type = "primary" onClick = {this.handleOk} >Submit</Button>
+                ]}>
 
                 <div style={styles.form}>
-                        <div style={styles.formItem}>
-                            Provider Name:
-                            <Input
-                                placeholder="Provider Name"
-                                onChange={(e) => this.onProviderNameChange(e.target.value)}/>
-                        </div>
+                    <div style={styles.formItem}>
+                        Provider Name:
+                        <Input
+                            rowData={this.props.rowData}
+                            value={this.state.provider_id}
+                            placeholder="Provider Name"
+                            onChange={(e) => this.onNameChange(e.target.value)}/>
+                    </div>
 
                     <Divider orientation="left">Contact Information</Divider>
-                    <ProviderInfo
-                        onZipChange={this.onZipChange}
-                        onCityChange={this.onCityChange}
-                        onCountyChange={this.onCountyChange}
-                        onStateChange={this.onStateChange}
-                        onAddressChange={this.onAddressChange}
-                        onContactEmailChange={this.onContactEmailChange}
-                        onContactNameChange={this.onContactNameChange}
-                        onContactPhoneChange={this.onContactPhoneChange}/> 
-
+                    <div style={styles.topThird}>
+                        <div style={styles.formItem}>
+                            Address:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.address}
+                                placeholder="Address"
+                                onChange={(e) => this.onAddressChange(e.target.value)}/>
+                                
+                        </div>
+                        <div style={styles.formItem}>
+                            City:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.city}
+                                placeholder="City"
+                                onChange={(e) => this.onCityChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            State:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.state}
+                                placeholder="State"
+                                onChange={(e) => this.onStateChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            ZIP:
+                            <Input 
+                                rowData={this.props.rowData}
+                                value={this.state.zip}
+                                placeholder="ZIP" 
+                                onChange={(e) => this.onZipChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            County:
+                            <Input 
+                                rowData={this.props.rowData} 
+                                value={this.state.county}
+                                placeholder="County"
+                                onChange={(e) => this.onCountyChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            Contact Name:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.contact}
+                                placeholder="Contact Name"
+                                onChange={(e) => this.onContactNameChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            Contact Phone:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.phone}
+                                placeholder="Contact Phone"
+                                onChange={(e) => this.onContactPhoneChange(e.target.value)}/>
+                        </div>
+                        <div style={styles.formItem}>
+                            Contact Email:
+                            <Input
+                                rowData={this.props.rowData}
+                                value={this.state.email}
+                                placeholder="Contact Email"
+                                onChange={(e) => this.onContactEmailChange(e.target.value)}/>
+                        </div>
+                    </div>
                     <Divider/>
-                    
                     <div style={styles.formItem}>
-                    Status:<br/>
-                    <Select
-                        placeholder="Status"
-                        style={{
-                        width: 120
-                    }}
-                        onChange={this.onStatusChange}>
-                        <Option value="Active">Active</Option>
-                        <Option value="Inactive">Inactive</Option>
-                    </Select>
+                        Status:<br/>
+                        <Select
+                            placeholder="Status"
+                            style={{
+                            width: 120
+                        }}
+                            onChange={this.onStatusChange}
+                            rowData={this.props.rowData}
+                            value={this.state.status}>
+                            <Option value="Active">Active</Option>
+                            <Option value="Inactive">Inactive</Option>
+                        </Select>
                     </div>
                     <div style={styles.formItem}>
-                    <TextArea
-                        rows={4}
-                        placeholder="Notes"
-                        onChange={(e) => this.onNotesChange(e.target.value)}/>
-                        </div>
+                        <TextArea
+                            rowData={this.props.rowData}
+                            value={this.state.notes}
+                            rows={4}
+                            placeholder="Notes"
+                            onChange={(e) => this.onNotesChange(e.target.value)}/>
+                    </div>
 
                 </div>
 

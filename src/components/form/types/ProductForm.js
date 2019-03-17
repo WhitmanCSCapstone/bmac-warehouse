@@ -119,10 +119,8 @@ class ProductForm extends React.Component {
 
         if (row) {
             // if we are editing a shipment, set in place
-            console.log('editing')
             db.setProductObj(row.uniq_id, newData);
           } else {
-              console.log('new entry')
             // else we are creating a new entry
             db.pushProductObj(newData);
           }
