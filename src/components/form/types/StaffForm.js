@@ -1,7 +1,6 @@
 import React from 'react';
 import { Divider, Modal, Alert} from 'antd';
 import {auth, db} from '../../../firebase';
-import firebase from 'firebase';
 import {Input, Select} from 'antd';
 import * as ROLES from '../../../constants/roles';
 
@@ -54,7 +53,7 @@ class StaffForm extends React.Component {
         const roles = [];
         const isInvalid = passwordOne !== passwordTwo || passwordOne === '' || email === '' || username === '';
         
-        if (role=='Admin') {
+        if (role === 'Admin') {
             roles.push(ROLES.ADMIN);
           }
         if (!isInvalid) {

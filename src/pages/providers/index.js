@@ -33,6 +33,7 @@ class Providers extends React.Component {
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
+      rowData: null,
     }
   }
 
@@ -53,7 +54,7 @@ class Providers extends React.Component {
       <div style={styles.container}>
 
         <Button type="primary"
-                onClick={ () => this.setState({ formModalVisible: true }) }>
+                onClick={ () => this.setState({ formModalVisible: true, rowData:null }) }>
           Add New Provider
         </Button>
 
@@ -61,9 +62,16 @@ class Providers extends React.Component {
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
+          rowData = {this.state.rowData}
         />
         { !this.state.data ? <LoadingScreen/> :
           <ReactTable
+          getTrProps={(state, rowInfo) => ({
+            onClick: () => this.setState({
+              rowData: rowInfo.original,
+              formModalVisible: true,
+            })
+            })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if(string === 'provider_id'){
