@@ -132,7 +132,7 @@ class Shipments extends React.Component {
                 if(string === 'ship_date'){
                   return({
                     id: "ship_date",
-                    Header: string.replace('_',' ').split(' ')                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
                     accessor: d => {
