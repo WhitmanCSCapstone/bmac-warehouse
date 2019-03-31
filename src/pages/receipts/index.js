@@ -106,7 +106,7 @@ class Receipts extends React.Component {
                 if(string === 'recieve_date'){
                   return({
                     id: "recieve_date",
-                    Header: string.replace('_',' ').split(' ')                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
                     accessor: d => {
