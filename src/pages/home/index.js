@@ -93,12 +93,26 @@ class Home extends React.Component {
           <ReactTable
             data={this.state.receiptsData ? this.state.receiptsData : []}
             columns={receiptKeys.map(string => {
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                                .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                                .join(' '),
-                  accessor: string,
-                })
+              if(string === 'provider_id')
+                  return({
+                    Header: "Provider",
+                    accessor: string,})
+              if(string === 'billed_amt')
+                    return({
+                      Header: "Billed Amount",
+                      accessor: string,})
+              if(string === 'recieve_date')
+                    return({
+                        Header: "Received On",
+                        accessor: string,})        
+              else{   
+                      return({
+                      Header: string.replace('_',' ').split(' ')
+                                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                    .join(' '),
+                      accessor: string,
+                    })}
+             
             })}
             defaultPageSize={this.state.receiptsData.length}
             className="-striped -highlight"

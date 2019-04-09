@@ -93,9 +93,7 @@ class Receipts extends React.Component {
             columns={keys.map(string => {
                 if(string === 'provider_id'){
                   return({
-                    Header: string.replace('_',' ').split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    Header: "Provider",
                     accessor: string,
                     filterable: true,
                     filterAll: true,
@@ -106,9 +104,7 @@ class Receipts extends React.Component {
                 if(string === 'recieve_date'){
                   return({
                     id: "recieve_date",
-                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    Header: "Received On",
                     accessor: d => {
                     return Moment(d.recieve_date)
                     .local()
@@ -119,7 +115,13 @@ class Receipts extends React.Component {
                        return b > a ? 1 : -1;
                                           }
                     })
-                }                
+                }  
+              if(string== "billed_amt"){
+                return({
+                  Header: "Billed Amount",
+                  accessor: string,
+                })
+              }              
                 else{
                   return({
                     Header: string.replace('_',' ').split(' ')

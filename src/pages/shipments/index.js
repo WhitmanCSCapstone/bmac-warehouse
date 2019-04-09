@@ -118,9 +118,7 @@ class Shipments extends React.Component {
             columns={keys.map(string => {
                 if(string==='customer_id'){
                   return({
-                    Header: string.replace('_',' ').split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    Header: "Customer",
                     accessor: string,
                     Cell: this.readableCustomerCell,
                     filterable: true,

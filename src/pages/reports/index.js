@@ -186,26 +186,50 @@ class Reports extends React.Component {
           columns={reportKeys[this.state.reportType].map(string => {
               if(string === 'customer_id' && this.state.reportType === 'Inventory Shipments'){
                 return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
+                  Header: "Customer",
+                  accessor: string,
+                })
+              }
+              if(string === 'provider_id' && this.state.reportType === 'Current Providers'){
+                return({
+                  Header: "Provider",
+                  accessor: string,
+                })
+              }
+              if(string === 'billed_amt' && this.state.reportType === 'Current Providers'){
+                return({
+                  Header: "Billed Amount",
+                  accessor: string,
+                })
+              }
+              if(string === 'recieve_date' && this.state.reportType === 'Current Providers'){
+                return({
+                  Header: "Received On",
                   accessor: string,
                 })
               }
               if(string === 'provider_id' && this.state.reportType === 'Inventory Receipts'){
                 return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
+                  Header: "Provider",
+                  accessor: string,
+                })
+              }
+              if(string === 'customer_id' && this.state.reportType === 'Current Customers'){
+                return({
+                  Header: "Customer",
+                  accessor: string,
+                })
+              }
+              if(string === 'recieve_date' && this.state.reportType === 'Inventory Receipts'){
+                return({
+                  Header: "Received On",
                   accessor: string,
                 })
               }
               if(string === 'ship_date'){
                   return({
                     id: "ship_date",
-                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    Header: "Shipped On",
                     accessor: d => {
                     return Moment(d.ship_date)
                     .local()
