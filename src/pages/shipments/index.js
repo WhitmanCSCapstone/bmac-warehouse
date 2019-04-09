@@ -126,7 +126,8 @@ class Shipments extends React.Component {
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>
-                      matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                    matchSorter(rows, filter.value, { keys: ["customer_id"] }),
+                  
                   })
                 }
                 if(string === 'ship_date'){
@@ -139,8 +140,6 @@ class Shipments extends React.Component {
                     return Moment(d.ship_date)
                     .local()
                     .format("MM/DD/YYYY") },
-                    filterable: true,
-                    filterAll: true,
                     sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();

@@ -113,8 +113,6 @@ class Receipts extends React.Component {
                     return Moment(d.recieve_date)
                     .local()
                     .format("MM/DD/YYYY") },
-                    filterable: true,
-                    filterAll: true,
                     sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();

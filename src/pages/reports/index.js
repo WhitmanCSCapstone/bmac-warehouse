@@ -190,11 +190,6 @@ class Reports extends React.Component {
                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
                   accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
-
                 })
               }
               if(string === 'provider_id' && this.state.reportType === 'Inventory Receipts'){
@@ -203,10 +198,6 @@ class Reports extends React.Component {
                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
                   accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['provider_id'] }),
                 })
               }
               if(string === 'ship_date'){
@@ -219,8 +210,6 @@ class Reports extends React.Component {
                     return Moment(d.ship_date)
                     .local()
                     .format("MM/DD/YYYY") },
-                    filterable: true,
-                    filterAll: true,
                     sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();

@@ -93,8 +93,6 @@ class Products extends React.Component {
                     return Moment(d.initial_date)
                     .local()
                     .format("MM/DD/YYYY") },
-                    filterable: true,
-                    filterAll: true,
                     sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
