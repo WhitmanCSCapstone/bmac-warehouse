@@ -76,7 +76,6 @@ class ReceiptForm extends React.Component {
       this.setState({ ...this.props.rowData });
     }
   }
-  // TODO: DRY using this
 
   onClickFundingSource = (value) => {
     this.setState({ payment_source: value });
@@ -86,8 +85,8 @@ class ReceiptForm extends React.Component {
     this.setState({ payment_source: null });
   }
 
-  onBilledAmtChange = (value) => {
-    this.setState({ total_price: value })
+  onTextChange = (prop, val) => {
+    this.setState({ [prop]: val });
   }
 
   onNotesChange = (value) => {
@@ -161,12 +160,18 @@ class ReceiptForm extends React.Component {
         <div style={styles.form}>
 
           <div style={styles.topThird}>
-
+            {/* intentially mispelled "receive" */}
             <div style={styles.formItem}>
               Date:
               <DatePicker style={styles.datePicker}
-                          format={'MM/DD/YYYY'}
                           onChange={ (date) => this.onChange('recieve_date', date.format('MM/DD/YYYY')) }
+                          format={'MM/DD/YYYY'}
+                          key={`recievedate:${this.state.recieve_date}`}
+                          defaultValue={
+                            this.state.recieve_date
+                                      ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
+                                      : this.state.recieve_date
+                          }
                           placeholder="Receive Date" />
             </div>
 
@@ -179,13 +184,18 @@ class ReceiptForm extends React.Component {
                 onClick={this.onClickFundingSource}
                 clearFundingSource={this.clearPaymentSource}
                 required={true}
+                rowData={this.props.rowData}
+                key={`paymentsource:${this.state.payment_source}`}
               />
             </div>
 
 
             <div style={styles.formItem}>
               Provider:
-              <ProviderAutoComplete onProviderChange={ this.onChange }/>
+              <ProviderAutoComplete
+                onProviderChange={ (val) => this.onChange('provider_id', val) }
+                rowData={this.props.rowData}
+              />
             </div>
 
           </div>
@@ -209,7 +219,9 @@ class ReceiptForm extends React.Component {
             <div style={styles.formItem}>
               <Input
                 placeholder="Billed Amount"
-                onChange={ (e) => this.onBilledAmtChange(e.target.value) } />
+                value={this.state.billed_amt}
+                onChange={ (e) => this.onTextChange('billed_amt', e.target.value) }
+              />
             </div>
 
           </div>
@@ -217,7 +229,8 @@ class ReceiptForm extends React.Component {
           <TextArea
             rows={4}
             placeholder="Notes"
-            onChange={ (e) => this.onNotesChange(e.target.value) }
+            value={this.state.notes}
+            onChange={ (e) => this.onTextChange('notes', e.target.value) }
           />
 
         </div>
