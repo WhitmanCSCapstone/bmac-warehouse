@@ -76,7 +76,7 @@ class Home extends React.Component {
                     accessor: string,})
                 else{
                   return({
-                    Header: "Ship Date",
+                    Header: "Shipped On",
                     accessor: string,
                   })}
 
