@@ -4,6 +4,7 @@ import { Input, DatePicker, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import ProviderAutoComplete from '../ProviderAutoComplete';
+import Moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -48,26 +49,33 @@ const styles = {
 var ref = null;
 
 class ReceiptForm extends React.Component {
+
+  defaultState = {
+    provider_id: null,
+    recieve_date: null,
+    payment_source: null,
+    receive_items: [{},{},{},{},{}],
+    billed_amt: null,
+    notes: null,
+    total_weight: null,
+  }
+
   constructor(props) {
     super(props);
-    this.state = {
-      provider_id: null,
-      recieve_date: null,
-      payment_source: null,
-      receive_items: [{},{},{},{},{}],
-      billed_amt: null,
-      notes: null,
-      total_weight: null,
-    }
+    this.state = { ...this.defaultState, ...props.rowData }
   }
 
   onChange = (prop, val) => {
-    console.log('Received values of form: ', val, prop);
     this.setState({
       [prop]: val,
     })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({ ...this.props.rowData });
+    }
+  }
   // TODO: DRY using this
 
   onClickFundingSource = (value) => {
@@ -123,15 +131,7 @@ class ReceiptForm extends React.Component {
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
 
-    this.setState({
-      provider_id: null,
-      recieve_date: null,
-      payment_source: null,
-      receive_items: [{},{},{},{},{}],
-      billed_amt: null,
-      notes: null,
-      total_weight: null,
-    });
+    this.setState({ ...this.defaultState });
   }
 
   addReceiveItem = () => {
