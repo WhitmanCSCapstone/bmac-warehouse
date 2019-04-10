@@ -140,22 +140,14 @@ class Receipts extends React.Component {
                 if(string === 'recieve_date'){
                   return({
                     id: "recieve_date",
-                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                    accessor: d => {
-                    return Moment(d.recieve_date)
-                    .local()
-                    .format("MM/DD/YYYY") },
-                    filterable: true,
-                    filterAll: true,
+                    Header: 'Receive Date',
+                    accessor: d => Moment(d.initial_date).local().format("MM/DD/YYYY"),
                     sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                       return b > a ? 1 : -1;
-                                          }
-                    })
-                }                
+                      a = new Date(a).getTime();
+                      b = new Date(b).getTime();
+                      return b > a ? 1 : -1;
+                    }})
+                }
                 else{
                   return({
                     Header: string.replace('_',' ').split(' ')
