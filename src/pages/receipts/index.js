@@ -94,7 +94,7 @@ class Receipts extends React.Component {
         <Button type="primary"
                 onClick={ () => this.setState({
                     formModalVisible: true,
-                    rowData: null
+                    rowData: null,
                 })}>
           Add New Receipt
         </Button>

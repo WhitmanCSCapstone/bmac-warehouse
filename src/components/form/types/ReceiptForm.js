@@ -132,14 +132,11 @@ class ReceiptForm extends React.Component {
 
     if (row && row.uniq_id) {
       // if we are editing a shipment, set in place
-      console.log('editing!');
-      console.log(newData);
       db.setReceiptObj(row.uniq_id, newData);
     } else {
       // else we are creating a new entry
       db.pushReceiptObj(newData);
     }
-
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
