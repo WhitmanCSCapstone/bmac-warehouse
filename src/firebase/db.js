@@ -45,9 +45,11 @@ export const setShipmentObj = (index, newData) => {
 export const deleteShipmentObj = (index) => {
     db.ref(`2/shipments/${index}`).remove();
 }
+export const setReceiptObj = (index, newData) =>
+  db.ref(`6/contributions/${index}`).set(newData);
 
-export const setReceiptsObj = (index, newData) =>
-    db.ref(`6/contributions/${index}/receive_items`).set(newData);
+export const deleteReceiptObj = (index) =>
+  db.ref(`6/contributions/${index}`).remove();
 
 export const pushShipmentObj = (newData) => {
     db.ref('2/shipments')
@@ -59,9 +61,15 @@ export const pushShipmentObj = (newData) => {
       })
 }
 
-export const pushReceiptObj = (newData) =>
-  db.ref(`6/contributions/`).push(newData);
-
+export const pushReceiptObj = (newData) => {
+    db.ref('6/contributions')
+      .push(newData)
+      .then((snapshot) => {
+        const uniq_id = snapshot.key;
+        newData['uniq_id'] = uniq_id;
+        db.ref(`6/contributions/${uniq_id}`).set(newData);
+      })
+}
 
 export const pushProviderObj = (newData) =>
     db.ref('3/providers/')

@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { db } from '../../firebase';
 import { getReadableReceiptsTableData } from '../../utils/receipts';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
@@ -37,6 +38,7 @@ class Receipts extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
+      providers: null,
     }
   }
 
@@ -57,12 +59,25 @@ class Receipts extends React.Component {
 
   componentDidMount(){
     this.refreshTable()
+
+    db.onceGetProviders().then(snapshot => {
+      var data = snapshot.val();
+      this.setState({ providers: data });
+    });
+  }
+
+  readableProviderCell = (rowData) => {
+    var hash = rowData.original['provider_id'];
+    var obj = this.state.providers[hash];
+    var name = obj ? obj['provider_id'] : 'INVALID PROVIDER_ID';
+    return <span>{name}</span>
   }
 
   refreshTable = () => {
-    getReadableReceiptsTableData().then(data =>
-      this.setState({ data: data.val() })
-    );
+    db.onceGetReceipts().then(snapshot => {
+      var data = Object.values(snapshot.val());
+      this.setState({ data: data });
+    });
   }
 
   render() {
@@ -91,7 +106,7 @@ class Receipts extends React.Component {
           rowData={ this.state.rowData }
         />
 
-        { !this.state.data ? <LoadingScreen/> :
+        { !this.state.data || !this.state.providers ? <LoadingScreen/> :
           <ReactTable
             getTrProps={(state, rowInfo) => ({
                 onClick: () => this.setState({
@@ -108,6 +123,7 @@ class Receipts extends React.Component {
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
                     accessor: string,
+                    Cell: this.readableProviderCell,
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>

@@ -58,6 +58,7 @@ class ReceiptForm extends React.Component {
     billed_amt: null,
     notes: null,
     total_weight: null,
+    uniq_id: null,
   }
 
   constructor(props) {
@@ -104,28 +105,41 @@ class ReceiptForm extends React.Component {
 
     var total_weight = 0;
     for(var item of this.state.receive_items) {
-      var weight = parseInt(item['total_weight'])
+      var stringWeight = item ? item['total_weight'] : '0';
+      var weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
   }
 
-  deleteEmptyReceiveItems = () => {
-    var newItems = [];
-    for (let obj of this.state.receive_items){
-      if (Object.keys(obj).length !== 0 && obj.constructor === Object){
-        newItems.push(obj);
-      }
-    }
-    this.setState({ receive_items: newItems });
+
+  deleteEmptyReceiveItems = (receiveItems) => {
+    var filteredItems = receiveItems.filter( obj => {
+      return obj !== undefined && obj['product'] !== undefined;
+    })
+    return filteredItems;
   }
 
   handleOk = () => {
     this.props.onCancel();
 
-    this.deleteEmptyReceiveItems();
+    var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
+    var newData = JSON.parse(JSON.stringify(this.state));
 
-    db.pushReceiptObj(this.state);
+    newData['receive_items'] = emptiedShipItems;
+
+    var row = this.props.rowData
+
+    if (row && row.uniq_id) {
+      // if we are editing a shipment, set in place
+      console.log('editing!');
+      console.log(newData);
+      db.setReceiptObj(row.uniq_id, newData);
+    } else {
+      // else we are creating a new entry
+      db.pushReceiptObj(newData);
+    }
+
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
@@ -134,7 +148,20 @@ class ReceiptForm extends React.Component {
   }
 
   addReceiveItem = () => {
-    this.setState({ receive_items: [...this.state.receive_items, {}] });
+    var emptyRow = {
+      'product': undefined,
+      'unit_weight': undefined,
+      'case_lots': undefined,
+      'total_weight': undefined,
+    };
+
+    var newReceiveItems = this.state.receive_items
+                           .concat(emptyRow)
+                           .filter( elem => {
+                             return elem !== undefined;
+                           });
+
+    this.setState({ receive_items: newReceiveItems });
   }
 
   removeReceiveItem = (removeIndex) => {

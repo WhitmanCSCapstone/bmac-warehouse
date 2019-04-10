@@ -47,9 +47,9 @@ class ProviderAutoComplete extends React.Component {
     return(
       <AutoComplete
         dataSource={this.state.dataSourceTypeItemList}
-        style={styles.container}
-        defaultValue={this.props.rowData ? this.props.rowData.provider_id : undefined }
+        defaultValue={this.state.defaultValue}
         key={this.state.defaultValue}
+        style={styles.container}
         onChange={ this.onChange }
         placeholder="Provider"
         filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
