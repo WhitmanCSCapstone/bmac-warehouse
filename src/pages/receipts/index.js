@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { db } from '../../firebase';
 import { getReadableReceiptsTableData } from '../../utils/receipts';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
@@ -36,6 +37,8 @@ class Receipts extends React.Component {
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
+      rowData: null,
+      providers: null,
     }
   }
 
@@ -56,12 +59,25 @@ class Receipts extends React.Component {
 
   componentDidMount(){
     this.refreshTable()
+
+    db.onceGetProviders().then(snapshot => {
+      var data = snapshot.val();
+      this.setState({ providers: data });
+    });
+  }
+
+  readableProviderCell = (rowData) => {
+    var hash = rowData.original['provider_id'];
+    var obj = this.state.providers[hash];
+    var name = obj ? obj['provider_id'] : 'INVALID PROVIDER_ID';
+    return <span>{name}</span>
   }
 
   refreshTable = () => {
-    getReadableReceiptsTableData().then(data =>
-      this.setState({ data: data.val() })
-    );
+    db.onceGetReceipts().then(snapshot => {
+      var data = Object.values(snapshot.val());
+      this.setState({ data: data });
+    });
   }
 
   render() {
@@ -76,7 +92,10 @@ class Receipts extends React.Component {
         </div>
 
         <Button type="primary"
-                onClick={ () => this.setState({ formModalVisible: true }) }>
+                onClick={ () => this.setState({
+                    formModalVisible: true,
+                    rowData: null,
+                })}>
           Add New Receipt
         </Button>
 
@@ -84,10 +103,17 @@ class Receipts extends React.Component {
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
           onCancel={ () => this.setState({ formModalVisible: false }) }
+          rowData={ this.state.rowData }
         />
 
-        { !this.state.data ? <LoadingScreen/> :
+        { !this.state.data || !this.state.providers ? <LoadingScreen/> :
           <ReactTable
+            getTrProps={(state, rowInfo) => ({
+                onClick: () => this.setState({
+                  rowData: rowInfo.original,
+                  formModalVisible: true,
+                })
+            })}
             data={this.state.filteredData && this.state.dateRange.length ?
                   this.state.filteredData : this.state.data}
             columns={keys.map(string => {
@@ -95,10 +121,18 @@ class Receipts extends React.Component {
                   return({
                     Header: "Provider",
                     accessor: string,
+                    Cell: this.readableProviderCell,
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>
-                      matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                      matchSorter(rows, filter.value, {keys: [obj => {
+                        var provider = this.state.providers[obj.provider_id]
+                        var name = 'INVALID PROVIDER ID'
+                        if(provider){
+                          var name = provider.provider_id
+                        }
+                        return name;
+                      }]}),
                   })
                 }
                 if(string === 'recieve_date'){
@@ -122,6 +156,7 @@ class Receipts extends React.Component {
                   accessor: string,
                 })
               }              
+
                 else{
                   return({
                     Header: string.replace('_',' ').split(' ')

@@ -226,7 +226,7 @@ class Reports extends React.Component {
                   accessor: string,
                 })
               }
-              if(string === 'ship_date'){
+              if(string === 'ship_date' || string === 'intial_date' || string === 'recieve_date'){
                   return({
                     id: "ship_date",
                     Header: "Shipped On",
@@ -235,12 +235,12 @@ class Reports extends React.Component {
                     .local()
                     .format("MM/DD/YYYY") },
                     sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                       return b > a ? 1 : -1;
-                                          }
-                    })
-              }              
+                      a = new Date(a).getTime();
+                      b = new Date(b).getTime();
+                      return b > a ? 1 : -1;
+                    }
+                  })
+              }
               else{
                 return({
                   Header: string.replace('_',' ').split(' ')

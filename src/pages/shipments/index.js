@@ -124,34 +124,28 @@ class Shipments extends React.Component {
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, {keys: [obj => {
-                      var customer = this.state.customers[obj.customer_id]
-                      var name = 'INVALID CUSTOMER ID'
-                      if(customer){
-                        var name = customer.customer_id
-                      }
-                      return name;
-                    }]}),
-                  
+                      matchSorter(rows, filter.value, {keys: [obj => {
+                        var customer = this.state.customers[obj.customer_id]
+                        var name = 'INVALID CUSTOMER ID'
+                        if(customer){
+                          var name = customer.customer_id
+                        }
+                        return name;
+                      }]}),
                   })
                 }
                 if(string === 'ship_date'){
                   return({
                     id: "ship_date",
-                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                    accessor: d => {
-                    return Moment(d.ship_date)
-                    .local()
-                    .format("MM/DD/YYYY") },
+                    Header: 'Ship Date',
+                    accessor: d => Moment(d.ship_date).local().format("MM/DD/YYYY"),
                     sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                       return b > a ? 1 : -1;
-                                          }
-                    })
-                }                
+                      a = new Date(a).getTime();
+                      b = new Date(b).getTime();
+                      return b > a ? 1 : -1;
+                    }
+                  })
+                }
                 else{
                   return({
                     Header: string.replace('_',' ').split(' ')

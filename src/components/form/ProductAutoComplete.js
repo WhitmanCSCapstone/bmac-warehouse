@@ -44,7 +44,11 @@ class ProductAutoComplete extends React.Component {
         value={this.props.value}
         onChange={ value => this.props.onChange('product', this.props.index, value) }
         placeholder="Product"
-        filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+        filterOption={(inputValue, option) => {
+            if(option.props.children) {
+              return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            }
+        }
       />
     );
   }
