@@ -127,7 +127,14 @@ class Receipts extends React.Component {
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>
-                      matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                      matchSorter(rows, filter.value, {keys: [obj => {
+                        var provider = this.state.providers[obj.provider_id]
+                        var name = 'INVALID PROVIDER ID'
+                        if(provider){
+                          var name = provider.provider_id
+                        }
+                        return name;
+                      }]}),
                   })
                 }
                 if(string === 'recieve_date'){

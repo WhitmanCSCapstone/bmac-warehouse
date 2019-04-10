@@ -126,7 +126,15 @@ class Shipments extends React.Component {
                     filterable: true,
                     filterAll: true,
                     filterMethod: (filter, rows) =>
-                      matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                      matchSorter(rows, filter.value, {keys: [obj => {
+                        var customer = this.state.customers[obj.customer_id]
+                        var name = 'INVALID CUSTOMER ID'
+                        if(customer){
+                          var name = customer.customer_id
+                        }
+                        return name;
+                      }]}),
+
                   })
                 }
                 if(string === 'ship_date'){
