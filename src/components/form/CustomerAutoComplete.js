@@ -53,7 +53,11 @@ class CustomerAutoComplete extends React.Component {
         style={styles.container}
         onChange={ this.onChange }
         placeholder="Customer"
-        filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+        filterOption={(inputValue, option) => {
+            if(option.props.children) {
+              return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            }
+        }
       />
     );
   }

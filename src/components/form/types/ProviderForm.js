@@ -124,7 +124,7 @@ class ProviderForm extends React.Component {
 
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData
-        if (row) {
+        if (row && row.uniq_id) {
             db.setProviderObj(row.uniq_id, newData)
         } else {
             db.pushProviderObj(this.state);

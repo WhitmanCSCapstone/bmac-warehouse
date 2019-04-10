@@ -84,7 +84,7 @@ class CustomerForm extends React.Component {
 
         var row = this.props.rowData;
 
-        if(row) {
+        if(row && row.uniq_id) {
             db.setCustomerObj(row.uniq_id, newData);
         } else {
             db.pushCustomerObj(this.state);
