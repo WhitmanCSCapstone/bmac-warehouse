@@ -34,7 +34,7 @@ class Customers extends React.Component {
     }
   }
 
- 
+
 componentDidMount(){
     this.refreshTable();
 }

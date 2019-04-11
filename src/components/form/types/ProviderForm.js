@@ -72,7 +72,7 @@ class ProviderForm extends React.Component {
         //  prop: val,
        // })
       //}
-    
+
     //Functions to update state on change of each input field.
     // TODO: Remove if onChange works.
     onZipChange = (value) => {
@@ -139,7 +139,7 @@ class ProviderForm extends React.Component {
             ...this.defaultState
         });
     }
-    
+
     //Used to handle deleting the object being observed in the Modal.
     handleDelete = () => {
         db.deleteProviderObj(this.props.rowData.uniq_id);
@@ -191,7 +191,7 @@ class ProviderForm extends React.Component {
                                 value={this.state.address}
                                 placeholder="Address"
                                 onChange={(e) => this.onAddressChange(e.target.value)}/>
-                                
+
                         </div>
                         <div style={styles.formItem}>
                             City:
@@ -211,16 +211,16 @@ class ProviderForm extends React.Component {
                         </div>
                         <div style={styles.formItem}>
                             ZIP:
-                            <Input 
+                            <Input
                                 rowData={this.props.rowData}
                                 value={this.state.zip}
-                                placeholder="ZIP" 
+                                placeholder="ZIP"
                                 onChange={(e) => this.onZipChange(e.target.value)}/>
                         </div>
                         <div style={styles.formItem}>
                             County:
-                            <Input 
-                                rowData={this.props.rowData} 
+                            <Input
+                                rowData={this.props.rowData}
                                 value={this.state.county}
                                 placeholder="County"
                                 onChange={(e) => this.onCountyChange(e.target.value)}/>

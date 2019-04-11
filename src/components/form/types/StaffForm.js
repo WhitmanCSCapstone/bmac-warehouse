@@ -52,7 +52,7 @@ class StaffForm extends React.Component {
         const {username, email, passwordOne, passwordTwo, role} = this.state;
         const roles = [];
         const isInvalid = passwordOne !== passwordTwo || passwordOne === '' || email === '' || username === '';
-        
+
         if (role === 'Admin') {
             roles.push(ROLES.ADMIN);
           }
@@ -87,7 +87,7 @@ class StaffForm extends React.Component {
                     this.setState(byPropKey('error', error));
                 });
 
-        } 
+        }
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous this.props.refreshTable();
     }
@@ -100,7 +100,7 @@ class StaffForm extends React.Component {
         const {username, email, passwordOne, passwordTwo, error} = this.state;
 
         const isInvalid = passwordOne !== passwordTwo;
-        
+
 
         return (
 
@@ -127,7 +127,7 @@ class StaffForm extends React.Component {
                             type="text"
                             placeholder="Username"/>
                     </div>
-                    
+
                     <div style={styles.formItem}>
                     Email:
                         <Input
@@ -149,7 +149,7 @@ class StaffForm extends React.Component {
 
                     </Select>
                     </div>
-                   
+
                     <Divider orientation="left">Password</Divider>
 
                     <div style={styles.formItem}>

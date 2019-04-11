@@ -47,8 +47,8 @@ class Providers extends React.Component {
       );
     }
 
-  
-  
+
+
   render() {
     return(
       <div style={styles.container}>

@@ -94,7 +94,7 @@ class ProductForm extends React.Component {
     onDateChange = (value) => {
         if (value!=null){
             this.setState({initial_date: value.format('MM/DD/YYYY')})
-        } 
+        }
     }
     onStatusChange = (value) => {
         this.setState({status: value})
@@ -166,7 +166,7 @@ class ProductForm extends React.Component {
                             value={this.state.product_id}
                             placeholder="Product Name"
                             onChange={(e) => this.onProductNameChange(e.target.value)}/>
-                            
+
 
                     </div>
 
@@ -184,9 +184,9 @@ class ProductForm extends React.Component {
                                 rowData={this.props.rowData}
                                 key={`fundssource:${this.state.funding_source}`}
                             />
-                                
+
                         </div>
-                        
+
                         <div style={styles.formItem}>
                             Unit Weight:
                             <Input
@@ -225,8 +225,8 @@ class ProductForm extends React.Component {
                                               ? Moment(this.state.initial_date, 'MM/DD/YYYY')
                                               : this.state.initial_date
                                   }/>
-                                
-                                
+
+
                         </div>
                         <div style={styles.formItem}>
                             Minimum Stock:
@@ -248,7 +248,7 @@ class ProductForm extends React.Component {
                         rowData={this.props.rowData}
                         value={this.state.status}
                         >
-                        
+
                         <Option value="Active">Active</Option>
                         <Option value="Discontinued">Discontinued</Option>
 
