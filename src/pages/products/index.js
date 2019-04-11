@@ -22,7 +22,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     padding: 24,
-    
+
   },
 };
 
@@ -40,11 +40,11 @@ class Products extends React.Component {
   componentDidMount(){
       this.refreshTable();
 
-      
+
   }
 
   refreshTable = () => {
-    db.onceGetProducts().then(snapshot => 
+    db.onceGetProducts().then(snapshot =>
       this.setState({ data: Object.values(snapshot.val()) })
     );
   }

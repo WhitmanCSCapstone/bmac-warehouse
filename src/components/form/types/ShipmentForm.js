@@ -98,7 +98,7 @@ class ShipmentForm extends React.Component {
   onTextChange = (prop, val) => {
     this.setState({ [prop]: val });
   }
-  
+
 
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.ship_items.slice(0); // shallow clone
@@ -149,7 +149,7 @@ class ShipmentForm extends React.Component {
     this.setState({ ...this.defaultState });
 
   }
-  
+
 
   // @param 1 - Coordinate (in units declared at inception of PDF document) against left edge of the page
   // @param 2 - Coordinate (in units declared at inception of PDF document) against upper edge of the page

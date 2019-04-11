@@ -50,7 +50,7 @@ class CustomerForm extends React.Component {
         email: null,
         status: null,
         notes: null,
-        uniq_id: null,        
+        uniq_id: null,
     };
 
     constructor(props) {
@@ -78,7 +78,7 @@ class CustomerForm extends React.Component {
     handleOk = () => {
 
         //TODO: fix bug of editing customer just added creating new customer
-        this.props.onCancel();
+        this.props.closeForm();
 
         var newData = JSON.parse(JSON.stringify(this.state));
 
@@ -125,7 +125,7 @@ class CustomerForm extends React.Component {
                     </div>
 
                     <Divider orientation="left">Customer Information</Divider>
-                   
+
                         <div style={styles.formItem}>
                             Address:
                             <Input
@@ -138,7 +138,7 @@ class CustomerForm extends React.Component {
 
                         <div style={styles.formItem}>
                             City:
-                            <Input placeholder="City" 
+                            <Input placeholder="City"
                                    onChange={(e) => this.onChange('city', e.target.value)}
                                    rowData={this.props.rowData}
                                    value={this.state.city}/>
@@ -153,7 +153,7 @@ class CustomerForm extends React.Component {
                         </div>
                         <div style={styles.formItem}>
                             ZIP:
-                            <Input placeholder="ZIP" 
+                            <Input placeholder="ZIP"
                                    onChange={(e) => this.onChange('zip', e.target.value)}
                                    rowData={this.props.rowData}
                                    value={this.state.zip}/>
@@ -210,7 +210,7 @@ class CustomerForm extends React.Component {
                         onChange={(e) => this.onChange('notes', e.target.value)}
                         rowData={this.props.rowData}
                         value={this.state.notes}/>
-                    
+
                 </div>
 
             </Modal>
