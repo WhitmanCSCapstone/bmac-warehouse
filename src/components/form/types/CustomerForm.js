@@ -109,7 +109,7 @@ class CustomerForm extends React.Component {
                 visible={this.props.formModalVisible}
                 okText='Submit'
                 onOk={this.handleOk}
-                onCancel={this.props.onCancel}>
+                onCancel={this.props.closeForm}>
 
                 <div style={styles.form}>
                 <div style={styles.topThird}>

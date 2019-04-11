@@ -126,7 +126,7 @@ class ShipmentForm extends React.Component {
   }
 
   handleOk = () => {
-    this.props.onCancel();
+    this.props.closeForm();
 
     var emptiedShipItems = this.deleteEmptyShipItems(this.state.ship_items);
     var newData = JSON.parse(JSON.stringify(this.state));
@@ -272,7 +272,7 @@ class ShipmentForm extends React.Component {
 
   handleDelete = () => {
     db.deleteShipmentObj(this.props.rowData.uniq_id);
-    this.props.onCancel()
+    this.props.closeForm()
     this.props.refreshTable();
   }
 
@@ -286,12 +286,12 @@ class ShipmentForm extends React.Component {
         width={'50vw'}
         destroyOnClose={true}
         visible={this.props.formModalVisible}
-        onCancel={this.props.onCancel}
+        onCancel={this.props.closeForm}
         footer={[
           <Button key="savelabel" type="primary" onClick={this.handleLabel}>Create Label</Button>,
           <Button key="savepdf" type="primary" onClick={this.handlePdf}>Save Invoice</Button>,
           <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
-          <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
+          <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>,
           <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
         ]}
       >

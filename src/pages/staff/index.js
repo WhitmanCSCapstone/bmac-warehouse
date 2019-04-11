@@ -51,7 +51,7 @@ class Staff extends React.Component {
                 <StaffForm
                     formModalVisible={this.state.formModalVisible}
                     refreshTable={this.refreshTable}
-                    onCancel={() => this.setState({formModalVisible: false})}/> {!this.state.data
+                    closeForm={() => this.setState({formModalVisible: false})}/> {!this.state.data
                     ? <LoadingScreen/>
                     : <ReactTable
                         data={this.state.data

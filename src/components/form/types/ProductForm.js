@@ -112,7 +112,7 @@ class ProductForm extends React.Component {
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
 
-        this.props.onCancel();
+        this.props.closeForm();
 
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData
@@ -134,7 +134,7 @@ class ProductForm extends React.Component {
 
     handleDelete = () => {
         db.deleteProductObj(this.props.rowData.uniq_id);
-        this.props.onCancel()
+        this.props.closeForm()
         this.props.refreshTable();
       }
 
@@ -151,10 +151,10 @@ class ProductForm extends React.Component {
                 destroyOnClose={true}
                 visible={this.props.formModalVisible}
                 okText='Submit'
-                onCancel={this.props.onCancel}
+                onCancel={this.props.closeForm}
                 footer={[
                     <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
-                    <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
+                    <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>,
                     <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
                  ]}>
                 <div style={styles.form}>

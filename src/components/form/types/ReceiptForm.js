@@ -121,7 +121,7 @@ class ReceiptForm extends React.Component {
   }
 
   handleOk = () => {
-    this.props.onCancel();
+    this.props.closeForm();
 
     var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
     var newData = JSON.parse(JSON.stringify(this.state));
@@ -168,7 +168,7 @@ class ReceiptForm extends React.Component {
 
   handleDelete = () => {
     db.deleteReceiptObj(this.props.rowData.uniq_id);
-    this.props.onCancel()
+    this.props.closeForm()
     this.props.refreshTable();
   }
 
@@ -184,10 +184,10 @@ class ReceiptForm extends React.Component {
         visible={this.props.formModalVisible}
         footer={[
           <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
-          <Button key="Cancel" onClick={this.props.onCancel}>Cancel</Button>,
+          <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>,
           <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
         ]}
-        onCancel={this.props.onCancel}
+        onCancel={this.props.closeForm}
       >
 
         <div style={styles.form}>
