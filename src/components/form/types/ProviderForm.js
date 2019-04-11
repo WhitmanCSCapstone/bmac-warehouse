@@ -120,7 +120,7 @@ class ProviderForm extends React.Component {
     handleOk = () => {
         this
             .props
-            .onCancel();
+            .closeForm();
 
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData
@@ -145,7 +145,7 @@ class ProviderForm extends React.Component {
         db.deleteProviderObj(this.props.rowData.uniq_id);
         this
             .props
-            .onCancel()
+            .closeForm()
         this
             .props
             .refreshTable();
@@ -165,10 +165,10 @@ class ProviderForm extends React.Component {
                 visible={this.props.formModalVisible}
                 okText='Submit'
                 onOk={this.handleOk}
-                onCancel={this.props.onCancel}
-                footer={[ 
+                onCancel={this.props.closeForm}
+                footer={[
                 <Button key = "delete" disabled = {this.props.rowData? false: true}type = "danger" onClick = {this.handleDelete}> Delete</Button>,
-                <Button key = "Cancel" onClick={this.props.onCancel}>Cancel</Button >, 
+                <Button key = "Cancel" onClick={this.props.closeForm}>Cancel</Button >,
                 < Button key = "submit" type = "primary" onClick = {this.handleOk} >Submit</Button>
                 ]}>
 

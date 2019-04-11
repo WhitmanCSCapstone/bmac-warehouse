@@ -75,7 +75,7 @@ class StaffForm extends React.Component {
                             });
                             this
                                 .props
-                                .onCancel();
+                                .closeForm();
                             this.props.refreshTable();
                         })
                         .catch(error => {
@@ -117,7 +117,7 @@ class StaffForm extends React.Component {
                 okButtonProps={{
                 disabled: isInvalid
             }}
-                onCancel={this.props.onCancel}>
+                onCancel={this.props.closeForm}>
                 <div style={styles.form}>
                     <div style={styles.formItem}>
                     Username:

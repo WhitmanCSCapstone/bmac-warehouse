@@ -102,7 +102,7 @@ class Receipts extends React.Component {
         <ReceiptForm
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
-          onCancel={ () => this.setState({ formModalVisible: false }) }
+          closeForm={ () => this.setState({ formModalVisible: false }) }
           rowData={ this.state.rowData }
         />
 

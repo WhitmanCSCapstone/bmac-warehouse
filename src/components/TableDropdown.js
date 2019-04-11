@@ -89,7 +89,7 @@ class TableDropdown extends React.Component {
     }
   }
 
-  onCancel = () => {
+  closeForm = () => {
     this.setState({data: originalData})
     this.setState({editable: !this.state.editable})
   }
@@ -100,7 +100,7 @@ class TableDropdown extends React.Component {
 
     if(this.state.editable) {
       renderEdit = <div>
-        <button onClick = {this.onCancel}>
+        <button onClick = {this.closeForm}>
           Cancel
         </button>
       </div>
