@@ -13,7 +13,7 @@ const styles = {
 
   iconDisabled: {
     alignSelf: 'center',
-    marginBottom: '0.20em',
+    marginBottom: '0.5em',
     opacity: 0,
   },
 
