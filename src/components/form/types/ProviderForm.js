@@ -176,7 +176,6 @@ class ProviderForm extends React.Component {
                     <div style={styles.formItem}>
                         Provider Name:
                         <Input
-                            rowData={this.props.rowData}
                             value={this.state.provider_id}
                             placeholder="Provider Name"
                             onChange={(e) => this.onNameChange(e.target.value)}/>
@@ -187,7 +186,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             Address:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.address}
                                 placeholder="Address"
                                 onChange={(e) => this.onAddressChange(e.target.value)}/>
@@ -196,7 +194,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             City:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.city}
                                 placeholder="City"
                                 onChange={(e) => this.onCityChange(e.target.value)}/>
@@ -204,7 +201,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             State:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.state}
                                 placeholder="State"
                                 onChange={(e) => this.onStateChange(e.target.value)}/>
@@ -212,7 +208,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             ZIP:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.zip}
                                 placeholder="ZIP"
                                 onChange={(e) => this.onZipChange(e.target.value)}/>
@@ -220,7 +215,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             County:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.county}
                                 placeholder="County"
                                 onChange={(e) => this.onCountyChange(e.target.value)}/>
@@ -228,7 +222,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             Contact Name:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.contact}
                                 placeholder="Contact Name"
                                 onChange={(e) => this.onContactNameChange(e.target.value)}/>
@@ -236,7 +229,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             Contact Phone:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.phone}
                                 placeholder="Contact Phone"
                                 onChange={(e) => this.onContactPhoneChange(e.target.value)}/>
@@ -244,7 +236,6 @@ class ProviderForm extends React.Component {
                         <div style={styles.formItem}>
                             Contact Email:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.email}
                                 placeholder="Contact Email"
                                 onChange={(e) => this.onContactEmailChange(e.target.value)}/>
@@ -259,7 +250,6 @@ class ProviderForm extends React.Component {
                             width: 120
                         }}
                             onChange={this.onStatusChange}
-                            rowData={this.props.rowData}
                             value={this.state.status}>
                             <Option value="Active">Active</Option>
                             <Option value="Inactive">Inactive</Option>
@@ -267,7 +257,6 @@ class ProviderForm extends React.Component {
                     </div>
                     <div style={styles.formItem}>
                         <TextArea
-                            rowData={this.props.rowData}
                             value={this.state.notes}
                             rows={4}
                             placeholder="Notes"

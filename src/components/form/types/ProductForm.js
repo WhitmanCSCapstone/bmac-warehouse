@@ -162,12 +162,9 @@ class ProductForm extends React.Component {
                     <div style={styles.formItem}>
                         Product Name:
                         <Input
-                            rowData={this.props.rowData}
                             value={this.state.product_id}
                             placeholder="Product Name"
                             onChange={(e) => this.onProductNameChange(e.target.value)}/>
-
-
                     </div>
 
                     <Divider orientation="left">Product Information</Divider>
@@ -190,7 +187,6 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Unit Weight:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.unit_weight}
                                 placeholder="Unit Weight"
                                 onChange={(e) => this.onWeightChange(e.target.value)}/>
@@ -198,7 +194,6 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Unit Price:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.unit_price}
                                 placeholder="Unit Price"
                                 onChange={(e) => this.onPriceChange(e.target.value)}/>
@@ -206,7 +201,6 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Initial Stock:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.initial_stock}
                                 placeholder="Initial Stock"
                                 onChange={(e) => this.onInitialStockChange(e.target.value)}/>
@@ -214,7 +208,6 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Initial Date:
                             <DatePicker
-                                rowData={this.props.rowData}
                                 style={styles.datePicker}
                                 onChange={(date) => this.onDateChange(date)}
                                 placeholder="Initial Date"
@@ -231,7 +224,6 @@ class ProductForm extends React.Component {
                         <div style={styles.formItem}>
                             Minimum Stock:
                             <Input
-                                rowData={this.props.rowData}
                                 value={this.state.minimum_stock}
                                 placeholder="Initial Stock"
                                 onChange={(e) => this.onMinimumStockChange(e.target.value)}/>
@@ -245,7 +237,6 @@ class ProductForm extends React.Component {
                         width: 120
                     }}
                         onChange={this.onStatusChange}
-                        rowData={this.props.rowData}
                         value={this.state.status}
                         >
 
@@ -262,7 +253,6 @@ class ProductForm extends React.Component {
 
                     <TextArea
                         value={this.state.notes}
-                        rowData={this.props.rowData}
                         rows={4}
                         placeholder="Notes"
                         onChange={(e) => this.onNotesChange(e.target.value)}/>
