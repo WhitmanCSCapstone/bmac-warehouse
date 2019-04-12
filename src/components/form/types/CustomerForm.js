@@ -1,6 +1,7 @@
 import React from 'react';
 import {db} from '../../../firebase';
 import {Input, Select, Divider, Modal} from 'antd';
+import Footer from '../Footer';
 
 //This is for the notes section.
 const {TextArea} = Input;
@@ -76,10 +77,6 @@ class CustomerForm extends React.Component {
 
     //Ok Click
     handleOk = () => {
-
-        //TODO: fix bug of editing customer just added creating new customer
-        this.props.closeForm();
-
         var newData = JSON.parse(JSON.stringify(this.state));
 
         var row = this.props.rowData;
@@ -92,24 +89,33 @@ class CustomerForm extends React.Component {
 
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
+
         this.props.refreshTable();
 
-        this.setState({...this.defaultState});
+        setTimeout(() => {
+          this.props.closeForm();
+          this.setState({ ...this.defaultState });
+        }, 1500);
     }
 
     render() {
         return (
             <Modal
                 title="Add New Customer"
-                style={{
-                top: 20
-            }}
+               style={{ top: 20 }}
                 width={'50vw'}
                 destroyOnClose={true}
                 visible={this.props.formModalVisible}
-                okText='Submit'
-                onOk={this.handleOk}
-                onCancel={this.props.closeForm}>
+                onCancel={this.props.closeForm}
+                footer={[
+                  <Footer key='footer'
+                               rowData={this.props.rowData}
+                               handleDelete={this.handleDelete}
+                               closeForm={this.props.closeForm}
+                               handleOk={this.handleOk}
+                  />
+                ]}
+              >
 
                 <div style={styles.form}>
                 <div style={styles.topThird}>

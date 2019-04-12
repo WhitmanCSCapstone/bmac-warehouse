@@ -1,7 +1,8 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Button, Input, DatePicker, Divider, Modal } from 'antd';
+import { Input, DatePicker, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
+import Footer from '../Footer';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
 import ProviderAutoComplete from '../ProviderAutoComplete';
 import Moment from 'moment';
@@ -121,8 +122,6 @@ class ReceiptForm extends React.Component {
   }
 
   handleOk = () => {
-    this.props.closeForm();
-
     var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
     var newData = JSON.parse(JSON.stringify(this.state));
 
@@ -141,7 +140,10 @@ class ReceiptForm extends React.Component {
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable();
 
-    this.setState({ ...this.defaultState });
+    setTimeout(() => {
+      this.props.closeForm();
+      this.setState({ ...this.defaultState });
+    }, 1500);
   }
 
   addReceiveItem = () => {
@@ -182,12 +184,15 @@ class ReceiptForm extends React.Component {
         width={'50vw'}
         destroyOnClose={true}
         visible={this.props.formModalVisible}
-        footer={[
-          <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
-          <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>,
-          <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
-        ]}
         onCancel={this.props.closeForm}
+        footer={[
+          <Footer key='footer'
+                       rowData={this.props.rowData}
+                       handleDelete={this.handleDelete}
+                       closeForm={this.props.closeForm}
+                       handleOk={this.handleOk}
+          />
+        ]}
       >
 
         <div style={styles.form}>
