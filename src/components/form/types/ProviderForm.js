@@ -1,7 +1,7 @@
 import React from 'react';
 import {db} from '../../../firebase';
 import {Input, Select, Divider, Modal, Button} from 'antd';
-
+import Footer from '../Footer';
 
 //This is for the notes section.
 const {TextArea} = Input;
@@ -118,10 +118,6 @@ class ProviderForm extends React.Component {
 
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
-        this
-            .props
-            .closeForm();
-
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData
         if (row && row.uniq_id) {
@@ -131,24 +127,19 @@ class ProviderForm extends React.Component {
         }
         // this only works if the push doesn't take too long, kinda sketch, should be
         // made asynchronous
-        this
-            .props
-            .refreshTable();
+        this.props.refreshTable();
 
-        this.setState({
-            ...this.defaultState
-        });
+        setTimeout(() => {
+          this.props.closeForm();
+          this.setState({ ...this.defaultState });
+        }, 1500);
     }
 
     //Used to handle deleting the object being observed in the Modal.
     handleDelete = () => {
         db.deleteProviderObj(this.props.rowData.uniq_id);
-        this
-            .props
-            .closeForm()
-        this
-            .props
-            .refreshTable();
+        this.props.closeForm()
+        this.prop.refreshTable();
     }
 
     render() {
@@ -164,14 +155,16 @@ class ProviderForm extends React.Component {
                 destroyOnClose={true}
                 visible={this.props.formModalVisible}
                 okText='Submit'
-                onOk={this.handleOk}
                 onCancel={this.props.closeForm}
                 footer={[
-                <Button key = "delete" disabled = {this.props.rowData? false: true}type = "danger" onClick = {this.handleDelete}> Delete</Button>,
-                <Button key = "Cancel" onClick={this.props.closeForm}>Cancel</Button >,
-                < Button key = "submit" type = "primary" onClick = {this.handleOk} >Submit</Button>
-                ]}>
-
+                  <Footer key='footer'
+                               rowData={this.props.rowData}
+                               handleDelete={this.handleDelete}
+                               closeForm={this.props.closeForm}
+                               handleOk={this.handleOk}
+                  />
+                ]}
+            >
                 <div style={styles.form}>
                     <div style={styles.formItem}>
                         Provider Name:

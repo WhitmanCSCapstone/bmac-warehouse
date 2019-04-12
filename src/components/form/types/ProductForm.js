@@ -1,9 +1,9 @@
 import React from 'react';
 import {db} from '../../../firebase';
-import {Input, Select, Divider, Modal, DatePicker, Button} from 'antd';
+import {Input, Select, Divider, Modal, DatePicker } from 'antd';
 import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
 import Moment from 'moment';
-
+import Footer from '../Footer';
 
 //This is for the notes section.
 const {TextArea} = Input;
@@ -111,9 +111,6 @@ class ProductForm extends React.Component {
     }
     //Used to send the data to the databsae and reset the state.
     handleOk = () => {
-
-        this.props.closeForm();
-
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData
 
@@ -129,7 +126,10 @@ class ProductForm extends React.Component {
         // made asynchronous
         this.props.refreshTable();
 
-        this.setState({ ...this.defaultState });
+        setTimeout(() => {
+          this.props.closeForm();
+          this.setState({ ...this.defaultState });
+        }, 1500);
     }
 
     handleDelete = () => {
@@ -153,10 +153,14 @@ class ProductForm extends React.Component {
                 okText='Submit'
                 onCancel={this.props.closeForm}
                 footer={[
-                    <Button key="delete" disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>,
-                    <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>,
-                    <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
-                 ]}>
+                  <Footer key='footer'
+                               rowData={this.props.rowData}
+                               handleDelete={this.handleDelete}
+                               closeForm={this.props.closeForm}
+                               handleOk={this.handleOk}
+                  />
+                ]}
+            >
                 <div style={styles.form}>
 
                     <div style={styles.formItem}>
