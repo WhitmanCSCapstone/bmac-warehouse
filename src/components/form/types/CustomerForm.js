@@ -118,7 +118,6 @@ class CustomerForm extends React.Component {
                         <Input
                             placeholder="Customer Name"
                             onChange={(e) => this.onChange('customer_id', e.target.value)}
-                            rowData={this.props.rowData}
                             value={this.state.customer_id}
                             />
 
@@ -131,7 +130,6 @@ class CustomerForm extends React.Component {
                             <Input
                                 placeholder="Address"
                                 onChange={(e) => this.onChange('address', e.target.value)}
-                                rowData={this.props.rowData}
                                 value={this.state.address}/>
 
                         </div>
@@ -140,7 +138,6 @@ class CustomerForm extends React.Component {
                             City:
                             <Input placeholder="City"
                                    onChange={(e) => this.onChange('city', e.target.value)}
-                                   rowData={this.props.rowData}
                                    value={this.state.city}/>
                         </div>
                         <div style={styles.formItem}>
@@ -148,14 +145,12 @@ class CustomerForm extends React.Component {
                             <Input
                                 placeholder="State"
                                 onChange={(e) => this.onChange('state', e.target.value)}
-                                rowData={this.props.rowData}
                                 value={this.state.state}/>
                         </div>
                         <div style={styles.formItem}>
                             ZIP:
                             <Input placeholder="ZIP"
                                    onChange={(e) => this.onChange('zip', e.target.value)}
-                                   rowData={this.props.rowData}
                                    value={this.state.zip}/>
                         </div>
                         <div style={styles.formItem}>
@@ -163,7 +158,6 @@ class CustomerForm extends React.Component {
                             <Input
                                 placeholder="Contact Phone"
                                 onChange={(e) => this.onChange('phone', e.target.value)}
-                                rowData={this.props.rowData}
                                 value={this.state.phone}/>
 
                         </div>
@@ -172,7 +166,6 @@ class CustomerForm extends React.Component {
                             <Input
                                 placeholder="Contact Person"
                                 onChange={(e) => this.onChange('contact', e.target.value)}
-                                rowData={this.props.rowData}
                                 value={this.state.contact}/>
                         </div>
                         <div style={styles.formItem}>
@@ -180,7 +173,6 @@ class CustomerForm extends React.Component {
                             <Input
                                 placeholder="Contact Email"
                                 onChange={(e) => this.onChange('email', e.target.value)}
-                                rowData={this.props.rowData}
                                 value={this.state.email}/>
                         </div>
                     </div>
@@ -188,11 +180,8 @@ class CustomerForm extends React.Component {
                     Status:
                     <Select
                         placeholder="Status"
-                        style={{
-                            width: 120
-                        }}
+                        style={{ width: 120 }}
                         onChange={this.onStatusChange}
-                        rowData={this.props.rowData}
                         value={this.state.status}>
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
@@ -208,8 +197,8 @@ class CustomerForm extends React.Component {
                         rows={4}
                         placeholder="Notes"
                         onChange={(e) => this.onChange('notes', e.target.value)}
-                        rowData={this.props.rowData}
-                        value={this.state.notes}/>
+                        value={this.state.notes}
+                 />
 
                 </div>
 
