@@ -130,7 +130,7 @@ class Shipments extends React.Component {
                         var customer = this.state.customers[obj.customer_id]
                         var name = 'INVALID CUSTOMER ID'
                         if(customer){
-                          var name = customer.customer_id
+                          name = customer.customer_id
                         }
                         return name;
                       }]}),

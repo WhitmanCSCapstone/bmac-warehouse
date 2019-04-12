@@ -4,7 +4,6 @@
 
 import React from 'react';
 import { db } from '../../firebase';
-import { getReadableReceiptsTableData } from '../../utils/receipts';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { Button, DatePicker } from 'antd';
@@ -131,7 +130,7 @@ class Receipts extends React.Component {
                         var provider = this.state.providers[obj.provider_id]
                         var name = 'INVALID PROVIDER ID'
                         if(provider){
-                          var name = provider.provider_id
+                          name = provider.provider_id
                         }
                         return name;
                       }]}),
