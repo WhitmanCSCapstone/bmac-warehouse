@@ -8,25 +8,30 @@ const styles = {
 
   icon: {
     alignSelf: 'center',
-    marginBottom: '0.5em',
+    marginBottom: '0.20em',
+  },
+
+  iconDisabled: {
+    alignSelf: 'center',
+    marginBottom: '0.20em',
+    opacity: 0,
   },
 
   row: {
     display: 'flex',
     justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 
   productItem: {
-    width: '80%',
+    width: '40%',
     margin: '0em 0.5em 0.5em 0em',
-    display: 'flex',
-    flexDirection: 'column',
   },
 
   formItem: {
     margin: '0em 0.5em 0.5em 0em',
+    width: '20%',
     overflow: 'hidden',
-
   },
 
 };
@@ -47,8 +52,26 @@ class ProductItems extends React.Component {
   }
 
   render() {
+
+    function invisibleBtn() {
+      return(
+        <Icon
+          className="dynamic-delete-button"
+          style={styles.iconDisabled}
+          type="minus-circle-o"
+        />
+      );
+    }
+
     return(
       <div style={styles.container}>
+        <div style={styles.row}>
+          <span style={styles.productItem}>Product</span>
+          <span style={styles.formItem}>Unit Weight</span>
+          <span style={styles.formItem}>Case Lots</span>
+          <span style={styles.formItem}>Total Weight</span>
+          {invisibleBtn()}
+        </div>
         {
           !this.state.items ? null :
           this.state.items.map((obj, index) => {
@@ -57,7 +80,6 @@ class ProductItems extends React.Component {
                    style={styles.row}>
 
                 <div style={styles.productItem}>
-                  {index === 0 ? "Product" : "     "}
                   <ProductAutoComplete
                     onChange={this.props.onChange}
                     value={obj ? obj['product'] : undefined}
@@ -66,7 +88,6 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
-                  {index === 0 ? "Unit Weight" : "     "}
                   <Input
                     placeholder="Unit Weight"
                     value={obj ? obj['unit_weight'] : undefined}
@@ -75,7 +96,6 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
-                  {index === 0 ? "Case Lots" : "     "}
                   <Input
                     placeholder="Case Lots"
                     value={obj ? obj['case_lots'] : undefined}
@@ -84,7 +104,6 @@ class ProductItems extends React.Component {
                 </div>
 
                 <div style={styles.formItem}>
-                  {index === 0 ? "Total Weight" : "     "}
                   <Input
                     placeholder="Total Weight"
                     value={obj ? obj['total_weight'] : undefined}
@@ -92,15 +111,18 @@ class ProductItems extends React.Component {
                   />
                 </div>
 
-                {this.state.items.length > 1 ? (
-                   <Icon
-                     className="dynamic-delete-button"
-                     style={styles.icon}
-                     type="minus-circle-o"
-                     disabled={this.state.items.length === 1}
-                     onClick={ () => this.props.removeProductItem(index) }
-                   />
-                ) : null}
+                {
+                  this.state.items.length === 1
+                  ?
+                  invisibleBtn()
+                  :
+                  <Icon
+                    className="dynamic-delete-button"
+                    style={styles.icon}
+                    type="minus-circle-o"
+                    onClick={ () => this.props.removeProductItem(index) }
+                  />
+                }
 
               </div>
             );
