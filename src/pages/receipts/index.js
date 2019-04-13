@@ -8,7 +8,6 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { Button, DatePicker } from 'antd';
 import Moment from 'moment';
-import TableDropdown from '../../components/TableDropdown';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
@@ -155,12 +154,6 @@ class Receipts extends React.Component {
                     accessor: string,
                   })}
             })}
-            SubComponent={row => {
-                return <TableDropdown
-                         row={row.original.receive_items}
-                             index={this.state.data.indexOf(row.original)}
-                />
-            }}
             defaultPageSize={10}
             className="-striped -highlight"
           />
