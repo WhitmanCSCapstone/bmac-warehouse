@@ -10,7 +10,6 @@ import {Button, Input} from 'antd';
 
 const SignUpPage = ({ history }) =>
   <div>
-
     <SignUpForm history={history} />
   </div>
 
@@ -20,6 +19,7 @@ const SignUpPage = ({ history }) =>
       passwordOne: '',
       passwordTwo: '',
       error: null,
+      role: '',
   };
 
   const byPropKey = (propertyName, value) => () => ({

@@ -168,4 +168,6 @@ class Shipments extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Shipments);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Shipments);

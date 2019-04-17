@@ -120,4 +120,6 @@ class Products extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Products);
+const adminOnly = true;
+
+export default withAuthorization(authCondition, adminOnly)(Products);
