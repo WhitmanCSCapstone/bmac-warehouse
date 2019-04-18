@@ -36,7 +36,7 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      customers: null,
+      customers: null
     }
   }
 
@@ -59,7 +59,7 @@ class Shipments extends React.Component {
     this.refreshTable()
 
     db.onceGetCustomers().then(snapshot => {
-      var data = snapshot.val();
+        var data = snapshot.val()
       this.setState({ customers: data });
     })
   }
@@ -108,7 +108,7 @@ class Shipments extends React.Component {
           <ReactTable
             getTrProps={(state, rowInfo) => ({
                 onClick: () => this.setState({
-                  rowData: rowInfo.original,
+                    rowData: rowInfo.original,
                   formModalVisible: true,
                 })
             })}
@@ -118,8 +118,8 @@ class Shipments extends React.Component {
                 if(string==='customer_id'){
                   return({
                     Header: string.replace('_',' ').split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                  .join(' '),
                     accessor: string,
                     Cell: this.readableCustomerCell,
                     filterable: true,
@@ -151,8 +151,8 @@ class Shipments extends React.Component {
                 else{
                   return({
                     Header: string.replace('_',' ').split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                  .join(' '),
                     accessor: string,
                   })}
             })}
