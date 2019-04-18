@@ -36,7 +36,7 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      customers: null,
+        customers: null
     }
   }
 
@@ -66,7 +66,7 @@ class Shipments extends React.Component {
 
   readableCustomerCell = (rowData) => {
     var hash = rowData.original['customer_id'];
-    var obj = this.state.customers[hash];
+      var obj = this.state.customers[hash];
     var name = obj ? obj['customer_id'] : 'INVALID CUSTOMER_ID';
     return <span>{name}</span>
   }
@@ -82,7 +82,7 @@ class Shipments extends React.Component {
     return(
       <div style={styles.container}>
 
-        <div>
+          <div>
           <RangePicker
             onChange={this.onDateChange}
             format={'MM/DD/YYYY'}
