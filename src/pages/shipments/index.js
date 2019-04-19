@@ -59,7 +59,7 @@ class Shipments extends React.Component {
     this.refreshTable()
 
     db.onceGetCustomers().then(snapshot => {
-      var data = snapshot.val();
+        var data = snapshot.val();
       this.setState({ customers: data });
     })
   }
