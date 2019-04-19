@@ -9,7 +9,6 @@ import { firebase } from '../firebase';
 
 import Navigation from './Navigation';
 import LandingPage from './Landing';
-import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
 import PasswordForgetPage from './PasswordForget';
 import Dashboard from './Dashboard';
@@ -44,7 +43,6 @@ class App extends React.Component {
           {this.state.authUser === null && this.state.confirmedAuth && <Navigation />}
           <Switch>
             <Route exact path={routes.LANDING} component={LandingPage} />
-            <Route exact path={routes.SIGN_UP} component={SignUpPage} />
             <Route exact path={routes.SIGN_IN} component={SignInPage} />
             <Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
             <Route path={routes.DASHBOARD} component={Dashboard} />
