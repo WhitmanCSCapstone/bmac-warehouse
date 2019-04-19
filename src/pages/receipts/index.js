@@ -166,4 +166,6 @@ class Receipts extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Receipts);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Receipts);

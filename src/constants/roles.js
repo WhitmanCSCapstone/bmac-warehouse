@@ -1,3 +1,2 @@
-export const ADMIN = 'ADMIN';
+export const ADMIN = 'Admin';
 export const STANDARD = 'STANDARD';
-

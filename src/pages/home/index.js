@@ -30,7 +30,7 @@ class Home extends React.Component {
   }
 
   componentDidMount(){
-   
+
       getReadableShipmentsTableData().then(snapshot => {
         var ship = snapshot.val();
         var filteredShip = [];
@@ -113,4 +113,6 @@ class Home extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Home);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Home);

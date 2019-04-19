@@ -103,4 +103,6 @@ refreshTable = () => {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Customers);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Customers);
