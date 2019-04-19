@@ -45,7 +45,10 @@ class App extends React.Component {
             <Route exact path={routes.LANDING} component={LandingPage} />
             <Route exact path={routes.SIGN_IN} component={SignInPage} />
             <Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
-            <Route path={routes.DASHBOARD} component={Dashboard} />
+            <Route
+              path={routes.DASHBOARD}
+              render={props => <Dashboard {...props} authUser={this.state.authUser} />}
+            />
             <Route exact path={routes.ACCOUNT} component={AccountPage} />
             <Route component={Error} />
           </Switch>

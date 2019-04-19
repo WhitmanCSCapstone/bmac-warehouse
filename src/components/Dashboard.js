@@ -1,8 +1,9 @@
 import React from 'react';
 import withAuthorization from './withAuthorization';
 import SignOutButton from './SignOut';
-
+import { db } from '../firebase';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
+import * as roles from '../constants/roles';
 
 import About from '../pages/about';
 import Home from '../pages/home';
@@ -73,24 +74,33 @@ const pages = {
   home: Home,
   shipments: Shipments,
   receipts: Receipts,
-  products: Products,
-  staff: Staff,
   providers: Providers,
   customers: Customers,
   reports: Reports,
   about: About,
   help: Help,
-}
+};
+
+const adminOnlyPages = {
+  products: Products,
+  staff: Staff,
+};
 
 class Dashboard extends React.Component {
   state = {
     // this should be "home" but currently the app doesn't auto-route to the home
     // page, so for now this is null
-    current: null
+    current: null,
+    pages: { ...pages },
   }
 
   componentDidMount() {
-    console.log('Dashboard Mounted');
+    db.onceGetSpecifcUser(this.props.authUser.uid).then((snapshot) => {
+      const userData = snapshot.val();
+      if (userData.role === roles.ADMIN) {
+        this.setState({ pages: Object.assign(pages, adminOnlyPages) });
+      }
+    });
   }
 
   render() {
@@ -111,7 +121,7 @@ class Dashboard extends React.Component {
               theme="light"
               style={styles.menu}>
               {Object
-                .keys(pages)
+                .keys(this.state.pages)
                 .map((name) => {
                   return (
                     <Menu.Item key={name}>
