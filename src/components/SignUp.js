@@ -8,18 +8,19 @@ import { auth, db } from '../firebase';
 import * as routes from '../constants/routes';
 import {Button, Input} from 'antd';
 
-const SignUpPage = ({ history }) =>
-      <div>
-       
-        <SignUpForm history={history} />
-      </div>
+const SignUpPage = ({ history }) => (
+  <div>
+    <SignUpForm history={history} />
+  </div>
+);
 
 const INITIAL_STATE = {
-    username: '',
-    email: '',
-    passwordOne: '',
-    passwordTwo: '',
-    error: null,
+  username: '',
+  email: '',
+  passwordOne: '',
+  passwordTwo: '',
+  error: null,
+  role: '',
 };
 
 const byPropKey = (propertyName, value) => () => ({

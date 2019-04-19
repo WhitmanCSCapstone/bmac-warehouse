@@ -29,4 +29,6 @@ class Help extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Help);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Help);

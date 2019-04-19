@@ -77,4 +77,6 @@ class Staff extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Staff);
+const adminOnly = true;
+
+export default withAuthorization(authCondition, adminOnly)(Staff);
