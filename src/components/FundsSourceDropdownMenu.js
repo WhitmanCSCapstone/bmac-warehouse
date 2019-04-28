@@ -41,10 +41,12 @@ class FundsSourceDropdownMenu extends React.Component {
     return newData;
   }
 
+//https://stackoverflow.com/questions/51283562/how-to-add-the-input-field-inside-the-select-option-using-ant-design-and-react
   render() {
     return(
       <div>
-      <Select onChange={(value) => this.props.onClick(value)}
+      <Select
+              onChange={(value) => this.props.onClick(value)}
               disabled={this.props.disabled}
               style={styles.select}
               key={this.props.funds_source}

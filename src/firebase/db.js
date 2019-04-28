@@ -81,6 +81,15 @@ export const pushShipmentObj = (newData) => {
       })
 }
 
+export const pushFundingSource = (newData) => {
+    db.ref('4/fundingsources')
+      .push(newData)
+      .then((snapshot) => {
+        const uniq_id = snapshot.key;
+        newData['uniq_id'] = uniq_id;
+        db.ref(`4/fundingsources/${uniq_id}`).set(newData);
+      })
+}
 export const pushReceiptObj = (newData) => {
     db.ref('6/contributions')
       .push(newData)
