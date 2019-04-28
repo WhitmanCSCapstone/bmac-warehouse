@@ -13,6 +13,7 @@ import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
+import AddFundsSource from '../../components/AddFundsSource';
 
 const keys = tableKeys['shipments'];
 
@@ -88,7 +89,7 @@ class Shipments extends React.Component {
             format={'MM/DD/YYYY'}
           />
         </div>
-
+        <AddFundsSource/>
         <Button type="primary"
                 onClick={ () => this.setState({
                     formModalVisible: true,
