@@ -1,6 +1,6 @@
-import React from 'react';
-import { db } from '../firebase';
-import { Input, Button, Modal } from 'antd';
+import React from "react";
+import { db } from "../firebase";
+import { Input, Button, Modal } from "antd";
 
 class AddFundsSource extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class AddFundsSource extends React.Component {
   cleanFundingSourcesData = data => {
     var newData = [];
     for (var i = 0; i < data.length; i++) {
-      newData.push(data[i]['id']);
+      newData.push(data[i]["id"]);
     }
     return newData;
   };
@@ -45,7 +45,7 @@ class AddFundsSource extends React.Component {
           style={{
             top: 20
           }}
-          width={'50vw'}
+          width={"50vw"}
           destroyOnClose={true}
           visible={this.state.formModalVisible}
           okText="Submit"
@@ -53,7 +53,7 @@ class AddFundsSource extends React.Component {
           onOk={this.onOk}
         >
           New Funding Source:
-          <Input placeholder={'New Funding Source'} onChange={e => this.onChange(e.target.value)} />
+          <Input placeholder={"New Funding Source"} onChange={e => this.onChange(e.target.value)} />
         </Modal>
       </div>
     );

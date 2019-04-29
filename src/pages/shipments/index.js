@@ -2,26 +2,26 @@
  *  A component
  */
 
-import React from 'react';
-import { db } from '../../firebase';
-import { Button } from 'antd';
-import ReactTable from 'react-table';
-import LoadingScreen from '../../components/LoadingScreen';
-import { DatePicker } from 'antd';
-import Moment from 'moment';
-import { tableKeys } from '../../constants/constants';
-import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
-import ShipmentForm from '../../components/form/types/ShipmentForm';
-import AddFundsSource from '../../components/AddFundsSource';
+import React from "react";
+import { db } from "../../firebase";
+import { Button } from "antd";
+import ReactTable from "react-table";
+import LoadingScreen from "../../components/LoadingScreen";
+import { DatePicker } from "antd";
+import Moment from "moment";
+import { tableKeys } from "../../constants/constants";
+import withAuthorization from "../../components/withAuthorization";
+import matchSorter from "match-sorter";
+import ShipmentForm from "../../components/form/types/ShipmentForm";
+import AddFundsSource from "../../components/AddFundsSource";
 
-const keys = tableKeys['shipments'];
+const keys = tableKeys["shipments"];
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     padding: 24
   }
 };
@@ -45,7 +45,7 @@ class Shipments extends React.Component {
     var newData = [];
     for (var i = 0; i < this.state.data.length; i++) {
       var entry = this.state.data[i];
-      var entryDate = Moment(entry['ship_date'], 'MM/DD/YYYY');
+      var entryDate = Moment(entry["ship_date"], "MM/DD/YYYY");
       if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
         newData.push(entry);
       }
@@ -71,9 +71,9 @@ class Shipments extends React.Component {
   }
 
   readableCustomerCell = rowData => {
-    var hash = rowData.original['customer_id'];
+    var hash = rowData.original["customer_id"];
     var obj = this.state.customers[hash];
-    var name = obj ? obj['customer_id'] : 'INVALID CUSTOMER_ID';
+    var name = obj ? obj["customer_id"] : "INVALID CUSTOMER_ID";
     return <span>{name}</span>;
   };
 
@@ -88,7 +88,7 @@ class Shipments extends React.Component {
     return (
       <div style={styles.container}>
         <div>
-          <RangePicker onChange={this.onDateChange} format={'MM/DD/YYYY'} />
+          <RangePicker onChange={this.onDateChange} format={"MM/DD/YYYY"} />
         </div>
         <AddFundsSource />
         <Button
@@ -127,13 +127,13 @@ class Shipments extends React.Component {
                 : this.state.data
             }
             columns={keys.map(string => {
-              if (string === 'customer_id') {
+              if (string === "customer_id") {
                 return {
                   Header: string
-                    .replace('_', ' ')
-                    .split(' ')
+                    .replace("_", " ")
+                    .split(" ")
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    .join(" "),
                   accessor: string,
                   Cell: this.readableCustomerCell,
                   filterable: true,
@@ -143,7 +143,7 @@ class Shipments extends React.Component {
                       keys: [
                         obj => {
                           var customer = this.state.customers[obj.customer_id];
-                          var name = 'INVALID CUSTOMER ID';
+                          var name = "INVALID CUSTOMER ID";
                           if (customer) {
                             name = customer.customer_id;
                           }
@@ -153,14 +153,14 @@ class Shipments extends React.Component {
                     })
                 };
               }
-              if (string === 'ship_date') {
+              if (string === "ship_date") {
                 return {
-                  id: 'ship_date',
-                  Header: 'Ship Date',
+                  id: "ship_date",
+                  Header: "Ship Date",
                   accessor: d =>
                     Moment(d.ship_date)
                       .local()
-                      .format('MM/DD/YYYY'),
+                      .format("MM/DD/YYYY"),
                   sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
@@ -170,10 +170,10 @@ class Shipments extends React.Component {
               } else {
                 return {
                   Header: string
-                    .replace('_', ' ')
-                    .split(' ')
+                    .replace("_", " ")
+                    .split(" ")
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    .join(" "),
                   accessor: string
                 };
               }
