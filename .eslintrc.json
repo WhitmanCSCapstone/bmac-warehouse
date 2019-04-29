@@ -23,6 +23,6 @@
         "react/prop-types": 0,
         "react/destructuring-assignment": [0, "never"],
         "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
-        "allowForLoopAfterthoughts": true
+        "no-plusplus": 0
     }
 }
