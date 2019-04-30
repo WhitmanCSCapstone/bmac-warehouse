@@ -14,12 +14,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em',
+    margin: '0px 1em 1em 1em'
   },
 
   topThird: {
@@ -27,14 +27,14 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    alignContent: 'center',
+    alignContent: 'center'
   },
 
   bottomThird: {
     display: 'flex',
     justifyContent: 'flex-start',
-    alignContent: 'center',
-  },
+    alignContent: 'center'
+  }
 };
 
 class CustomerForm extends React.Component {
@@ -50,7 +50,7 @@ class CustomerForm extends React.Component {
     email: null,
     status: null,
     notes: null,
-    uniq_id: null,
+    uniq_id: null
   };
 
   constructor(props) {
@@ -66,7 +66,7 @@ class CustomerForm extends React.Component {
 
   onChange = (prop, val) => {
     this.setState({
-      [prop]: val,
+      [prop]: val
     });
   };
 
@@ -113,7 +113,7 @@ class CustomerForm extends React.Component {
             handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
-          />,
+          />
         ]}
       >
         <div style={styles.form}>

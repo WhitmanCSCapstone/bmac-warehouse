@@ -22,8 +22,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 const { RangePicker } = DatePicker;
@@ -37,7 +37,7 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      customers: null,
+      customers: null
     };
   }
 
@@ -53,7 +53,7 @@ class Shipments extends React.Component {
     this.setState(
       {
         filteredData: newData,
-        dateRange: dateRange,
+        dateRange: dateRange
       },
       function() {
         console.log(this.state.dateRange);
@@ -96,7 +96,7 @@ class Shipments extends React.Component {
           onClick={() =>
             this.setState({
               formModalVisible: true,
-              rowData: null,
+              rowData: null
             })
           }
         >
@@ -118,8 +118,8 @@ class Shipments extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
+                  formModalVisible: true
+                })
             })}
             data={
               this.state.filteredData && this.state.dateRange.length
@@ -148,9 +148,9 @@ class Shipments extends React.Component {
                             name = customer.customer_id;
                           }
                           return name;
-                        },
-                      ],
-                    }),
+                        }
+                      ]
+                    })
                 };
               }
               if (string === 'ship_date') {
@@ -165,7 +165,7 @@ class Shipments extends React.Component {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
                     return b > a ? 1 : -1;
-                  },
+                  }
                 };
               } else {
                 return {
@@ -174,7 +174,7 @@ class Shipments extends React.Component {
                     .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}

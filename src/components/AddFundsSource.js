@@ -7,7 +7,7 @@ class AddFundsSource extends React.Component {
     super(props);
     this.state = {
       id: null,
-      formModalVisible: false,
+      formModalVisible: false
     };
   }
 
@@ -43,7 +43,7 @@ class AddFundsSource extends React.Component {
         <Modal
           title="Add New Funding Source"
           style={{
-            top: 20,
+            top: 20
           }}
           width={'50vw'}
           destroyOnClose={true}

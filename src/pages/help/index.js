@@ -7,8 +7,8 @@ import withAuthorization from '../../components/withAuthorization';
 
 const styles = {
   container: {
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Help extends React.Component {

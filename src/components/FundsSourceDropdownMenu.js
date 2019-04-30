@@ -11,18 +11,18 @@ const Option = Select.Option;
 const styles = {
   select: {
     width: '100%',
-    minWidth: '10em',
+    minWidth: '10em'
   },
   none: {
-    color: '#C1C1C1',
-  },
+    color: '#C1C1C1'
+  }
 };
 
 class FundsSourceDropdownMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fundingSources: [],
+      fundingSources: []
     };
   }
 

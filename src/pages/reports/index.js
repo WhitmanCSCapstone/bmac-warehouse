@@ -11,7 +11,7 @@ import {
   reportType2DateAccessor,
   reportType2FundingSourceRelavancy,
   reportType2DateRangeRelavancy,
-  radioValue2ReportType,
+  radioValue2ReportType
 } from '../../constants/constants';
 import { populateTableData, getCSVdata } from './utils';
 import { CSVLink } from 'react-csv';
@@ -27,15 +27,15 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
+    padding: 24
   },
   filters: {
-    display: 'flex',
+    display: 'flex'
   },
   radio: {
     display: 'flex',
-    flexDirection: 'column',
-  },
+    flexDirection: 'column'
+  }
 };
 
 class Reports extends React.Component {
@@ -49,7 +49,7 @@ class Reports extends React.Component {
       dateRange: [],
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
-      dataCSV: null,
+      dataCSV: null
     };
   }
 
@@ -103,19 +103,19 @@ class Reports extends React.Component {
       data: null,
       fundingSource: null,
       dateRange: [],
-      dataCSV: null,
+      dataCSV: null
     });
   };
 
   onDateChange = dateRange => {
     this.setState({
-      dateRange: dateRange,
+      dateRange: dateRange
     });
   };
 
   onStatusChange = e => {
     this.setState({
-      statusRadioValue: e.target.value,
+      statusRadioValue: e.target.value
     });
   };
 
@@ -207,7 +207,7 @@ class Reports extends React.Component {
                 filterable: true,
                 filterAll: true,
                 filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                  matchSorter(rows, filter.value, { keys: ['customer_id'] })
               };
             }
             if (string === 'provider_id' && this.state.reportType === 'Inventory Receipts') {
@@ -221,7 +221,7 @@ class Reports extends React.Component {
                 filterable: true,
                 filterAll: true,
                 filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                  matchSorter(rows, filter.value, { keys: ['provider_id'] })
               };
             }
             if (string === 'ship_date' || string === 'intial_date' || string === 'recieve_date') {
@@ -241,7 +241,7 @@ class Reports extends React.Component {
                   a = new Date(a).getTime();
                   b = new Date(b).getTime();
                   return b > a ? 1 : -1;
-                },
+                }
               };
             } else {
               return {
@@ -250,7 +250,7 @@ class Reports extends React.Component {
                   .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                accessor: string,
+                accessor: string
               };
             }
           })}

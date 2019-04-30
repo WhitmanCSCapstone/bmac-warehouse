@@ -10,18 +10,18 @@ import img from '../blues4.jpg';
 const styles = {
   splitScreen: {
     display: 'flex',
-    flex: 'row',
+    flex: 'row'
   },
   splitA: {
     borderTop: '5px solid #2C7BE5',
     width: '35%',
     height: '925px',
-    backgroundColor: 'off-white',
+    backgroundColor: 'off-white'
   },
   splitB: {
     width: '65%',
     backgroundImage: 'url(' + img + ')',
-    backgroundRepeat: 'no-repeat',
+    backgroundRepeat: 'no-repeat'
   },
   prettyForm: {
     display: 'flex',
@@ -30,21 +30,21 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: '12%',
-    marginRight: '12%',
+    marginRight: '12%'
   },
 
   prettyElement: {
     width: '100%',
-    marginTop: '5%',
+    marginTop: '5%'
   },
 
   prettyBottom: {
-    marginBottom: '3%',
+    marginBottom: '3%'
   },
 
   errorBox: {
-    paddingBottom: '2%',
-  },
+    paddingBottom: '2%'
+  }
 };
 
 const SignInPage = ({ history }) => (
@@ -81,7 +81,7 @@ const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
 const INITIAL_STATE = {
   email: '',
   password: '',
-  error: null,
+  error: null
 };
 
 class SignInForm extends Component {
@@ -89,7 +89,7 @@ class SignInForm extends Component {
     super(props);
 
     this.state = {
-      ...INITIAL_STATE,
+      ...INITIAL_STATE
     };
   }
 
@@ -102,7 +102,7 @@ class SignInForm extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({
-          ...INITIAL_STATE,
+          ...INITIAL_STATE
         });
         history.push(routes.HOME);
       })

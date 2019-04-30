@@ -19,8 +19,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Providers extends React.Component {
@@ -31,7 +31,7 @@ class Providers extends React.Component {
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
-      rowData: null,
+      rowData: null
     };
   }
 
@@ -67,8 +67,8 @@ class Providers extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
+                  formModalVisible: true
+                })
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
@@ -79,7 +79,7 @@ class Providers extends React.Component {
                   filterable: true,
                   filterAll: true,
                   filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+                    matchSorter(rows, filter.value, { keys: ['provider_id'] })
                 };
               } else {
                 return {
@@ -88,7 +88,7 @@ class Providers extends React.Component {
                     .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}
