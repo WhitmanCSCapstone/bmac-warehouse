@@ -21,7 +21,7 @@ const styles = {
   container: {
     flexGrow: 1,
     display: 'flex',
-    flexDirection: 'column',
+      flexDirection: 'column',
     padding: 24
   }
 };
@@ -33,7 +33,7 @@ class Shipments extends React.Component {
     super(props);
     this.state = {
       data: null,
-      filteredData: null,
+        filteredData: null,
       dateRange: null,
       formModalVisible: false,
       rowData: null,
