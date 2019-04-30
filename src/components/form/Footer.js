@@ -8,15 +8,15 @@ const styles = {
   },
   deleteBtn: {
     marginRight: 'auto',
-  }
+  },
 };
 
 class Footer extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loading: false,
-    }
+    };
   }
 
   onClick = () => {
@@ -25,25 +25,25 @@ class Footer extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div style={styles.container}>
 
         {
           this.handleDelete
-          ? <Button key="delete" style={styles.deleteBtn} disabled={this.props.rowData ? false : true} type="danger" onClick={this.handleDelete}>Delete</Button>
-          : null
+            ? <Button key="delete" style={styles.deleteBtn} disabled={!this.props.rowData} type="danger" onClick={this.handleDelete}>Delete</Button>
+            : null
         }
 
         {
           this.props.handleLabel
-          ? <Button key="savelabel" type="primary" onClick={this.props.handleLabel}>Create Label</Button>
-          : null
+            ? <Button key="savelabel" type="primary" onClick={this.props.handleLabel}>Create Label</Button>
+            : null
         }
 
         {
           this.props.handlePdf
-          ? <Button key="savepdf" type="primary" onClick={this.props.handlePdf}>Save Invoice</Button>
-          : null
+            ? <Button key="savepdf" type="primary" onClick={this.props.handlePdf}>Save Invoice</Button>
+            : null
         }
 
         <Button key="Cancel" onClick={this.props.closeForm}>Cancel</Button>

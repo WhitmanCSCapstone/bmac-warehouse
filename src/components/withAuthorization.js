@@ -9,7 +9,7 @@ import * as roles from '../constants/roles';
 const withAuthorization = (authCondition, adminOnly) => (Component) => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
-      firebase.auth.onAuthStateChanged(authUser => {
+      firebase.auth.onAuthStateChanged((authUser) => {
         if (!authCondition(authUser)) {
           this.props.history.push(routes.SIGN_IN);
         }
@@ -27,7 +27,7 @@ const withAuthorization = (authCondition, adminOnly) => (Component) => {
     render() {
       return (
         <AuthUserContext.Consumer>
-          {authUser => authUser ? <Component {...this.props} /> : null}
+          {authUser => (authUser ? <Component {...this.props} /> : null)}
         </AuthUserContext.Consumer>
       );
     }
