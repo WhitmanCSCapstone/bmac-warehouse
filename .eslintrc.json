@@ -1,28 +1,27 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "prettier"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "parser": "babel-eslint",
-    "extends": "airbnb",
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "react/prop-types": 0,
-        "react/destructuring-assignment": [0, "never"],
-        "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
-        "allowForLoopAfterthoughts": true
-    }
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["prettier", "react"],
+  "rules": {
+    "react/prop-types": 0,
+    "react/destructuring-assignment": [0, "never"],
+    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
+    "allowForLoopAfterthoughts": true,
+    "prettier/prettier": ["error"]
+  }
 }
