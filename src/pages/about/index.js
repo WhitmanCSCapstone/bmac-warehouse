@@ -12,9 +12,9 @@ const styles = {
     justifyContent: 'center',
     maxWidth: '40rem',
     paddingTop: '2em',
-    alignSelf: 'center',
+    alignSelf: 'center'
     //fontSize: '1.5em',
-  },
+  }
 };
 
 class About extends React.Component {

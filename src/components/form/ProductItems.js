@@ -7,38 +7,38 @@ const styles = {
 
   icon: {
     alignSelf: 'center',
-    marginBottom: '0.20em',
+    marginBottom: '0.20em'
   },
 
   iconDisabled: {
     alignSelf: 'center',
     marginBottom: '0.5em',
-    opacity: 0,
+    opacity: 0
   },
 
   row: {
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   productItem: {
     width: '40%',
-    margin: '0em 0.5em 0.5em 0em',
+    margin: '0em 0.5em 0.5em 0em'
   },
 
   formItem: {
     margin: '0em 0.5em 0.5em 0em',
     width: '20%',
-    overflow: 'hidden',
-  },
+    overflow: 'hidden'
+  }
 };
 
 class ProductItems extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: null,
+      items: null
     };
   }
 

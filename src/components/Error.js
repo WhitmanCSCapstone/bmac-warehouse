@@ -1,7 +1,7 @@
 import React from 'react';
 
 const styles = {
-  container: {},
+  container: {}
 };
 
 class Error extends React.Component {

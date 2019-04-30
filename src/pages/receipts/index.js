@@ -20,8 +20,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 const { RangePicker } = DatePicker;
@@ -35,7 +35,7 @@ class Receipts extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      providers: null,
+      providers: null
     };
   }
 
@@ -51,7 +51,7 @@ class Receipts extends React.Component {
     this.setState(
       {
         filteredData: newData,
-        dateRange: dateRange,
+        dateRange: dateRange
       },
       function() {
         console.log(this.state.dateRange);
@@ -94,7 +94,7 @@ class Receipts extends React.Component {
           onClick={() =>
             this.setState({
               formModalVisible: true,
-              rowData: null,
+              rowData: null
             })
           }
         >
@@ -116,8 +116,8 @@ class Receipts extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
+                  formModalVisible: true
+                })
             })}
             data={
               this.state.filteredData && this.state.dateRange.length
@@ -146,9 +146,9 @@ class Receipts extends React.Component {
                             name = provider.provider_id;
                           }
                           return name;
-                        },
-                      ],
-                    }),
+                        }
+                      ]
+                    })
                 };
               }
               if (string === 'recieve_date') {
@@ -163,7 +163,7 @@ class Receipts extends React.Component {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
                     return b > a ? 1 : -1;
-                  },
+                  }
                 };
               } else {
                 return {
@@ -172,7 +172,7 @@ class Receipts extends React.Component {
                     .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}

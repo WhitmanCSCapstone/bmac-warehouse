@@ -14,8 +14,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Staff extends React.Component {
@@ -23,7 +23,7 @@ class Staff extends React.Component {
     super(props);
     this.state = {
       data: null,
-      formModalVisible: false,
+      formModalVisible: false
     };
   }
 
@@ -62,7 +62,7 @@ class Staff extends React.Component {
                   .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                accessor: string,
+                accessor: string
               };
             })}
             defaultPageSize={10}

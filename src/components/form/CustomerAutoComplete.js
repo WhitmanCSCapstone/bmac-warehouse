@@ -4,8 +4,8 @@ import { db } from '../../firebase';
 
 const styles = {
   container: {
-    width: '100%',
-  },
+    width: '100%'
+  }
 };
 
 class CustomerAutoComplete extends React.Component {
@@ -14,7 +14,7 @@ class CustomerAutoComplete extends React.Component {
     this.state = {
       dataSourceTypeItemList: [],
       dictionary: {},
-      defaultValue: null,
+      defaultValue: null
     };
   }
 
@@ -33,7 +33,7 @@ class CustomerAutoComplete extends React.Component {
       this.setState({
         dataSourceTypeItemList: dataSourceTypeItemList,
         dictionary: dictionary,
-        defaultValue: this.props.rowData ? dictionary[this.props.rowData.customer_id] : null,
+        defaultValue: this.props.rowData ? dictionary[this.props.rowData.customer_id] : null
       });
     });
   }

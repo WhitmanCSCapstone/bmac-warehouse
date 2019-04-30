@@ -16,16 +16,16 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em',
+    margin: '0px 1em 1em 1em'
   },
 
   datePicker: {
-    width: '100%',
+    width: '100%'
   },
 
   topThird: {
@@ -33,13 +33,13 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    alignContent: 'center',
+    alignContent: 'center'
   },
 
   bottomThird: {
     display: 'flex',
-    justifyContent: 'flex-start',
-  },
+    justifyContent: 'flex-start'
+  }
 };
 
 //Provider Form Component
@@ -57,7 +57,7 @@ class ProductForm extends React.Component {
     inventory_date: null,
     status: null,
     uniq_id: null,
-    notes: null,
+    notes: null
   };
 
   constructor(props) {
@@ -142,7 +142,7 @@ class ProductForm extends React.Component {
       <Modal
         title="Add New Product"
         style={{
-          top: 20,
+          top: 20
         }}
         width={'50vw'}
         destroyOnClose={true}
@@ -156,7 +156,7 @@ class ProductForm extends React.Component {
             handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
-          />,
+          />
         ]}
       >
         <div style={styles.form}>
@@ -237,7 +237,7 @@ class ProductForm extends React.Component {
           <Select
             placeholder="Status"
             style={{
-              width: 120,
+              width: 120
             }}
             onChange={this.onStatusChange}
             value={this.state.status}

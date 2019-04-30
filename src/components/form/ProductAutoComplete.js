@@ -4,15 +4,15 @@ import { db } from '../../firebase';
 
 const styles = {
   container: {
-    width: '100%',
-  },
+    width: '100%'
+  }
 };
 
 class ProductAutoComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: []
     };
   }
 

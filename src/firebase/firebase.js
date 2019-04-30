@@ -31,7 +31,7 @@ const devConfig = {
   databaseURL: process.env.REACT_APP_DEV_DATABASEURL,
   projectId: process.env.REACT_APP_DEV_PROJECTID,
   storageBucket: process.env.REACT_APP_DEV_STORAGEBUCKET,
-  messagingSenderId: process.env.REACT_APP_DEV_MESSAGINGSENDERID,
+  messagingSenderId: process.env.REACT_APP_DEV_MESSAGINGSENDERID
 };
 
 //const config = process.env.NODE_ENV === 'production'

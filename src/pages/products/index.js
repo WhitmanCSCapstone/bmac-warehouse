@@ -20,8 +20,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Products extends React.Component {
@@ -31,7 +31,7 @@ class Products extends React.Component {
       data: null,
       rowData: null,
       products: null,
-      formModalVisible: false,
+      formModalVisible: false
     };
   }
 
@@ -68,8 +68,8 @@ class Products extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
+                  formModalVisible: true
+                })
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
@@ -113,13 +113,13 @@ class Products extends React.Component {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
                     return b > a ? 1 : -1;
-                  },
+                  }
                 };
               } else if (string === 'unit_weight') {
                 return {
                   Header: 'Unit Weight',
                   id: string,
-                  accessor: d => (isNaN(Number(d.unit_weight)) ? 0 : Number(d.unit_weight)),
+                  accessor: d => (isNaN(Number(d.unit_weight)) ? 0 : Number(d.unit_weight))
                 };
               } else {
                 return {
@@ -128,7 +128,7 @@ class Products extends React.Component {
                     .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}
