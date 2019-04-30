@@ -3,8 +3,7 @@ import { Icon, Input, Button } from 'antd';
 import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
-  container: {
-  },
+  container: {},
 
   icon: {
     alignSelf: 'center',
@@ -33,15 +32,14 @@ const styles = {
     width: '20%',
     overflow: 'hidden',
   },
-
 };
 
 class ProductItems extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       items: null,
-    }
+    };
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -52,18 +50,13 @@ class ProductItems extends React.Component {
   }
 
   render() {
-
     function invisibleBtn() {
-      return(
-        <Icon
-          className="dynamic-delete-button"
-          style={styles.iconDisabled}
-          type="minus-circle-o"
-        />
+      return (
+        <Icon className="dynamic-delete-button" style={styles.iconDisabled} type="minus-circle-o" />
       );
     }
 
-    return(
+    return (
       <div style={styles.container}>
         <div style={styles.row}>
           <span style={styles.productItem}>Product</span>
@@ -72,73 +65,65 @@ class ProductItems extends React.Component {
           <span style={styles.formItem}>Total Weight</span>
           {invisibleBtn()}
         </div>
-        {
-          !this.state.items ? null :
-          this.state.items.map((obj, index) => {
-            return (
-              <div key={index}
-                   style={styles.row}>
+        {!this.state.items
+          ? null
+          : this.state.items.map((obj, index) => {
+              return (
+                <div key={index} style={styles.row}>
+                  <div style={styles.productItem}>
+                    <ProductAutoComplete
+                      onChange={this.props.onChange}
+                      value={obj ? obj['product'] : undefined}
+                      index={index}
+                    />
+                  </div>
 
-                <div style={styles.productItem}>
-                  <ProductAutoComplete
-                    onChange={this.props.onChange}
-                    value={obj ? obj['product'] : undefined}
-                    index={index}
-                  />
+                  <div style={styles.formItem}>
+                    <Input
+                      placeholder="Unit Weight"
+                      value={obj ? obj['unit_weight'] : undefined}
+                      onChange={e => this.props.onChange('unit_weight', index, e.target.value)}
+                    />
+                  </div>
+
+                  <div style={styles.formItem}>
+                    <Input
+                      placeholder="Case Lots"
+                      value={obj ? obj['case_lots'] : undefined}
+                      onChange={e => this.props.onChange('case_lots', index, e.target.value)}
+                    />
+                  </div>
+
+                  <div style={styles.formItem}>
+                    <Input
+                      placeholder="Total Weight"
+                      value={obj ? obj['total_weight'] : undefined}
+                      onChange={e => this.props.onChange('total_weight', index, e.target.value)}
+                    />
+                  </div>
+
+                  {this.state.items.length === 1 ? (
+                    invisibleBtn()
+                  ) : (
+                    <Icon
+                      className="dynamic-delete-button"
+                      style={styles.icon}
+                      type="minus-circle-o"
+                      onClick={() => this.props.removeProductItem(index)}
+                    />
+                  )}
                 </div>
-
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Unit Weight"
-                    value={obj ? obj['unit_weight'] : undefined}
-                    onChange={ e => this.props.onChange('unit_weight', index, e.target.value) }
-                  />
-                </div>
-
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Case Lots"
-                    value={obj ? obj['case_lots'] : undefined}
-                    onChange={ e => this.props.onChange('case_lots', index, e.target.value) }
-                  />
-                </div>
-
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Total Weight"
-                    value={obj ? obj['total_weight'] : undefined}
-                    onChange={ e => this.props.onChange('total_weight', index, e.target.value) }
-                  />
-                </div>
-
-                {
-                  this.state.items.length === 1
-                  ?
-                  invisibleBtn()
-                  :
-                  <Icon
-                    className="dynamic-delete-button"
-                    style={styles.icon}
-                    type="minus-circle-o"
-                    onClick={ () => this.props.removeProductItem(index) }
-                  />
-                }
-
-              </div>
-            );
-          })
-        }
+              );
+            })}
 
         <div style={styles.formItem}>
           <Button type="dashed" onClick={this.props.addProductItem}>
             <Icon type="plus" /> Add fields
           </Button>
         </div>
-
       </div>
     );
   }
 }
-
 
 export default ProductItems;

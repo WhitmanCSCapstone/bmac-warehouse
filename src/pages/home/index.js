@@ -4,114 +4,118 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
-import {getReadableShipmentsTableData} from '../../utils/shipments';
-import {getReadableReceiptsTableData} from '../../utils/receipts';
-
+import { getReadableShipmentsTableData } from '../../utils/shipments';
+import { getReadableReceiptsTableData } from '../../utils/receipts';
 
 const shipKeys = tableKeys['shipments'];
-const receiptKeys = tableKeys['receipts']
+const receiptKeys = tableKeys['receipts'];
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24,
   },
 };
 
 class Home extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       shipData: null,
       receiptsData: null,
-    }
+    };
   }
 
-  componentDidMount(){
-
-      getReadableShipmentsTableData().then(snapshot => {
-        var ship = snapshot.val();
-        var filteredShip = [];
-        for (var i = 0; i<ship.length;i++){
-          var entry=ship[i];
-          var entryDate= Moment(entry['ship_date'], 'MM/DD/YYYY');
-          if(entryDate>=Moment().add(-10,'days') && entryDate <= Moment()) {
-            filteredShip.push(entry);
-
-          }
+  componentDidMount() {
+    getReadableShipmentsTableData().then(snapshot => {
+      var ship = snapshot.val();
+      var filteredShip = [];
+      for (var i = 0; i < ship.length; i++) {
+        var entry = ship[i];
+        var entryDate = Moment(entry['ship_date'], 'MM/DD/YYYY');
+        if (entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
+          filteredShip.push(entry);
         }
-        this.setState({ shipData: filteredShip});
-      });
+      }
+      this.setState({ shipData: filteredShip });
+    });
 
-      getReadableReceiptsTableData().then(snapshot => {
-        var receipts = snapshot.val();
-        var filteredReceipts = [];
-        for (var i = 0; i<receipts.length;i++){
-          var entry=receipts[i];
-          var entryDate= Moment(entry['recieve_date'], 'MM/DD/YYYY');
-          if(entryDate>=Moment().add(-10,'days') && entryDate <= Moment()) {
-            filteredReceipts.push(entry);
-
-          }
+    getReadableReceiptsTableData().then(snapshot => {
+      var receipts = snapshot.val();
+      var filteredReceipts = [];
+      for (var i = 0; i < receipts.length; i++) {
+        var entry = receipts[i];
+        var entryDate = Moment(entry['recieve_date'], 'MM/DD/YYYY');
+        if (entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
+          filteredReceipts.push(entry);
         }
-        this.setState({ receiptsData: filteredReceipts});
-      });
+      }
+      this.setState({ receiptsData: filteredReceipts });
+    });
   }
 
   render() {
-    return(
+    return (
       <div style={styles.container}>
-        <p>Welcome to <em>BMAC-Warehouse</em>! Today is {Moment().format('dddd MMMM Do YYYY')}</p>
+        <p>
+          Welcome to <em>BMAC-Warehouse</em>! Today is {Moment().format('dddd MMMM Do YYYY')}
+        </p>
         <strong>Last 10 days Shipments</strong>
 
-        { !this.state.shipData ? <LoadingScreen/> :
+        {!this.state.shipData ? (
+          <LoadingScreen />
+        ) : (
           <ReactTable
             data={this.state.shipData ? this.state.shipData : []}
             columns={shipKeys.map(string => {
-                if(string === 'customer_id')
-                  return({
-                    Header: "Customer",
-                    accessor: string,})
-                else{
-                  return({
-                    Header: "Ship Date",
-                    accessor: string,
-                  })}
-
+              if (string === 'customer_id')
+                return {
+                  Header: 'Customer',
+                  accessor: string,
+                };
+              else {
+                return {
+                  Header: 'Ship Date',
+                  accessor: string,
+                };
+              }
             })}
             defaultPageSize={this.state.shipData.length}
             className="-striped -highlight"
             showPagination={false}
           />
-        }
+        )}
 
         <strong>Last 10 days Receipts</strong>
 
-        { !this.state.receiptsData ? <LoadingScreen/> :
+        {!this.state.receiptsData ? (
+          <LoadingScreen />
+        ) : (
           <ReactTable
             data={this.state.receiptsData ? this.state.receiptsData : []}
             columns={receiptKeys.map(string => {
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                                .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                                .join(' '),
-                  accessor: string,
-                })
+              return {
+                Header: string
+                  .replace('_', ' ')
+                  .split(' ')
+                  .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(' '),
+                accessor: string,
+              };
             })}
             defaultPageSize={this.state.receiptsData.length}
             className="-striped -highlight"
             showPagination={false}
           />
-        }
-
+        )}
       </div>
     );
   }
 }
 
-const authCondition = (authUser) => !!authUser;
+const authCondition = authUser => !!authUser;
 
 const adminOnly = false;
 

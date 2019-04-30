@@ -50,28 +50,27 @@ const styles = {
 var ref = null;
 
 class ReceiptForm extends React.Component {
-
   defaultState = {
     provider_id: null,
     recieve_date: null,
     payment_source: null,
-    receive_items: [{},{},{},{},{}],
+    receive_items: [{}, {}, {}, {}, {}],
     billed_amt: null,
     notes: null,
     total_weight: null,
     uniq_id: null,
-  }
+  };
 
   constructor(props) {
     super(props);
-    this.state = { ...this.defaultState, ...props.rowData }
+    this.state = { ...this.defaultState, ...props.rowData };
   }
 
   onChange = (prop, val) => {
     this.setState({
       [prop]: val,
-    })
-  }
+    });
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
@@ -79,47 +78,46 @@ class ReceiptForm extends React.Component {
     }
   }
 
-  onClickFundingSource = (value) => {
+  onClickFundingSource = value => {
     this.setState({ payment_source: value });
-  }
+  };
 
   clearPaymentSource = () => {
     this.setState({ payment_source: null });
-  }
+  };
 
   onTextChange = (prop, val) => {
     this.setState({ [prop]: val });
-  }
+  };
 
-  onNotesChange = (value) => {
-    this.setState({ notes: value })
-  }
+  onNotesChange = value => {
+    this.setState({ notes: value });
+  };
 
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.receive_items.slice(0); // shallow clone
-    if(itemsCopy[index] === undefined) {
-      itemsCopy[index] = {[prop]: val};
+    if (itemsCopy[index] === undefined) {
+      itemsCopy[index] = { [prop]: val };
     } else {
       itemsCopy[index][prop] = val;
     }
     this.setState({ receive_items: itemsCopy });
 
     var total_weight = 0;
-    for(var item of this.state.receive_items) {
+    for (var item of this.state.receive_items) {
       var stringWeight = item ? item['total_weight'] : '0';
       var weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
-  }
+  };
 
-
-  deleteEmptyReceiveItems = (receiveItems) => {
-    var filteredItems = receiveItems.filter( obj => {
+  deleteEmptyReceiveItems = receiveItems => {
+    var filteredItems = receiveItems.filter(obj => {
       return obj !== undefined && obj['product'] !== undefined;
-    })
+    });
     return filteredItems;
-  }
+  };
 
   handleOk = () => {
     var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
@@ -127,7 +125,7 @@ class ReceiptForm extends React.Component {
 
     newData['receive_items'] = emptiedShipItems;
 
-    var row = this.props.rowData
+    var row = this.props.rowData;
 
     if (row && row.uniq_id) {
       // if we are editing a shipment, set in place
@@ -144,40 +142,36 @@ class ReceiptForm extends React.Component {
       this.props.closeForm();
       this.setState({ ...this.defaultState });
     }, 1500);
-  }
+  };
 
   addReceiveItem = () => {
     var emptyRow = {
-      'product': undefined,
-      'unit_weight': undefined,
-      'case_lots': undefined,
-      'total_weight': undefined,
+      product: undefined,
+      unit_weight: undefined,
+      case_lots: undefined,
+      total_weight: undefined,
     };
 
-    var newReceiveItems = this.state.receive_items
-                           .concat(emptyRow)
-                           .filter( elem => {
-                             return elem !== undefined;
-                           });
+    var newReceiveItems = this.state.receive_items.concat(emptyRow).filter(elem => {
+      return elem !== undefined;
+    });
 
     this.setState({ receive_items: newReceiveItems });
-  }
+  };
 
-  removeReceiveItem = (removeIndex) => {
-    var itemsCopy = this.state.receive_items.filter( (obj, objIndex) => objIndex !== removeIndex )
+  removeReceiveItem = removeIndex => {
+    var itemsCopy = this.state.receive_items.filter((obj, objIndex) => objIndex !== removeIndex);
     this.setState({ receive_items: itemsCopy });
-  }
+  };
 
   handleDelete = () => {
     db.deleteReceiptObj(this.props.rowData.uniq_id);
-    this.props.closeForm()
+    this.props.closeForm();
     this.props.refreshTable();
-  }
+  };
 
   render() {
-
     return (
-
       <Modal
         title="Add New Receipt"
         style={{ top: 20 }}
@@ -186,31 +180,32 @@ class ReceiptForm extends React.Component {
         visible={this.props.formModalVisible}
         onCancel={this.props.closeForm}
         footer={[
-          <Footer key='footer'
-                       rowData={this.props.rowData}
-                       handleDelete={this.handleDelete}
-                       closeForm={this.props.closeForm}
-                       handleOk={this.handleOk}
-          />
+          <Footer
+            key="footer"
+            rowData={this.props.rowData}
+            handleDelete={this.handleDelete}
+            closeForm={this.props.closeForm}
+            handleOk={this.handleOk}
+          />,
         ]}
       >
-
         <div style={styles.form}>
-
           <div style={styles.topThird}>
             {/* intentially mispelled "receive" */}
             <div style={styles.formItem}>
               Date:
-              <DatePicker style={styles.datePicker}
-                          onChange={ (date) => this.onChange('recieve_date', date.format('MM/DD/YYYY')) }
-                          format={'MM/DD/YYYY'}
-                          key={`recievedate:${this.state.recieve_date}`}
-                          defaultValue={
-                            this.state.recieve_date
-                                      ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
-                                      : this.state.recieve_date
-                          }
-                          placeholder="Receive Date" />
+              <DatePicker
+                style={styles.datePicker}
+                onChange={date => this.onChange('recieve_date', date.format('MM/DD/YYYY'))}
+                format={'MM/DD/YYYY'}
+                key={`recievedate:${this.state.recieve_date}`}
+                defaultValue={
+                  this.state.recieve_date
+                    ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
+                    : this.state.recieve_date
+                }
+                placeholder="Receive Date"
+              />
             </div>
 
             <div style={styles.formItem}>
@@ -227,19 +222,16 @@ class ReceiptForm extends React.Component {
               />
             </div>
 
-
             <div style={styles.formItem}>
               Provider:
               <ProviderAutoComplete
-                onProviderChange={ (val) => this.onChange('provider_id', val) }
+                onProviderChange={val => this.onChange('provider_id', val)}
                 rowData={this.props.rowData}
               />
             </div>
-
           </div>
 
           <Divider orientation="left">Receipt Items</Divider>
-
 
           {/* TODO make sure to change the props names that get passed down if you abstract it */}
 
@@ -253,26 +245,22 @@ class ReceiptForm extends React.Component {
           <Divider />
 
           <div style={styles.bottomThird}>
-
             <div style={styles.formItem}>
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
-                onChange={ (e) => this.onTextChange('billed_amt', e.target.value) }
+                onChange={e => this.onTextChange('billed_amt', e.target.value)}
               />
             </div>
-
           </div>
 
           <TextArea
             rows={4}
             placeholder="Notes"
             value={this.state.notes}
-            onChange={ (e) => this.onTextChange('notes', e.target.value) }
+            onChange={e => this.onTextChange('notes', e.target.value)}
           />
-
         </div>
-
       </Modal>
     );
   }

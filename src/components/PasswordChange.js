@@ -19,30 +19,25 @@ class PasswordChangeForm extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     const { passwordOne } = this.state;
 
-    auth.doPasswordUpdate(passwordOne)
-        .then(() => {
-          this.setState({ ...INITIAL_STATE });
-        })
-        .catch(error => {
-          this.setState(byPropKey('error', error));
-        });
+    auth
+      .doPasswordUpdate(passwordOne)
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+      })
+      .catch(error => {
+        this.setState(byPropKey('error', error));
+      });
 
     event.preventDefault();
-  }
+  };
 
   render() {
-    const {
-      passwordOne,
-      passwordTwo,
-      error,
-    } = this.state;
+    const { passwordOne, passwordTwo, error } = this.state;
 
-    const isInvalid =
-      passwordOne !== passwordTwo ||
-      passwordOne === '';
+    const isInvalid = passwordOne !== passwordTwo || passwordOne === '';
 
     return (
       <form onSubmit={this.onSubmit}>
@@ -62,7 +57,7 @@ class PasswordChangeForm extends Component {
           Reset My Password
         </button>
 
-        { error && <p>{error.message}</p> }
+        {error && <p>{error.message}</p>}
       </form>
     );
   }

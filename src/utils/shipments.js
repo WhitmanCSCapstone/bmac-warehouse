@@ -8,7 +8,7 @@ export async function getReadableShipmentsTableData() {
         var data = Object.values(snapshot.val());
         data.map(row => makeShipmentReadable(row, customers));
         // this is to make it act like the Firebase Promises
-        var obj = { val: () => data }
+        var obj = { val: () => data };
         data ? resolve(obj) : reject();
       });
     });
