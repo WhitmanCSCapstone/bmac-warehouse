@@ -1,7 +1,7 @@
-import React from "react";
-import { Input, Select, Divider, Modal } from "antd";
-import { db } from "../../../firebase";
-import Footer from "../Footer";
+import React from 'react';
+import { Input, Select, Divider, Modal } from 'antd';
+import { db } from '../../../firebase';
+import Footer from '../Footer';
 
 // This is for the notes section.
 const { TextArea } = Input;
@@ -11,29 +11,29 @@ const { Option } = Select;
 // Styles
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   topThird: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    alignContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center'
   },
 
   bottomThird: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignContent: "center"
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignContent: 'center'
   }
 };
 
@@ -122,7 +122,7 @@ class CustomerForm extends React.Component {
               Customer Name:
               <Input
                 placeholder="Customer Name"
-                onChange={e => this.onChange("customer_id", e.target.value)}
+                onChange={e => this.onChange('customer_id', e.target.value)}
                 value={this.state.customer_id}
               />
             </div>
@@ -133,7 +133,7 @@ class CustomerForm extends React.Component {
               Address:
               <Input
                 placeholder="Address"
-                onChange={e => this.onChange("address", e.target.value)}
+                onChange={e => this.onChange('address', e.target.value)}
                 value={this.state.address}
               />
             </div>
@@ -142,7 +142,7 @@ class CustomerForm extends React.Component {
               City:
               <Input
                 placeholder="City"
-                onChange={e => this.onChange("city", e.target.value)}
+                onChange={e => this.onChange('city', e.target.value)}
                 value={this.state.city}
               />
             </div>
@@ -150,7 +150,7 @@ class CustomerForm extends React.Component {
               State:
               <Input
                 placeholder="State"
-                onChange={e => this.onChange("state", e.target.value)}
+                onChange={e => this.onChange('state', e.target.value)}
                 value={this.state.state}
               />
             </div>
@@ -158,7 +158,7 @@ class CustomerForm extends React.Component {
               ZIP:
               <Input
                 placeholder="ZIP"
-                onChange={e => this.onChange("zip", e.target.value)}
+                onChange={e => this.onChange('zip', e.target.value)}
                 value={this.state.zip}
               />
             </div>
@@ -166,7 +166,7 @@ class CustomerForm extends React.Component {
               Contact Phone:
               <Input
                 placeholder="Contact Phone"
-                onChange={e => this.onChange("phone", e.target.value)}
+                onChange={e => this.onChange('phone', e.target.value)}
                 value={this.state.phone}
               />
             </div>
@@ -174,7 +174,7 @@ class CustomerForm extends React.Component {
               Contact Person:
               <Input
                 placeholder="Contact Person"
-                onChange={e => this.onChange("contact", e.target.value)}
+                onChange={e => this.onChange('contact', e.target.value)}
                 value={this.state.contact}
               />
             </div>
@@ -182,7 +182,7 @@ class CustomerForm extends React.Component {
               Contact Email:
               <Input
                 placeholder="Contact Email"
-                onChange={e => this.onChange("email", e.target.value)}
+                onChange={e => this.onChange('email', e.target.value)}
                 value={this.state.email}
               />
             </div>
@@ -204,7 +204,7 @@ class CustomerForm extends React.Component {
           <TextArea
             rows={4}
             placeholder="Notes"
-            onChange={e => this.onChange("notes", e.target.value)}
+            onChange={e => this.onChange('notes', e.target.value)}
             value={this.state.notes}
           />
         </div>

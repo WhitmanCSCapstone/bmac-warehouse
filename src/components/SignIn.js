@@ -1,49 +1,49 @@
-import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
-import { Form, Icon, Input, Button, Alert } from "antd";
+import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
+import { Form, Icon, Input, Button, Alert } from 'antd';
 
-import { PasswordForgetLink } from "./PasswordForget";
-import { auth } from "../firebase";
-import * as routes from "../constants/routes";
-import img from "../blues4.jpg";
+import { PasswordForgetLink } from './PasswordForget';
+import { auth } from '../firebase';
+import * as routes from '../constants/routes';
+import img from '../blues4.jpg';
 
 const styles = {
   splitScreen: {
-    display: "flex",
-    flex: "row"
+    display: 'flex',
+    flex: 'row'
   },
   splitA: {
-    borderTop: "5px solid #2C7BE5",
-    width: "35%",
-    height: "925px",
-    backgroundColor: "off-white"
+    borderTop: '5px solid #2C7BE5',
+    width: '35%',
+    height: '925px',
+    backgroundColor: 'off-white'
   },
   splitB: {
-    width: "65%",
+    width: '65%',
     backgroundImage: `url(${img})`,
-    backgroundRepeat: "no-repeat"
+    backgroundRepeat: 'no-repeat'
   },
   prettyForm: {
-    display: "flex",
-    flexDirection: "column",
-    maxWidth: "400px",
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: "12%",
-    marginRight: "12%"
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '400px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: '12%',
+    marginRight: '12%'
   },
 
   prettyElement: {
-    width: "100%",
-    marginTop: "5%"
+    width: '100%',
+    marginTop: '5%'
   },
 
   prettyBottom: {
-    marginBottom: "3%"
+    marginBottom: '3%'
   },
 
   errorBox: {
-    paddingBottom: "2%"
+    paddingBottom: '2%'
   }
 };
 
@@ -79,8 +79,8 @@ const SignInPage = ({ history }) => (
 const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
 
 const INITIAL_STATE = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
   error: null
 };
 
@@ -107,7 +107,7 @@ class SignInForm extends Component {
         history.push(routes.HOME);
       })
       .catch(error => {
-        this.setState(byPropKey("error", error));
+        this.setState(byPropKey('error', error));
       });
 
     event.preventDefault();
@@ -127,18 +127,18 @@ class SignInForm extends Component {
         </div>
         <Form onSubmit={this.onSubmit}>
           <Input
-            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
             value={email}
-            onChange={event => this.setState(byPropKey("email", event.target.value))}
+            onChange={event => this.setState(byPropKey('email', event.target.value))}
             type="text"
             style={styles.prettyBottom}
             placeholder="Email Address"
           />
 
           <Input
-            prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
             value={password}
-            onChange={event => this.setState(byPropKey("password", event.target.value))}
+            onChange={event => this.setState(byPropKey('password', event.target.value))}
             type="password"
             placeholder="Password"
           />

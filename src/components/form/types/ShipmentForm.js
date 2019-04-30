@@ -1,12 +1,12 @@
-import React from "react";
-import * as jspdf from "jspdf";
-import { Input, DatePicker, Select, Divider, Modal } from "antd";
-import Moment from "moment";
-import { db } from "../../../firebase";
-import ProductItems from "../ProductItems";
-import Footer from "../Footer";
-import FundsSourceDropdownMenu from "../../FundsSourceDropdownMenu";
-import CustomerAutoComplete from "../CustomerAutoComplete";
+import React from 'react';
+import * as jspdf from 'jspdf';
+import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import Moment from 'moment';
+import { db } from '../../../firebase';
+import ProductItems from '../ProductItems';
+import Footer from '../Footer';
+import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
+import CustomerAutoComplete from '../CustomerAutoComplete';
 
 const { TextArea } = Input;
 
@@ -14,39 +14,39 @@ const { Option } = Select;
 
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   datePicker: {
-    width: "100%"
+    width: '100%'
   },
 
   topThird: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    alignContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center'
   },
 
   bottomThird: {
-    display: "flex",
-    justifyContent: "flex-start"
+    display: 'flex',
+    justifyContent: 'flex-start'
   },
 
   shipViaContainer: {
-    width: "45%",
-    margin: "0px 1em 1em 1em",
-    display: "flex",
-    flexDirection: "column"
+    width: '45%',
+    margin: '0px 1em 1em 1em',
+    display: 'flex',
+    flexDirection: 'column'
   }
 };
 
@@ -56,8 +56,8 @@ class ShipmentForm extends React.Component {
   defaultState = {
     customer_id: null,
     funds_source: null,
-    invoice_date: "null",
-    invoice_no: "null",
+    invoice_date: 'null',
+    invoice_no: 'null',
     notes: undefined,
     ship_date: null,
     ship_items: [{}, {}, {}, {}, {}],
@@ -108,7 +108,7 @@ class ShipmentForm extends React.Component {
 
     let total_weight = 0;
     for (const item of this.state.ship_items) {
-      const stringWeight = item ? item.total_weight : "0";
+      const stringWeight = item ? item.total_weight : '0';
       const weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
@@ -151,72 +151,72 @@ class ShipmentForm extends React.Component {
   handlePdf = () => {
     const pdf = new jspdf();
     db.onceGetSpecificCustomer(this.state.customer_id).then(customerObj => {
-      const customerName = customerObj.child("customer_id").val();
-      const address = customerObj.child("address").val();
-      const city = customerObj.child("city").val();
-      const state = customerObj.child("state").val();
-      const zip = customerObj.child("zip").val();
+      const customerName = customerObj.child('customer_id').val();
+      const address = customerObj.child('address').val();
+      const city = customerObj.child('city').val();
+      const state = customerObj.child('state').val();
+      const zip = customerObj.child('zip').val();
       const fullAddress = `${address}, ${city}, ${state}, ${zip}`;
 
-      pdf.setFont("helvetica");
-      pdf.setFontSize("20");
-      pdf.setFontType("italic");
-      pdf.text(40, 10, "BMAC Shipment Invoice");
-      pdf.text(55, 17.5, "Blue Mountain Action Council");
-      pdf.text(55, 25, "Walla Walla, WA, 99362");
+      pdf.setFont('helvetica');
+      pdf.setFontSize('20');
+      pdf.setFontType('italic');
+      pdf.text(40, 10, 'BMAC Shipment Invoice');
+      pdf.text(55, 17.5, 'Blue Mountain Action Council');
+      pdf.text(55, 25, 'Walla Walla, WA, 99362');
 
-      pdf.setFontType("italic");
-      pdf.setFontSize("12");
+      pdf.setFontType('italic');
+      pdf.setFontSize('12');
       pdf.text(10, 40, `Invoice No:${this.state.ship_date}`);
       pdf.text(10, 50, `Ship Date: ${this.state.ship_date}`);
       pdf.text(70, 50, `Ship Via: ${this.state.ship_via}`);
       pdf.text(130, 50, `Funds Source: ${this.state.funds_source}`);
-      pdf.text(10, 65, "Ship To: ");
+      pdf.text(10, 65, 'Ship To: ');
       pdf.text(15, 75, customerName);
       pdf.text(15, 80, fullAddress);
       const clean_ship_items = this.deleteEmptyShipItems(this.state.ship_items);
 
-      pdf.text(10, 90, "Items Shipped:");
-      pdf.setFontType("bold");
-      pdf.text(30, 100, "Product");
-      pdf.text(90, 100, "Unit Weight");
-      pdf.text(115, 100, "Case Lots");
-      pdf.text(140, 100, "Total Weight");
-      pdf.setFontType("normal");
+      pdf.text(10, 90, 'Items Shipped:');
+      pdf.setFontType('bold');
+      pdf.text(30, 100, 'Product');
+      pdf.text(90, 100, 'Unit Weight');
+      pdf.text(115, 100, 'Case Lots');
+      pdf.text(140, 100, 'Total Weight');
+      pdf.setFontType('normal');
       let y = 105;
       let total_case_lots = 0;
       let shipment_weight = 0;
       for (let i = 0; i < clean_ship_items.length; i++) {
         clean_ship_items[i].product
           ? pdf.text(30, y, String(clean_ship_items[i].product))
-          : pdf.text(30, y, "-");
+          : pdf.text(30, y, '-');
         clean_ship_items[i].unit_weight
           ? pdf.text(90, y, String(clean_ship_items[i].unit_weight))
-          : pdf.text(90, y, "-");
+          : pdf.text(90, y, '-');
         clean_ship_items[i].case_lots
           ? pdf.text(115, y, String(clean_ship_items[i].case_lots))
-          : pdf.text(115, y, "-");
+          : pdf.text(115, y, '-');
         clean_ship_items[i].total_weight
           ? pdf.text(140, y, String(clean_ship_items[i].total_weight))
-          : pdf.text(140, y, "-");
+          : pdf.text(140, y, '-');
         y += 5;
         total_case_lots += parseInt(clean_ship_items[i].case_lots);
         shipment_weight += parseInt(clean_ship_items[i].total_weight);
       }
-      pdf.setFontType("bold");
-      pdf.text(90, y + 5, "Totals: ");
+      pdf.setFontType('bold');
+      pdf.text(90, y + 5, 'Totals: ');
       pdf.text(115, y + 5, String(total_case_lots));
       pdf.text(140, y + 5, String(shipment_weight));
-      pdf.text(155, y + 5, "pounds");
-      pdf.setFontType("normal");
-      pdf.setFontType("italic");
+      pdf.text(155, y + 5, 'pounds');
+      pdf.setFontType('normal');
+      pdf.setFontType('italic');
       pdf.text(10, y + 20, `Rate: ${this.state.ship_rate}`);
       pdf.text(70, y + 20, `Billed Amount: ${this.state.total_price}`);
       pdf.text(10, y + 30, `Notes: ${this.state.notes}`);
-      pdf.text(10, y + 50, "BMAC Signature - ____________________________________________");
-      pdf.text(10, y + 60, "Agency Signature - ___________________________________________");
+      pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
+      pdf.text(10, y + 60, 'Agency Signature - ___________________________________________');
 
-      pdf.save("Receipt");
+      pdf.save('Receipt');
     });
   };
 
@@ -224,30 +224,30 @@ class ShipmentForm extends React.Component {
     const pdf = new jspdf();
 
     db.onceGetSpecificCustomer(this.state.customer_id).then(customerObj => {
-      const customerName = customerObj.child("customer_id").val();
-      const address = customerObj.child("address").val();
-      const city = customerObj.child("city").val();
-      const state = customerObj.child("state").val();
-      const zip = customerObj.child("zip").val();
+      const customerName = customerObj.child('customer_id').val();
+      const address = customerObj.child('address').val();
+      const city = customerObj.child('city').val();
+      const state = customerObj.child('state').val();
+      const zip = customerObj.child('zip').val();
       const fullAddress = `${city}, ${state}, ${zip}`;
 
       pdf
-        .setFont("Helvetica")
+        .setFont('Helvetica')
         .setFontSize(28)
-        .setFontType("italic");
-      pdf.text(10, 60, "Ship To: ");
+        .setFontType('italic');
+      pdf.text(10, 60, 'Ship To: ');
       pdf.text(50, 70, customerName);
       pdf.text(50, 80, address);
       pdf.text(50, 90, fullAddress);
 
-      pdf.setFontSize(12).setFontType("normal");
+      pdf.setFontSize(12).setFontType('normal');
       pdf.text(10, 110, `Invoice no: ${this.state.ship_date}`);
       pdf.text(130, 110, `Funds Source: ${this.state.funds_source}`);
       pdf.text(10, 120, `Ship Date: ${this.state.ship_date}`);
       pdf.text(70, 120, `Ship Via: ${this.state.ship_via}`);
       pdf.text(130, 120, `Total Weight: ${this.state.total_weight}`);
 
-      pdf.save("Label");
+      pdf.save('Label');
     });
   };
 
@@ -302,12 +302,12 @@ class ShipmentForm extends React.Component {
               Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onChange("ship_date", date.format("MM/DD/YYYY"))}
+                onChange={date => this.onChange('ship_date', date.format('MM/DD/YYYY'))}
                 format="MM/DD/YYYY"
                 key={`shipdate:${this.state.ship_date}`}
                 defaultValue={
                   this.state.ship_date
-                    ? Moment(this.state.ship_date, "MM/DD/YYYY")
+                    ? Moment(this.state.ship_date, 'MM/DD/YYYY')
                     : this.state.ship_date
                 }
                 placeholder="Ship Date"
@@ -317,7 +317,7 @@ class ShipmentForm extends React.Component {
             <div style={styles.formItem}>
               Customer:
               <CustomerAutoComplete
-                onCustomerChange={val => this.onChange("customer_id", val)}
+                onCustomerChange={val => this.onChange('customer_id', val)}
                 rowData={this.props.rowData}
               />
             </div>
@@ -342,7 +342,7 @@ class ShipmentForm extends React.Component {
                 placeholder="Ship Via"
                 value={this.state.ship_via}
                 onChange={val => {
-                  this.onChange("ship_via", val);
+                  this.onChange('ship_via', val);
                 }}
               >
                 <Option value="BMAC">BMAC</Option>
@@ -368,7 +368,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Rate"
                 value={this.state.ship_rate}
-                onChange={e => this.onTextChange("ship_rate", e.target.value)}
+                onChange={e => this.onTextChange('ship_rate', e.target.value)}
               />
             </div>
 
@@ -376,7 +376,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.total_price}
-                onChange={e => this.onTextChange("total_price", e.target.value)}
+                onChange={e => this.onTextChange('total_price', e.target.value)}
               />
             </div>
           </div>
@@ -385,7 +385,7 @@ class ShipmentForm extends React.Component {
             rows={4}
             value={this.state.notes}
             placeholder="Notes"
-            onChange={e => this.onTextChange("notes", e.target.value)}
+            onChange={e => this.onTextChange('notes', e.target.value)}
           />
         </div>
       </Modal>

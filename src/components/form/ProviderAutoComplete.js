@@ -1,10 +1,10 @@
-import React from "react";
-import { AutoComplete } from "antd";
-import { db } from "../../firebase";
+import React from 'react';
+import { AutoComplete } from 'antd';
+import { db } from '../../firebase';
 
 const styles = {
   container: {
-    width: "100%"
+    width: '100%'
   }
 };
 

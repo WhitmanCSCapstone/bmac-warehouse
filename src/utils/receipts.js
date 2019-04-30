@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db } from '../firebase';
 
 export function getReadableReceiptsTableData() {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ function makeRecieptReadable(row, providers) {
   if (providerObj) {
     name = providerObj.provider_id;
   } else {
-    name = "INVALID PROVIDER ID";
+    name = 'INVALID PROVIDER ID';
   }
   row.provider_id = name;
   return row;

@@ -2,23 +2,23 @@
  *  A component
  */
 
-import React from "react";
-import ReactTable from "react-table";
-import matchSorter from "match-sorter";
-import { Button } from "antd";
-import { db } from "../../firebase";
-import LoadingScreen from "../../components/LoadingScreen";
-import { tableKeys } from "../../constants/constants";
-import withAuthorization from "../../components/withAuthorization";
-import CustomerForm from "../../components/form/types/CustomerForm";
+import React from 'react';
+import ReactTable from 'react-table';
+import matchSorter from 'match-sorter';
+import { Button } from 'antd';
+import { db } from '../../firebase';
+import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
+import CustomerForm from '../../components/form/types/CustomerForm';
 
 const keys = tableKeys.customers;
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24
   }
 };
@@ -69,12 +69,12 @@ class Customers extends React.Component {
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if (string === "customer_id") {
+              if (string === 'customer_id') {
                 return {
-                  Header: "Customer",
+                  Header: 'Customer',
                   accessor: string,
                   filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ["customer_id"] }),
+                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
                   filterAll: true,
                   filterable: true
                 };
@@ -82,10 +82,10 @@ class Customers extends React.Component {
 
               return {
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: string
               };
             })}

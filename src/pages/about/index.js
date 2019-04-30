@@ -2,17 +2,17 @@
  *  A component
  */
 
-import React from "react";
-import withAuthorization from "../../components/withAuthorization";
+import React from 'react';
+import withAuthorization from '../../components/withAuthorization';
 
 const styles = {
   container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    maxWidth: "40rem",
-    paddingTop: "2em",
-    alignSelf: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    maxWidth: '40rem',
+    paddingTop: '2em',
+    alignSelf: 'center'
     // fontSize: '1.5em',
   }
 };

@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db } from '../firebase';
 
 export async function getReadableShipmentsTableData() {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ function makeShipmentReadable(row, customers) {
   if (customerObj) {
     name = customerObj.customer_id;
   } else {
-    name = "INVALID CUSTOMER ID";
+    name = 'INVALID CUSTOMER ID';
   }
   row.customer_id = name;
   return row;

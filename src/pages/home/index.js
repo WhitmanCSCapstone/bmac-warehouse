@@ -1,11 +1,11 @@
-import React from "react";
-import Moment from "moment";
-import ReactTable from "react-table";
-import LoadingScreen from "../../components/LoadingScreen";
-import { tableKeys } from "../../constants/constants";
-import withAuthorization from "../../components/withAuthorization";
-import { getReadableShipmentsTableData } from "../../utils/shipments";
-import { getReadableReceiptsTableData } from "../../utils/receipts";
+import React from 'react';
+import Moment from 'moment';
+import ReactTable from 'react-table';
+import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
+import { getReadableShipmentsTableData } from '../../utils/shipments';
+import { getReadableReceiptsTableData } from '../../utils/receipts';
 
 const shipKeys = tableKeys.shipments;
 const receiptKeys = tableKeys.receipts;
@@ -13,8 +13,8 @@ const receiptKeys = tableKeys.receipts;
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24
   }
 };
@@ -34,8 +34,8 @@ class Home extends React.Component {
       const filteredShip = [];
       for (let i = 0; i < ship.length; i++) {
         const entry = ship[i];
-        const entryDate = Moment(entry.ship_date, "MM/DD/YYYY");
-        if (entryDate >= Moment().add(-10, "days") && entryDate <= Moment()) {
+        const entryDate = Moment(entry.ship_date, 'MM/DD/YYYY');
+        if (entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
           filteredShip.push(entry);
         }
       }
@@ -47,8 +47,8 @@ class Home extends React.Component {
       const filteredReceipts = [];
       for (let i = 0; i < receipts.length; i++) {
         const entry = receipts[i];
-        const entryDate = Moment(entry.recieve_date, "MM/DD/YYYY");
-        if (entryDate >= Moment().add(-10, "days") && entryDate <= Moment()) {
+        const entryDate = Moment(entry.recieve_date, 'MM/DD/YYYY');
+        if (entryDate >= Moment().add(-10, 'days') && entryDate <= Moment()) {
           filteredReceipts.push(entry);
         }
       }
@@ -62,7 +62,7 @@ class Home extends React.Component {
         <p>
           Welcome to
           <em>BMAC-Warehouse</em>! Today is
-          {Moment().format("dddd MMMM Do YYYY")}
+          {Moment().format('dddd MMMM Do YYYY')}
         </p>
         <strong>Last 10 days Shipments</strong>
 
@@ -72,15 +72,15 @@ class Home extends React.Component {
           <ReactTable
             data={this.state.shipData ? this.state.shipData : []}
             columns={shipKeys.map(string => {
-              if (string === "customer_id") {
+              if (string === 'customer_id') {
                 return {
-                  Header: "Customer",
+                  Header: 'Customer',
                   accessor: string
                 };
               }
 
               return {
-                Header: "Ship Date",
+                Header: 'Ship Date',
                 accessor: string
               };
             })}
@@ -99,10 +99,10 @@ class Home extends React.Component {
             data={this.state.receiptsData ? this.state.receiptsData : []}
             columns={receiptKeys.map(string => ({
               Header: string
-                .replace("_", " ")
-                .split(" ")
+                .replace('_', ' ')
+                .split(' ')
                 .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                .join(" "),
+                .join(' '),
               accessor: string
             }))}
             defaultPageSize={this.state.receiptsData.length}

@@ -2,12 +2,12 @@
  *  A component
  */
 
-import React from "react";
-import ReactTable from "react-table";
-import { Spin, Button, Icon, DatePicker, Radio } from "antd";
-import { CSVLink } from "react-csv";
-import matchSorter from "match-sorter";
-import Moment from "moment";
+import React from 'react';
+import ReactTable from 'react-table';
+import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
+import { CSVLink } from 'react-csv';
+import matchSorter from 'match-sorter';
+import Moment from 'moment';
 import {
   reportKeys,
   reportType2TableName,
@@ -15,26 +15,26 @@ import {
   reportType2FundingSourceRelavancy,
   reportType2DateRangeRelavancy,
   radioValue2ReportType
-} from "../../constants/constants";
-import { populateTableData, getCSVdata } from "./utils";
-import withAuthorization from "../../components/withAuthorization";
-import FundsSourceDropdownMenu from "../../components/FundsSourceDropdownMenu";
+} from '../../constants/constants';
+import { populateTableData, getCSVdata } from './utils';
+import withAuthorization from '../../components/withAuthorization';
+import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
-const antIcon = <Icon type="loading" style={{ fontSize: "1rem", color: "white" }} spin />;
+const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
 
 const styles = {
   container: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24
   },
   filters: {
-    display: "flex"
+    display: 'flex'
   },
   radio: {
-    display: "flex",
-    flexDirection: "column"
+    display: 'flex',
+    flexDirection: 'column'
   }
 };
 
@@ -42,8 +42,8 @@ class Reports extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      reportType: "Inventory Shipments",
-      reportTypeTableName: "shipments",
+      reportType: 'Inventory Shipments',
+      reportTypeTableName: 'shipments',
       data: null,
       fundingSource: null,
       dateRange: [],
@@ -78,7 +78,7 @@ class Reports extends React.Component {
       this.state.dateRange,
       reportType2DateAccessor[this.state.reportType],
       data => {
-        this.setState({ data }, console.log("just updated table data"));
+        this.setState({ data }, console.log('just updated table data'));
       }
     );
   };
@@ -86,7 +86,7 @@ class Reports extends React.Component {
   createCSV = () => {
     getCSVdata(this.state.data, this.state.reportType, dataCSV => {
       this.setState({ dataCSV });
-      console.log("just updated csv data");
+      console.log('just updated csv data');
     });
   };
 
@@ -173,14 +173,14 @@ class Reports extends React.Component {
 
           {this.state.data ? (
             <Button type="primary" onClick={this.createCSV}>
-              {" "}
-              Create CSV{" "}
+              {' '}
+              Create CSV{' '}
             </Button>
           ) : (
             <Button type="primary">
-              {" "}
+              {' '}
               Create CSV
-              <Spin indicator={antIcon} />{" "}
+              <Spin indicator={antIcon} />{' '}
             </Button>
           )}
 
@@ -200,47 +200,47 @@ class Reports extends React.Component {
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
-            if (string === "customer_id" && this.state.reportType === "Inventory Shipments") {
+            if (string === 'customer_id' && this.state.reportType === 'Inventory Shipments') {
               return {
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: string,
                 filterable: true,
                 filterAll: true,
                 filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ["customer_id"] })
+                  matchSorter(rows, filter.value, { keys: ['customer_id'] })
               };
             }
-            if (string === "provider_id" && this.state.reportType === "Inventory Receipts") {
+            if (string === 'provider_id' && this.state.reportType === 'Inventory Receipts') {
               return {
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: string,
                 filterable: true,
                 filterAll: true,
                 filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ["provider_id"] })
+                  matchSorter(rows, filter.value, { keys: ['provider_id'] })
               };
             }
-            if (string === "ship_date" || string === "intial_date" || string === "recieve_date") {
+            if (string === 'ship_date' || string === 'intial_date' || string === 'recieve_date') {
               return {
                 id: string,
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: d =>
                   Moment(d.ship_date)
                     .local()
-                    .format("MM/DD/YYYY"),
+                    .format('MM/DD/YYYY'),
                 sortMethod: (a, b) => {
                   a = new Date(a).getTime();
                   b = new Date(b).getTime();
@@ -250,10 +250,10 @@ class Reports extends React.Component {
             }
             return {
               Header: string
-                .replace("_", " ")
-                .split(" ")
+                .replace('_', ' ')
+                .split(' ')
                 .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                .join(" "),
+                .join(' '),
               accessor: string
             };
           })}

@@ -1,6 +1,6 @@
-import Moment from "moment";
-import { db } from "../../firebase";
-import { reportType2FirebaseCallback, reportKeys } from "../../constants/constants";
+import Moment from 'moment';
+import { db } from '../../firebase';
+import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
 
 function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
   const dict = {};
@@ -51,7 +51,7 @@ function addProviderInfo2Receipts(data, providers) {
       }
       receipt.total_weight = total_weight;
     } else {
-      receipt.total_weight = "NO WEIGHT GIVEN";
+      receipt.total_weight = 'NO WEIGHT GIVEN';
     }
 
     const uuid = receipt.provider_id;
@@ -60,8 +60,8 @@ function addProviderInfo2Receipts(data, providers) {
       receipt.address = `${obj.address} ${obj.city}`;
       receipt.provider_id = obj.provider_id;
     } else {
-      receipt.address = "INVALID PROVIDER_ID GIVEN";
-      receipt.provider_id = "INVALID PROVIDER_ID GIVEN";
+      receipt.address = 'INVALID PROVIDER_ID GIVEN';
+      receipt.provider_id = 'INVALID PROVIDER_ID GIVEN';
     }
 
     newData.push(receipt);
@@ -97,7 +97,7 @@ function getVerboseItems(oldObj, items_accessor) {
   const newObj = oldObj[items_accessor];
   for (const i in newObj) {
     for (const prop in oldObj) {
-      if (prop !== "ship_items" && prop !== "receive_items") {
+      if (prop !== 'ship_items' && prop !== 'receive_items') {
         newObj[i][prop] = oldObj[prop];
       }
     }
@@ -110,13 +110,13 @@ export async function getCSVdata(init_data, reportType, callback) {
   if (data) {
     let array = [];
     let dict = {};
-    if (reportType === "Inventory Shipments") {
-      dict = createDictOfItemsSortedByProperty(data, "product", "ship_items");
-    } else if (reportType === "Inventory Receipts") {
-      dict = createDictOfItemsSortedByProperty(data, "product", "receive_items");
-    } else if (reportType === "Current Customers") {
-      dict = createDictOfItemsSortedByProperty(data, "customer_id", "ship_items");
-    } else if (reportType === "Current Providers") {
+    if (reportType === 'Inventory Shipments') {
+      dict = createDictOfItemsSortedByProperty(data, 'product', 'ship_items');
+    } else if (reportType === 'Inventory Receipts') {
+      dict = createDictOfItemsSortedByProperty(data, 'product', 'receive_items');
+    } else if (reportType === 'Current Customers') {
+      dict = createDictOfItemsSortedByProperty(data, 'customer_id', 'ship_items');
+    } else if (reportType === 'Current Providers') {
       dict = await createDictOfReceiptsSortedbyProvider(data).then(dict => dict);
     }
     array = create2DArrayFromDict(dict, reportType);
@@ -135,7 +135,7 @@ export async function populateTableData(
 ) {
   const firebaseCallback = reportType2FirebaseCallback[reportType];
   let data = await firebaseCallback().then(snapshot => snapshot.val());
-  data = typeof data === "object" ? Object.values(data) : data;
+  data = typeof data === 'object' ? Object.values(data) : data;
   data = dateRange.length ? filterDataByDate(data, dateRange, date_accessor) : data;
   data = fundingSource ? filterDataByFundingSource(data, fundingSource) : data;
   callback(data);
@@ -157,7 +157,7 @@ export function filterDataByDate(data, dateRange, accessor) {
   const newData = [];
   for (let i = 0; i < data.length; i++) {
     const entry = data[i];
-    const entryDate = Moment(entry[accessor], "MM/DD/YYYY");
+    const entryDate = Moment(entry[accessor], 'MM/DD/YYYY');
     if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
       newData.push(entry);
     }

@@ -1,72 +1,72 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import withAuthorization from "./withAuthorization";
-import SignOutButton from "./SignOut";
-import { db } from "../firebase";
-import * as roles from "../constants/roles";
+import React from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import withAuthorization from './withAuthorization';
+import SignOutButton from './SignOut';
+import { db } from '../firebase';
+import * as roles from '../constants/roles';
 
-import About from "../pages/about";
-import Home from "../pages/home";
-import Shipments from "../pages/shipments";
-import Receipts from "../pages/receipts";
-import Products from "../pages/products";
-import Staff from "../pages/staff";
-import Providers from "../pages/providers";
-import Customers from "../pages/customers";
-import Reports from "../pages/reports";
-import Help from "../pages/help";
+import About from '../pages/about';
+import Home from '../pages/home';
+import Shipments from '../pages/shipments';
+import Receipts from '../pages/receipts';
+import Products from '../pages/products';
+import Staff from '../pages/staff';
+import Providers from '../pages/providers';
+import Customers from '../pages/customers';
+import Reports from '../pages/reports';
+import Help from '../pages/help';
 
-import "./Dashboard.css";
-import { Layout, Menu } from "antd";
+import './Dashboard.css';
+import { Layout, Menu } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 
 const styles = {
   layout: {
-    display: "flex",
-    flex: "column",
-    minHeight: "100vh"
+    display: 'flex',
+    flex: 'column',
+    minHeight: '100vh'
   },
 
   header: {
-    display: "flex",
-    backgroundColor: "white",
+    display: 'flex',
+    backgroundColor: 'white',
     // marginBottom: "auto",
-    width: "100%",
-    borderBottom: "1px solid #EBEDF0"
+    width: '100%',
+    borderBottom: '1px solid #EBEDF0'
   },
 
   footer: {
-    width: "100%",
-    padding: "1em",
-    alignSelf: "flex-end",
-    backgroundColor: "white",
-    borderTop: "1px solid #EBEDF0",
-    fontSize: "small",
-    color: "#595959",
-    textAlign: "center"
+    width: '100%',
+    padding: '1em',
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+    borderTop: '1px solid #EBEDF0',
+    fontSize: 'small',
+    color: '#595959',
+    textAlign: 'center'
   },
 
   content: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "#F0F2F5"
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#F0F2F5'
     // marginTop: "auto",
   },
 
   menu: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: "1%"
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginTop: '1%'
   },
 
   title: {
-    paddingRight: "1%",
-    fontSize: "2em"
+    paddingRight: '1%',
+    fontSize: '2em'
   },
 
   signOutButton: {
-    paddingTop: ".4%"
+    paddingTop: '.4%'
   }
 };
 

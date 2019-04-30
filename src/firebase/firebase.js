@@ -11,9 +11,9 @@
  * firebase.initializeApp(config);
  * export default firebase; */
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 
 /* const prodConfig = {
  *   apiKey: YOUR_API_KEY,

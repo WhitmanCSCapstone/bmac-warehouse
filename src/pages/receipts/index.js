@@ -2,24 +2,24 @@
  *  A component
  */
 
-import React from "react";
-import ReactTable from "react-table";
-import { Button, DatePicker } from "antd";
-import Moment from "moment";
-import matchSorter from "match-sorter";
-import { db } from "../../firebase";
-import LoadingScreen from "../../components/LoadingScreen";
-import { tableKeys } from "../../constants/constants";
-import withAuthorization from "../../components/withAuthorization";
-import ReceiptForm from "../../components/form/types/ReceiptForm";
+import React from 'react';
+import ReactTable from 'react-table';
+import { Button, DatePicker } from 'antd';
+import Moment from 'moment';
+import matchSorter from 'match-sorter';
+import { db } from '../../firebase';
+import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
+import ReceiptForm from '../../components/form/types/ReceiptForm';
 
 const keys = tableKeys.receipts;
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24
   }
 };
@@ -43,7 +43,7 @@ class Receipts extends React.Component {
     const newData = [];
     for (let i = 0; i < this.state.data.length; i++) {
       const entry = this.state.data[i];
-      const entryDate = Moment(entry.recieve_date, "MM/DD/YYYY");
+      const entryDate = Moment(entry.recieve_date, 'MM/DD/YYYY');
       if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
         newData.push(entry);
       }
@@ -71,7 +71,7 @@ class Receipts extends React.Component {
   readableProviderCell = rowData => {
     const hash = rowData.original.provider_id;
     const obj = this.state.providers[hash];
-    const name = obj ? obj.provider_id : "INVALID PROVIDER_ID";
+    const name = obj ? obj.provider_id : 'INVALID PROVIDER_ID';
     return <span>{name}</span>;
   };
 
@@ -125,13 +125,13 @@ class Receipts extends React.Component {
                 : this.state.data
             }
             columns={keys.map(string => {
-              if (string === "provider_id") {
+              if (string === 'provider_id') {
                 return {
                   Header: string
-                    .replace("_", " ")
-                    .split(" ")
+                    .replace('_', ' ')
+                    .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" "),
+                    .join(' '),
                   accessor: string,
                   Cell: this.readableProviderCell,
                   filterable: true,
@@ -141,7 +141,7 @@ class Receipts extends React.Component {
                       keys: [
                         obj => {
                           const provider = this.state.providers[obj.provider_id];
-                          let name = "INVALID PROVIDER ID";
+                          let name = 'INVALID PROVIDER ID';
                           if (provider) {
                             name = provider.provider_id;
                           }
@@ -151,14 +151,14 @@ class Receipts extends React.Component {
                     })
                 };
               }
-              if (string === "recieve_date") {
+              if (string === 'recieve_date') {
                 return {
-                  id: "recieve_date",
-                  Header: "Receive Date",
+                  id: 'recieve_date',
+                  Header: 'Receive Date',
                   accessor: d =>
                     Moment(d.initial_date)
                       .local()
-                      .format("MM/DD/YYYY"),
+                      .format('MM/DD/YYYY'),
                   sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
@@ -168,10 +168,10 @@ class Receipts extends React.Component {
               }
               return {
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: string
               };
             })}

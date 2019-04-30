@@ -1,9 +1,9 @@
-import React from "react";
-import { Input, Select, Divider, Modal, DatePicker } from "antd";
-import Moment from "moment";
-import { db } from "../../../firebase";
-import FundsSourceDropdownMenu from "../../FundsSourceDropdownMenu";
-import Footer from "../Footer";
+import React from 'react';
+import { Input, Select, Divider, Modal, DatePicker } from 'antd';
+import Moment from 'moment';
+import { db } from '../../../firebase';
+import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
+import Footer from '../Footer';
 
 // This is for the notes section.
 const { TextArea } = Input;
@@ -13,32 +13,32 @@ const { Option } = Select;
 // Styles
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "flex-start"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   datePicker: {
-    width: "100%"
+    width: '100%'
   },
 
   topThird: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    alignContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center'
   },
 
   bottomThird: {
-    display: "flex",
-    justifyContent: "flex-start"
+    display: 'flex',
+    justifyContent: 'flex-start'
   }
 };
 
@@ -98,7 +98,7 @@ class ProductForm extends React.Component {
 
   onDateChange = value => {
     if (value != null) {
-      this.setState({ initial_date: value.format("MM/DD/YYYY") });
+      this.setState({ initial_date: value.format('MM/DD/YYYY') });
     }
   };
 
@@ -228,7 +228,7 @@ class ProductForm extends React.Component {
                 key={`initialdate:${this.state.initial_date}`}
                 defaultValue={
                   this.state.initial_date
-                    ? Moment(this.state.initial_date, "MM/DD/YYYY")
+                    ? Moment(this.state.initial_date, 'MM/DD/YYYY')
                     : this.state.initial_date
                 }
               />

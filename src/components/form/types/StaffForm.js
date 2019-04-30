@@ -1,28 +1,28 @@
-import React from "react";
-import { Divider, Modal, Alert, Input, Select } from "antd";
+import React from 'react';
+import { Divider, Modal, Alert, Input, Select } from 'antd';
 
-import { auth, db } from "../../../firebase";
-import * as ROLES from "../../../constants/roles";
+import { auth, db } from '../../../firebase';
+import * as ROLES from '../../../constants/roles';
 
 const { Option } = Select;
 
 // Styles
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "flex-start"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   errorMessage: {
-    display: "flex",
-    width: "100%"
+    display: 'flex',
+    width: '100%'
   }
 };
 
@@ -33,12 +33,12 @@ class StaffForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      email: "",
-      passwordOne: "",
-      passwordTwo: "",
+      username: '',
+      email: '',
+      passwordOne: '',
+      passwordTwo: '',
       error: null,
-      role: ""
+      role: ''
     };
   }
 
@@ -47,9 +47,9 @@ class StaffForm extends React.Component {
     const { username, email, passwordOne, passwordTwo, role } = this.state;
     const roles = [];
     const isInvalid =
-      passwordOne !== passwordTwo || passwordOne === "" || email === "" || username === "";
+      passwordOne !== passwordTwo || passwordOne === '' || email === '' || username === '';
 
-    if (role === "Admin") {
+    if (role === 'Admin') {
       roles.push(ROLES.ADMIN);
     }
     if (!isInvalid) {
@@ -60,22 +60,22 @@ class StaffForm extends React.Component {
           db.doCreateUser(authUser.user.uid, username, email, role)
             .then(() => {
               this.setState({
-                username: "",
-                email: "",
-                passwordOne: "",
-                passwordTwo: "",
+                username: '',
+                email: '',
+                passwordOne: '',
+                passwordTwo: '',
                 error: null,
-                role: ""
+                role: ''
               });
               this.props.closeForm();
               this.props.refreshTable();
             })
             .catch(error => {
-              this.setState(byPropKey("error", error));
+              this.setState(byPropKey('error', error));
             });
         })
         .catch(error => {
-          this.setState(byPropKey("error", error));
+          this.setState(byPropKey('error', error));
         });
     }
     // this only works if the push doesn't take too long, kinda sketch, should be
@@ -112,7 +112,7 @@ class StaffForm extends React.Component {
             Username:
             <Input
               value={username}
-              onChange={event => this.setState(byPropKey("username", event.target.value))}
+              onChange={event => this.setState(byPropKey('username', event.target.value))}
               type="text"
               placeholder="Username"
             />
@@ -122,7 +122,7 @@ class StaffForm extends React.Component {
             Email:
             <Input
               value={email}
-              onChange={event => this.setState(byPropKey("email", event.target.value))}
+              onChange={event => this.setState(byPropKey('email', event.target.value))}
               type="text"
               placeholder="Email Address"
             />
@@ -148,7 +148,7 @@ class StaffForm extends React.Component {
             Password:
             <Input
               value={passwordOne}
-              onChange={event => this.setState(byPropKey("passwordOne", event.target.value))}
+              onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
               type="password"
               placeholder="Password"
             />
@@ -157,7 +157,7 @@ class StaffForm extends React.Component {
             Confirm Password:
             <Input
               value={passwordTwo}
-              onChange={event => this.setState(byPropKey("passwordTwo", event.target.value))}
+              onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
               type="password"
               placeholder="Confirm Password"
             />

@@ -1,7 +1,7 @@
-import React from "react";
-import { Input, Select, Divider, Modal, Button } from "antd";
-import { db } from "../../../firebase";
-import Footer from "../Footer";
+import React from 'react';
+import { Input, Select, Divider, Modal, Button } from 'antd';
+import { db } from '../../../firebase';
+import Footer from '../Footer';
 
 // This is for the notes section.
 const { TextArea } = Input;
@@ -11,28 +11,28 @@ const { Option } = Select;
 // Styles
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "flex-start"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   topThird: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    alignContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center'
   },
 
   bottomThird: {
-    display: "flex",
-    justifyContent: "flex-start"
+    display: 'flex',
+    justifyContent: 'flex-start'
   }
 };
 

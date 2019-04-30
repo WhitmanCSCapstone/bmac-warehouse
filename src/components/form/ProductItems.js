@@ -1,36 +1,36 @@
-import React from "react";
-import { Icon, Input, Button } from "antd";
-import ProductAutoComplete from "./ProductAutoComplete";
+import React from 'react';
+import { Icon, Input, Button } from 'antd';
+import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
   container: {},
 
   icon: {
-    alignSelf: "center",
-    marginBottom: "0.20em"
+    alignSelf: 'center',
+    marginBottom: '0.20em'
   },
 
   iconDisabled: {
-    alignSelf: "center",
-    marginBottom: "0.5em",
+    alignSelf: 'center',
+    marginBottom: '0.5em',
     opacity: 0
   },
 
   row: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center"
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
 
   productItem: {
-    width: "40%",
-    margin: "0em 0.5em 0.5em 0em"
+    width: '40%',
+    margin: '0em 0.5em 0.5em 0em'
   },
 
   formItem: {
-    margin: "0em 0.5em 0.5em 0em",
-    width: "20%",
-    overflow: "hidden"
+    margin: '0em 0.5em 0.5em 0em',
+    width: '20%',
+    overflow: 'hidden'
   }
 };
 
@@ -81,7 +81,7 @@ class ProductItems extends React.Component {
                   <Input
                     placeholder="Unit Weight"
                     value={obj ? obj.unit_weight : undefined}
-                    onChange={e => this.props.onChange("unit_weight", index, e.target.value)}
+                    onChange={e => this.props.onChange('unit_weight', index, e.target.value)}
                   />
                 </div>
 
@@ -89,7 +89,7 @@ class ProductItems extends React.Component {
                   <Input
                     placeholder="Case Lots"
                     value={obj ? obj.case_lots : undefined}
-                    onChange={e => this.props.onChange("case_lots", index, e.target.value)}
+                    onChange={e => this.props.onChange('case_lots', index, e.target.value)}
                   />
                 </div>
 
@@ -97,7 +97,7 @@ class ProductItems extends React.Component {
                   <Input
                     placeholder="Total Weight"
                     value={obj ? obj.total_weight : undefined}
-                    onChange={e => this.props.onChange("total_weight", index, e.target.value)}
+                    onChange={e => this.props.onChange('total_weight', index, e.target.value)}
                   />
                 </div>
 

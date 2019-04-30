@@ -1,13 +1,13 @@
-import React from "react";
-import { Button } from "antd";
+import React from 'react';
+import { Button } from 'antd';
 
 const styles = {
   container: {
-    display: "flex",
-    justifyContent: "flex-end"
+    display: 'flex',
+    justifyContent: 'flex-end'
   },
   deleteBtn: {
-    marginRight: "auto"
+    marginRight: 'auto'
   }
 };
 

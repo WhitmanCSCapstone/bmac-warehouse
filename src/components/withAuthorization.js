@@ -1,10 +1,10 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 
-import AuthUserContext from "./AuthUserContext";
-import { firebase, db } from "../firebase";
-import * as routes from "../constants/routes";
-import * as roles from "../constants/roles";
+import AuthUserContext from './AuthUserContext';
+import { firebase, db } from '../firebase';
+import * as routes from '../constants/routes';
+import * as roles from '../constants/roles';
 
 const withAuthorization = (authCondition, adminOnly) => Component => {
   class WithAuthorization extends React.Component {

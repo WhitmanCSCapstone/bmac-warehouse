@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import AuthUserContext from "./AuthUserContext";
-import { firebase } from "../firebase";
+import AuthUserContext from './AuthUserContext';
+import { firebase } from '../firebase';
 
 const withAuthentication = Component =>
   class WithAuthentication extends React.Component {

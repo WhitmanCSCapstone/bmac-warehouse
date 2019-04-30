@@ -2,8 +2,8 @@
  *  A component
  */
 
-import React from "react";
-import withAuthorization from "../../components/withAuthorization";
+import React from 'react';
+import withAuthorization from '../../components/withAuthorization';
 
 const styles = {
   container: {

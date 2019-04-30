@@ -1,49 +1,49 @@
-import React from "react";
-import { Input, DatePicker, Divider, Modal } from "antd";
-import Moment from "moment";
-import { db } from "../../../firebase";
-import ProductItems from "../ProductItems";
-import Footer from "../Footer";
-import FundsSourceDropdownMenu from "../../FundsSourceDropdownMenu";
-import ProviderAutoComplete from "../ProviderAutoComplete";
+import React from 'react';
+import { Input, DatePicker, Divider, Modal } from 'antd';
+import Moment from 'moment';
+import { db } from '../../../firebase';
+import ProductItems from '../ProductItems';
+import Footer from '../Footer';
+import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
+import ProviderAutoComplete from '../ProviderAutoComplete';
 
 const { TextArea } = Input;
 
 const styles = {
   form: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
 
   formItem: {
-    width: "45%",
-    margin: "0px 1em 1em 1em"
+    width: '45%',
+    margin: '0px 1em 1em 1em'
   },
 
   datePicker: {
-    width: "100%"
+    width: '100%'
   },
 
   topThird: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    alignContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'center'
   },
 
   bottomThird: {
-    display: "flex",
-    justifyContent: "flex-start"
+    display: 'flex',
+    justifyContent: 'flex-start'
   },
 
   shipViaContainer: {
-    width: "45%",
-    margin: "0px 1em 1em 1em",
-    display: "flex",
-    flexDirection: "column"
+    width: '45%',
+    margin: '0px 1em 1em 1em',
+    display: 'flex',
+    flexDirection: 'column'
   }
 };
 
@@ -105,7 +105,7 @@ class ReceiptForm extends React.Component {
 
     let total_weight = 0;
     for (const item of this.state.receive_items) {
-      const stringWeight = item ? item.total_weight : "0";
+      const stringWeight = item ? item.total_weight : '0';
       const weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
@@ -196,12 +196,12 @@ class ReceiptForm extends React.Component {
               Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onChange("recieve_date", date.format("MM/DD/YYYY"))}
+                onChange={date => this.onChange('recieve_date', date.format('MM/DD/YYYY'))}
                 format="MM/DD/YYYY"
                 key={`recievedate:${this.state.recieve_date}`}
                 defaultValue={
                   this.state.recieve_date
-                    ? Moment(this.state.recieve_date, "MM/DD/YYYY")
+                    ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
                     : this.state.recieve_date
                 }
                 placeholder="Receive Date"
@@ -225,7 +225,7 @@ class ReceiptForm extends React.Component {
             <div style={styles.formItem}>
               Provider:
               <ProviderAutoComplete
-                onProviderChange={val => this.onChange("provider_id", val)}
+                onProviderChange={val => this.onChange('provider_id', val)}
                 rowData={this.props.rowData}
               />
             </div>
@@ -249,7 +249,7 @@ class ReceiptForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
-                onChange={e => this.onTextChange("billed_amt", e.target.value)}
+                onChange={e => this.onTextChange('billed_amt', e.target.value)}
               />
             </div>
           </div>
@@ -258,7 +258,7 @@ class ReceiptForm extends React.Component {
             rows={4}
             placeholder="Notes"
             value={this.state.notes}
-            onChange={e => this.onTextChange("notes", e.target.value)}
+            onChange={e => this.onTextChange('notes', e.target.value)}
           />
         </div>
       </Modal>

@@ -1,21 +1,21 @@
-import React from "react";
+import React from 'react';
 import {
   BrowserRouter as Router, // hash router????????
   Route,
   Switch
-} from "react-router-dom";
-import withAuthentication from "./withAuthentication";
-import { firebase } from "../firebase";
+} from 'react-router-dom';
+import withAuthentication from './withAuthentication';
+import { firebase } from '../firebase';
 
-import Navigation from "./Navigation";
-import LandingPage from "./Landing";
-import SignInPage from "./SignIn";
-import PasswordForgetPage from "./PasswordForget";
-import Dashboard from "./Dashboard";
-import AccountPage from "./Account";
-import Error from "./Error";
+import Navigation from './Navigation';
+import LandingPage from './Landing';
+import SignInPage from './SignIn';
+import PasswordForgetPage from './PasswordForget';
+import Dashboard from './Dashboard';
+import AccountPage from './Account';
+import Error from './Error';
 
-import * as routes from "../constants/routes";
+import * as routes from '../constants/routes';
 
 class App extends React.Component {
   constructor(props) {

@@ -2,19 +2,19 @@
  *  Dropdown menu to select funding source, parent component keeps track of its state
  */
 
-import React from "react";
-import { Select } from "antd";
-import { db } from "../firebase";
+import React from 'react';
+import { Select } from 'antd';
+import { db } from '../firebase';
 
 const { Option } = Select;
 
 const styles = {
   select: {
-    width: "100%",
-    minWidth: "10em"
+    width: '100%',
+    minWidth: '10em'
   },
   none: {
-    color: "#C1C1C1"
+    color: '#C1C1C1'
   }
 };
 

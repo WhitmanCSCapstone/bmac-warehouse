@@ -2,24 +2,24 @@
  *  A component
  */
 
-import React from "react";
-import ReactTable from "react-table";
-import matchSorter from "match-sorter";
-import { Button } from "antd";
-import Moment from "moment";
-import { db } from "../../firebase";
-import LoadingScreen from "../../components/LoadingScreen";
-import { tableKeys } from "../../constants/constants";
-import withAuthorization from "../../components/withAuthorization";
-import ProductForm from "../../components/form/types/ProductForm";
+import React from 'react';
+import ReactTable from 'react-table';
+import matchSorter from 'match-sorter';
+import { Button } from 'antd';
+import Moment from 'moment';
+import { db } from '../../firebase';
+import LoadingScreen from '../../components/LoadingScreen';
+import { tableKeys } from '../../constants/constants';
+import withAuthorization from '../../components/withAuthorization';
+import ProductForm from '../../components/form/types/ProductForm';
 
 const keys = tableKeys.products;
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     padding: 24
   }
 };
@@ -73,24 +73,24 @@ class Products extends React.Component {
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if (string === "product_id") {
+              if (string === 'product_id') {
                 return {
-                  Header: "Product",
+                  Header: 'Product',
                   accessor: string,
                   filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ["product_id"] }),
+                    matchSorter(rows, filter.value, { keys: ['product_id'] }),
                   filterAll: true,
                   filterable: true
                 };
               }
-              if (string === "initial_date") {
+              if (string === 'initial_date') {
                 return {
-                  id: "initial_date",
-                  Header: "Initial Date",
+                  id: 'initial_date',
+                  Header: 'Initial Date',
                   accessor: d =>
                     Moment(d.initial_date)
                       .local()
-                      .format("MM/DD/YYYY"),
+                      .format('MM/DD/YYYY'),
                   sortMethod: (a, b) => {
                     a = new Date(a).getTime();
                     b = new Date(b).getTime();
@@ -98,19 +98,19 @@ class Products extends React.Component {
                   }
                 };
               }
-              if (string === "unit_weight") {
+              if (string === 'unit_weight') {
                 return {
-                  Header: "Unit Weight",
+                  Header: 'Unit Weight',
                   id: string,
                   accessor: d => (isNaN(Number(d.unit_weight)) ? 0 : Number(d.unit_weight))
                 };
               }
               return {
                 Header: string
-                  .replace("_", " ")
-                  .split(" ")
+                  .replace('_', ' ')
+                  .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(" "),
+                  .join(' '),
                 accessor: string
               };
             })}
