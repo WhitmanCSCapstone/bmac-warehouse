@@ -4,18 +4,18 @@ import { Button } from 'antd';
 const styles = {
   container: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   deleteBtn: {
-    marginRight: 'auto',
-  },
+    marginRight: 'auto'
+  }
 };
 
 class Footer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: false
     };
   }
 
