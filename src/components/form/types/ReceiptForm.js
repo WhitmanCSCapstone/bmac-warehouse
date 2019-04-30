@@ -14,16 +14,16 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em',
+    margin: '0px 1em 1em 1em'
   },
 
   datePicker: {
-    width: '100%',
+    width: '100%'
   },
 
   topThird: {
@@ -31,20 +31,20 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    alignContent: 'center',
+    alignContent: 'center'
   },
 
   bottomThird: {
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
   },
 
   shipViaContainer: {
     width: '45%',
     margin: '0px 1em 1em 1em',
     display: 'flex',
-    flexDirection: 'column',
-  },
+    flexDirection: 'column'
+  }
 };
 
 var ref = null;
@@ -58,7 +58,7 @@ class ReceiptForm extends React.Component {
     billed_amt: null,
     notes: null,
     total_weight: null,
-    uniq_id: null,
+    uniq_id: null
   };
 
   constructor(props) {
@@ -68,7 +68,7 @@ class ReceiptForm extends React.Component {
 
   onChange = (prop, val) => {
     this.setState({
-      [prop]: val,
+      [prop]: val
     });
   };
 
@@ -149,7 +149,7 @@ class ReceiptForm extends React.Component {
       product: undefined,
       unit_weight: undefined,
       case_lots: undefined,
-      total_weight: undefined,
+      total_weight: undefined
     };
 
     var newReceiveItems = this.state.receive_items.concat(emptyRow).filter(elem => {
@@ -186,7 +186,7 @@ class ReceiptForm extends React.Component {
             handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
-          />,
+          />
         ]}
       >
         <div style={styles.form}>

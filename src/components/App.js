@@ -3,7 +3,7 @@ import withAuthentication from './withAuthentication';
 import {
   BrowserRouter as Router, // hash router????????
   Route,
-  Switch,
+  Switch
 } from 'react-router-dom';
 import { firebase } from '../firebase';
 
@@ -22,7 +22,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       authUser: null,
-      confirmedAuthStatus: false,
+      confirmedAuthStatus: false
     };
   }
 

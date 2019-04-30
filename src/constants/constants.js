@@ -5,7 +5,7 @@ export const tableKeys = {
   shipments: [
     'customer_id',
     //"funds_source",
-    'ship_date',
+    'ship_date'
     //"ship_via",
     //"ship_rate",
     //"total_weight",
@@ -27,7 +27,7 @@ export const tableKeys = {
     //"zip",
     //"county",
     //"contact",
-    'phone',
+    'phone'
     //"email",
     //"status",
     //"notes",
@@ -39,7 +39,7 @@ export const tableKeys = {
     'recieve_date',
     'payment_source',
     'billed_amt',
-    'notes',
+    'notes'
     //"uniq_id",
   ],
 
@@ -55,7 +55,7 @@ export const tableKeys = {
     //"history",
     //"current_stock",
     //"inventory_date",
-    'status',
+    'status'
     //"notes",
     //"uniq_id",
   ],
@@ -70,7 +70,7 @@ export const tableKeys = {
     //"zip",
     //"county",
     //"contact",
-    'phone',
+    'phone'
     //"email",
     //"status",
     //"notes",
@@ -87,13 +87,13 @@ export const tableKeys = {
     //"zip",
     'phone1',
     // "phone2",
-    'email',
+    'email'
     //"type",
     //"status",
     //"notes",
     //"password",
     //"uniq_id",
-  ],
+  ]
 };
 
 export const reportKeys = {
@@ -101,7 +101,7 @@ export const reportKeys = {
   'Inventory Receipts': ['product', 'recieve_date', 'provider_id', 'total_weight'],
   'Current Inventory': [],
   'Current Customers': ['customer_id', 'ship_date', 'funds_source', 'total_weight'],
-  'Current Providers': ['provider_id', 'address', 'recieve_date', 'billed_amt', 'total_weight'],
+  'Current Providers': ['provider_id', 'address', 'recieve_date', 'billed_amt', 'total_weight']
 };
 
 export const radioValue2ReportType = {
@@ -111,7 +111,7 @@ export const radioValue2ReportType = {
   '4': 'Current Customers',
   '5': 'Current Providers',
   '6': 'Active',
-  '7': 'Inactive/Discontinued',
+  '7': 'Inactive/Discontinued'
 };
 
 export const reportType2TableName = {
@@ -119,7 +119,7 @@ export const reportType2TableName = {
   'Inventory Receipts': 'receipts',
   'Current Inventory': 'products',
   'Current Customers': 'shipments', // sorts shipments by customers
-  'Current Providers': 'receipts', // sorts receipts by providers
+  'Current Providers': 'receipts' // sorts receipts by providers
 };
 
 export const reportType2DateAccessor = {
@@ -127,7 +127,7 @@ export const reportType2DateAccessor = {
   'Inventory Receipts': 'recieve_date',
   'Current Inventory': 'initial_date',
   'Current Customers': 'ship_date', // uses shipments table rather than customers table
-  'Current Providers': 'recieve_date', // uses reciepts table
+  'Current Providers': 'recieve_date' // uses reciepts table
 };
 
 export const reportType2FundingSourceRelavancy = {
@@ -135,7 +135,7 @@ export const reportType2FundingSourceRelavancy = {
   'Inventory Receipts': false,
   'Current Inventory': true,
   'Current Customers': true,
-  'Current Providers': false,
+  'Current Providers': false
 };
 
 export const reportType2DateRangeRelavancy = {
@@ -143,7 +143,7 @@ export const reportType2DateRangeRelavancy = {
   'Inventory Receipts': true,
   'Current Inventory': false,
   'Current Customers': true,
-  'Current Providers': true,
+  'Current Providers': true
 };
 
 export const reportType2FirebaseCallback = {
@@ -151,5 +151,5 @@ export const reportType2FirebaseCallback = {
   'Inventory Receipts': getReadableReceiptsTableData,
   'Current Inventory': null,
   'Current Customers': getReadableShipmentsTableData,
-  'Current Providers': db.onceGetReceipts,
+  'Current Providers': db.onceGetReceipts
 };

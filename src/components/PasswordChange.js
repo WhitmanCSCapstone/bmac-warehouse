@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { auth } from '../firebase';
 
 const byPropKey = (propertyName, value) => () => ({
-  [propertyName]: value,
+  [propertyName]: value
 });
 
 const INITIAL_STATE = {
   passwordOne: '',
   passwordTwo: '',
-  error: null,
+  error: null
 };
 
 class PasswordChangeForm extends Component {

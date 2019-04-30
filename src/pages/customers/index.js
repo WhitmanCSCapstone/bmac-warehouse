@@ -19,8 +19,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Customers extends React.Component {
@@ -29,7 +29,7 @@ class Customers extends React.Component {
     this.state = {
       data: null,
       formModalVisible: false,
-      rowData: null,
+      rowData: null
     };
   }
 
@@ -64,8 +64,8 @@ class Customers extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
+                  formModalVisible: true
+                })
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
@@ -76,7 +76,7 @@ class Customers extends React.Component {
                   filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ['customer_id'] }),
                   filterAll: true,
-                  filterable: true,
+                  filterable: true
                 };
               else {
                 return {
@@ -85,7 +85,7 @@ class Customers extends React.Component {
                     .split(' ')
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' '),
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}

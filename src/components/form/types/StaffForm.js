@@ -12,18 +12,18 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em',
+    margin: '0px 1em 1em 1em'
   },
 
   errorMessage: {
     display: 'flex',
-    width: '100%',
-  },
+    width: '100%'
+  }
 };
 
 const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
@@ -38,7 +38,7 @@ class StaffForm extends React.Component {
       passwordOne: '',
       passwordTwo: '',
       error: null,
-      role: '',
+      role: ''
     };
   }
 
@@ -65,7 +65,7 @@ class StaffForm extends React.Component {
                 passwordOne: '',
                 passwordTwo: '',
                 error: null,
-                role: '',
+                role: ''
               });
               this.props.closeForm();
               this.props.refreshTable();
@@ -95,7 +95,7 @@ class StaffForm extends React.Component {
       <Modal
         title="Add New Staff Member"
         style={{
-          top: 20,
+          top: 20
         }}
         width={'50vw'}
         destroyOnClose={true}
@@ -103,7 +103,7 @@ class StaffForm extends React.Component {
         okText="Submit"
         onOk={this.handleOk}
         okButtonProps={{
-          disabled: isInvalid,
+          disabled: isInvalid
         }}
         onCancel={this.props.closeForm}
       >
@@ -133,7 +133,7 @@ class StaffForm extends React.Component {
             <Select
               placeholder="Role"
               style={{
-                width: 120,
+                width: 120
               }}
               onChange={this.onStatusChange}
             >

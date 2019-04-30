@@ -15,8 +15,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    padding: 24,
-  },
+    padding: 24
+  }
 };
 
 class Home extends React.Component {
@@ -24,7 +24,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       shipData: null,
-      receiptsData: null,
+      receiptsData: null
     };
   }
 
@@ -73,12 +73,12 @@ class Home extends React.Component {
               if (string === 'customer_id')
                 return {
                   Header: 'Customer',
-                  accessor: string,
+                  accessor: string
                 };
               else {
                 return {
                   Header: 'Ship Date',
-                  accessor: string,
+                  accessor: string
                 };
               }
             })}
@@ -102,7 +102,7 @@ class Home extends React.Component {
                   .split(' ')
                   .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                accessor: string,
+                accessor: string
               };
             })}
             defaultPageSize={this.state.receiptsData.length}
