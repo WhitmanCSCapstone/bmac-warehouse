@@ -12,22 +12,17 @@ const styles = {
 };
 
 class Help extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {};
   }
 
   render() {
-    return(
-      <div style={styles.container}>
-        This is the help page!
-      </div>
-    );
+    return <div style={styles.container}>This is the help page!</div>;
   }
 }
 
-const authCondition = (authUser) => !!authUser;
+const authCondition = authUser => !!authUser;
 
 const adminOnly = false;
 

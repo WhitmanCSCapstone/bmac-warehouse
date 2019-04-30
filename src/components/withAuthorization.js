@@ -6,7 +6,7 @@ import { firebase, db } from '../firebase';
 import * as routes from '../constants/routes';
 import * as roles from '../constants/roles';
 
-const withAuthorization = (authCondition, adminOnly) => (Component) => {
+const withAuthorization = (authCondition, adminOnly) => Component => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
       firebase.auth.onAuthStateChanged(authUser => {
@@ -14,7 +14,7 @@ const withAuthorization = (authCondition, adminOnly) => (Component) => {
           this.props.history.push(routes.SIGN_IN);
         }
         if (adminOnly) {
-          db.onceGetSpecifcUser(authUser.uid).then((snapshot) => {
+          db.onceGetSpecifcUser(authUser.uid).then(snapshot => {
             const userData = snapshot.val();
             if (userData.role !== roles.ADMIN) {
               this.props.history.push(routes.HOME);
@@ -27,7 +27,7 @@ const withAuthorization = (authCondition, adminOnly) => (Component) => {
     render() {
       return (
         <AuthUserContext.Consumer>
-          {authUser => authUser ? <Component {...this.props} /> : null}
+          {authUser => (authUser ? <Component {...this.props} /> : null)}
         </AuthUserContext.Consumer>
       );
     }

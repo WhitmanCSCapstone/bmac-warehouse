@@ -29,15 +29,13 @@ class App extends React.Component {
   componentDidMount() {
     firebase.auth.onAuthStateChanged(authUser => {
       authUser
-      ? this.setState({ authUser: authUser,
-                        confirmedAuthStatus: true })
-      : this.setState({ authUser: null,
-                        confirmedAuthStatus: true });
+        ? this.setState({ authUser: authUser, confirmedAuthStatus: true })
+        : this.setState({ authUser: null, confirmedAuthStatus: true });
     });
   }
 
   render() {
-    return(
+    return (
       <Router>
         <div>
           {this.state.authUser === null && this.state.confirmedAuth && <Navigation />}
