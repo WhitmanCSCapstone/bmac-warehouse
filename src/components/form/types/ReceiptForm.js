@@ -1,52 +1,50 @@
-import React from 'react';
-import {
-  Input, DatePicker, Divider, Modal,
-} from 'antd';
-import Moment from 'moment';
-import { db } from '../../../firebase';
-import ProductItems from '../ProductItems';
-import Footer from '../Footer';
-import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
-import ProviderAutoComplete from '../ProviderAutoComplete';
+import React from "react";
+import { Input, DatePicker, Divider, Modal } from "antd";
+import Moment from "moment";
+import { db } from "../../../firebase";
+import ProductItems from "../ProductItems";
+import Footer from "../Footer";
+import FundsSourceDropdownMenu from "../../FundsSourceDropdownMenu";
+import ProviderAutoComplete from "../ProviderAutoComplete";
 
 const { TextArea } = Input;
 
 const styles = {
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "center"
   },
 
   formItem: {
-    width: '45%',
-    margin: '0px 1em 1em 1em',
+    width: "45%",
+    margin: "0px 1em 1em 1em"
   },
 
   datePicker: {
-    width: '100%',
+    width: "100%"
   },
 
   topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
+    alignContent: "center"
   },
 
   bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start',
+    display: "flex",
+    justifyContent: "flex-start"
   },
 
   shipViaContainer: {
-    width: '45%',
-    margin: '0px 1em 1em 1em',
-    display: 'flex',
-    flexDirection: 'column',
-  },
+    width: "45%",
+    margin: "0px 1em 1em 1em",
+    display: "flex",
+    flexDirection: "column"
+  }
 };
 
 const ref = null;
@@ -60,8 +58,8 @@ class ReceiptForm extends React.Component {
     billed_amt: null,
     notes: null,
     total_weight: null,
-    uniq_id: null,
-  }
+    uniq_id: null
+  };
 
   constructor(props) {
     super(props);
@@ -70,9 +68,9 @@ class ReceiptForm extends React.Component {
 
   onChange = (prop, val) => {
     this.setState({
-      [prop]: val,
+      [prop]: val
     });
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
@@ -80,21 +78,21 @@ class ReceiptForm extends React.Component {
     }
   }
 
-  onClickFundingSource = (value) => {
+  onClickFundingSource = value => {
     this.setState({ payment_source: value });
-  }
+  };
 
   clearPaymentSource = () => {
     this.setState({ payment_source: null });
-  }
+  };
 
   onTextChange = (prop, val) => {
     this.setState({ [prop]: val });
-  }
+  };
 
-  onNotesChange = (value) => {
+  onNotesChange = value => {
     this.setState({ notes: value });
-  }
+  };
 
   onItemsChange = (prop, index, val) => {
     const itemsCopy = this.state.receive_items.slice(0); // shallow clone
@@ -107,18 +105,19 @@ class ReceiptForm extends React.Component {
 
     let total_weight = 0;
     for (const item of this.state.receive_items) {
-      const stringWeight = item ? item.total_weight : '0';
+      const stringWeight = item ? item.total_weight : "0";
       const weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
-  }
+  };
 
-
-  deleteEmptyReceiveItems = (receiveItems) => {
-    const filteredItems = receiveItems.filter(obj => obj !== undefined && obj.product !== undefined);
+  deleteEmptyReceiveItems = receiveItems => {
+    const filteredItems = receiveItems.filter(
+      obj => obj !== undefined && obj.product !== undefined
+    );
     return filteredItems;
-  }
+  };
 
   handleOk = () => {
     const emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
@@ -143,14 +142,14 @@ class ReceiptForm extends React.Component {
       this.props.closeForm();
       this.setState({ ...this.defaultState });
     }, 1500);
-  }
+  };
 
   addReceiveItem = () => {
     const emptyRow = {
       product: undefined,
       unit_weight: undefined,
       case_lots: undefined,
-      total_weight: undefined,
+      total_weight: undefined
     };
 
     const newReceiveItems = this.state.receive_items
@@ -158,22 +157,21 @@ class ReceiptForm extends React.Component {
       .filter(elem => elem !== undefined);
 
     this.setState({ receive_items: newReceiveItems });
-  }
+  };
 
-  removeReceiveItem = (removeIndex) => {
+  removeReceiveItem = removeIndex => {
     const itemsCopy = this.state.receive_items.filter((obj, objIndex) => objIndex !== removeIndex);
     this.setState({ receive_items: itemsCopy });
-  }
+  };
 
   handleDelete = () => {
     db.deleteReceiptObj(this.props.rowData.uniq_id);
     this.props.closeForm();
     this.props.refreshTable();
-  }
+  };
 
   render() {
     return (
-
       <Modal
         title="Add New Receipt"
         style={{ top: 20 }}
@@ -188,26 +186,24 @@ class ReceiptForm extends React.Component {
             handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
-          />,
+          />
         ]}
       >
-
         <div style={styles.form}>
-
           <div style={styles.topThird}>
             {/* intentially mispelled "receive" */}
             <div style={styles.formItem}>
               Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onChange('recieve_date', date.format('MM/DD/YYYY'))}
+                onChange={date => this.onChange("recieve_date", date.format("MM/DD/YYYY"))}
                 format="MM/DD/YYYY"
                 key={`recievedate:${this.state.recieve_date}`}
                 defaultValue={
-                            this.state.recieve_date
-                              ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
-                              : this.state.recieve_date
-                          }
+                  this.state.recieve_date
+                    ? Moment(this.state.recieve_date, "MM/DD/YYYY")
+                    : this.state.recieve_date
+                }
                 placeholder="Receive Date"
               />
             </div>
@@ -226,19 +222,16 @@ class ReceiptForm extends React.Component {
               />
             </div>
 
-
             <div style={styles.formItem}>
               Provider:
               <ProviderAutoComplete
-                onProviderChange={val => this.onChange('provider_id', val)}
+                onProviderChange={val => this.onChange("provider_id", val)}
                 rowData={this.props.rowData}
               />
             </div>
-
           </div>
 
           <Divider orientation="left">Receipt Items</Divider>
-
 
           {/* TODO make sure to change the props names that get passed down if you abstract it */}
 
@@ -252,26 +245,22 @@ class ReceiptForm extends React.Component {
           <Divider />
 
           <div style={styles.bottomThird}>
-
             <div style={styles.formItem}>
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
-                onChange={e => this.onTextChange('billed_amt', e.target.value)}
+                onChange={e => this.onTextChange("billed_amt", e.target.value)}
               />
             </div>
-
           </div>
 
           <TextArea
             rows={4}
             placeholder="Notes"
             value={this.state.notes}
-            onChange={e => this.onTextChange('notes', e.target.value)}
+            onChange={e => this.onTextChange("notes", e.target.value)}
           />
-
         </div>
-
       </Modal>
     );
   }

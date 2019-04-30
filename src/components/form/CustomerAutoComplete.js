@@ -1,11 +1,11 @@
-import React from 'react';
-import { AutoComplete } from 'antd';
-import { db } from '../../firebase';
+import React from "react";
+import { AutoComplete } from "antd";
+import { db } from "../../firebase";
 
 const styles = {
   container: {
-    width: '100%',
-  },
+    width: "100%"
+  }
 };
 
 class CustomerAutoComplete extends React.Component {
@@ -14,12 +14,12 @@ class CustomerAutoComplete extends React.Component {
     this.state = {
       dataSourceTypeItemList: [],
       dictionary: {},
-      defaultValue: null,
+      defaultValue: null
     };
   }
 
   componentDidMount() {
-    db.onceGetCustomers().then((snapshot) => {
+    db.onceGetCustomers().then(snapshot => {
       const data = snapshot.val();
       const dictionary = {};
       const dataSourceTypeItemList = [];
@@ -33,14 +33,14 @@ class CustomerAutoComplete extends React.Component {
       this.setState({
         dataSourceTypeItemList,
         dictionary,
-        defaultValue: this.props.rowData ? dictionary[this.props.rowData.customer_id] : null,
+        defaultValue: this.props.rowData ? dictionary[this.props.rowData.customer_id] : null
       });
     });
   }
 
-  onChange = (val) => {
+  onChange = val => {
     this.props.onCustomerChange(val);
-  }
+  };
 
   render() {
     return (
@@ -55,8 +55,7 @@ class CustomerAutoComplete extends React.Component {
           if (option.props.children) {
             return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
           }
-        }
-        }
+        }}
       />
     );
   }

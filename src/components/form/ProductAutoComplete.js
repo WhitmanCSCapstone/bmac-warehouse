@@ -1,40 +1,40 @@
-import React from 'react';
-import { AutoComplete } from 'antd';
-import { db } from '../../firebase';
+import React from "react";
+import { AutoComplete } from "antd";
+import { db } from "../../firebase";
 
 const styles = {
   container: {
-    width: '100%',
-  },
+    width: "100%"
+  }
 };
 
 class ProductAutoComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: []
     };
   }
 
   componentDidMount() {
-    db.onceGetProducts().then((snapshot) => {
+    db.onceGetProducts().then(snapshot => {
       const data = this.getProductNames(Object.values(snapshot.val()));
       this.setState({ data });
     });
   }
 
-  getProductNames = (data) => {
+  getProductNames = data => {
     const seen = {};
     for (const product of data) {
       const name = product.product_id;
       // if there's a dupe then skip it
       // TODO: make it so that it doesn't have to skip dupes
-      if (!(name in seen) && name !== '') {
+      if (!(name in seen) && name !== "") {
         seen[name] = true;
       }
     }
     return Object.keys(seen);
-  }
+  };
 
   render() {
     return (
@@ -42,14 +42,13 @@ class ProductAutoComplete extends React.Component {
         dataSource={this.state.data}
         style={styles.container}
         value={this.props.value}
-        onChange={value => this.props.onChange('product', this.props.index, value)}
+        onChange={value => this.props.onChange("product", this.props.index, value)}
         placeholder="Product"
         filterOption={(inputValue, option) => {
           if (option.props.children) {
             return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
           }
-        }
-        }
+        }}
       />
     );
   }

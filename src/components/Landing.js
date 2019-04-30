@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from 'antd';
+import React from "react";
+import { Button } from "antd";
 
 function Landing() {
   return (
@@ -10,7 +10,11 @@ function Landing() {
       <center>
         <img alt="" src="http://rfhresourceguide.org/Content/cmsImages/logo.jpg" />
         <h1>BMAC Warehouse Management Portal</h1>
-        <a href="SignIn"><Button type="primary" htmlType="submit">Sign In</Button></a>
+        <a href="SignIn">
+          <Button type="primary" htmlType="submit">
+            Sign In
+          </Button>
+        </a>
       </center>
     </div>
   );

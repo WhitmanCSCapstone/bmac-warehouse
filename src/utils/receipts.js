@@ -1,10 +1,10 @@
-import { db } from '../firebase';
+import { db } from "../firebase";
 
 export function getReadableReceiptsTableData() {
   return new Promise((resolve, reject) => {
-    db.onceGetProviders().then((snapshot) => {
+    db.onceGetProviders().then(snapshot => {
       const providers = snapshot.val();
-      db.onceGetReceipts().then((snapshot) => {
+      db.onceGetReceipts().then(snapshot => {
         const data = Object.values(snapshot.val());
         data.map(row => makeRecieptReadable(row, providers));
         // this is to make it act like the Firebase Promises
@@ -22,7 +22,7 @@ function makeRecieptReadable(row, providers) {
   if (providerObj) {
     name = providerObj.provider_id;
   } else {
-    name = 'INVALID PROVIDER ID';
+    name = "INVALID PROVIDER ID";
   }
   row.provider_id = name;
   return row;

@@ -1,15 +1,14 @@
-@import '~antd/dist/antd.css';
+@import "~antd/dist/antd.css";
 @import "~react-table/react-table.css";
 
 .Title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #595959;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #595959;
 }
 
-
-.button{
+.button {
   background-color: gray;
   border: none;
   color: white;
@@ -29,6 +28,6 @@
   background-color: white;
   transform: translateY(4px);
 }
-.button:focus{
-  outline:0;
+.button:focus {
+  outline: 0;
 }

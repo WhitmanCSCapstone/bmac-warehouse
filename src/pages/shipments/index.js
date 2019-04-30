@@ -2,28 +2,28 @@
  *  A component
  */
 
-import React from 'react';
-import { Button, DatePicker } from 'antd';
-import ReactTable from 'react-table';
-import Moment from 'moment';
-import matchSorter from 'match-sorter';
-import LoadingScreen from '../../components/LoadingScreen';
+import React from "react";
+import { Button, DatePicker } from "antd";
+import ReactTable from "react-table";
+import Moment from "moment";
+import matchSorter from "match-sorter";
+import LoadingScreen from "../../components/LoadingScreen";
 
-import { tableKeys } from '../../constants/constants';
-import withAuthorization from '../../components/withAuthorization';
-import { db } from '../../firebase';
-import ShipmentForm from '../../components/form/types/ShipmentForm';
-import AddFundsSource from '../../components/AddFundsSource';
+import { tableKeys } from "../../constants/constants";
+import withAuthorization from "../../components/withAuthorization";
+import { db } from "../../firebase";
+import ShipmentForm from "../../components/form/types/ShipmentForm";
+import AddFundsSource from "../../components/AddFundsSource";
 
 const keys = tableKeys.shipments;
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24,
-  },
+    display: "flex",
+    flexDirection: "column",
+    padding: 24
+  }
 };
 
 const { RangePicker } = DatePicker;
@@ -37,65 +37,68 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      customers: null,
+      customers: null
     };
   }
 
-  onDateChange = (dateRange) => {
+  onDateChange = dateRange => {
     const newData = [];
     for (let i = 0; i < this.state.data.length; i++) {
       const entry = this.state.data[i];
-      const entryDate = Moment(entry.ship_date, 'MM/DD/YYYY');
+      const entryDate = Moment(entry.ship_date, "MM/DD/YYYY");
       if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
         newData.push(entry);
       }
     }
-    this.setState({
-      filteredData: newData,
-      dateRange,
-    }, function () { console.log(this.state.dateRange); });
-  }
+    this.setState(
+      {
+        filteredData: newData,
+        dateRange
+      },
+      function() {
+        console.log(this.state.dateRange);
+      }
+    );
+  };
 
   componentDidMount() {
     this.refreshTable();
 
-    db.onceGetCustomers().then((snapshot) => {
+    db.onceGetCustomers().then(snapshot => {
       const data = snapshot.val();
       this.setState({ customers: data });
     });
   }
 
-  readableCustomerCell = (rowData) => {
+  readableCustomerCell = rowData => {
     const hash = rowData.original.customer_id;
     const obj = this.state.customers[hash];
-    const name = obj ? obj.customer_id : 'INVALID CUSTOMER_ID';
+    const name = obj ? obj.customer_id : "INVALID CUSTOMER_ID";
     return <span>{name}</span>;
-  }
+  };
 
   refreshTable = () => {
-    db.onceGetShipments().then((snapshot) => {
+    db.onceGetShipments().then(snapshot => {
       const data = Object.values(snapshot.val());
       this.setState({ data });
     });
-  }
+  };
 
   render() {
     return (
       <div style={styles.container}>
-
         <div>
-          <RangePicker
-            onChange={this.onDateChange}
-            format="MM/DD/YYYY"
-          />
+          <RangePicker onChange={this.onDateChange} format="MM/DD/YYYY" />
         </div>
-        <AddFundsSource/>
+        <AddFundsSource />
         <Button
           type="primary"
-          onClick={() => this.setState({
-            formModalVisible: true,
-            rowData: null,
-          })}
+          onClick={() =>
+            this.setState({
+              formModalVisible: true,
+              rowData: null
+            })
+          }
         >
           Add New Shipment
         </Button>
@@ -107,65 +110,77 @@ class Shipments extends React.Component {
           rowData={this.state.rowData}
         />
 
-        { !this.state.data || !this.state.customers ? <LoadingScreen />
-          : (
-            <ReactTable
-              getTrProps={(state, rowInfo) => ({
-                onClick: () => this.setState({
+        {!this.state.data || !this.state.customers ? (
+          <LoadingScreen />
+        ) : (
+          <ReactTable
+            getTrProps={(state, rowInfo) => ({
+              onClick: () =>
+                this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true,
-                }),
-              })}
-              data={this.state.filteredData && this.state.dateRange.length
-                ? this.state.filteredData : this.state.data}
-              columns={keys.map((string) => {
-                if (string === 'customer_id') {
-                  return ({
-                    Header: string.replace('_', ' ').split(' ')
-                      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                      .join(' '),
-                    accessor: string,
-                    Cell: this.readableCustomerCell,
-                    filterable: true,
-                    filterAll: true,
-                    filterMethod: (filter, rows) => matchSorter(rows, filter.value, {
-                      keys: [(obj) => {
-                        const customer = this.state.customers[obj.customer_id];
-                        let name = 'INVALID CUSTOMER ID';
-                        if (customer) {
-                          name = customer.customer_id;
-                        }
-                        return name;
-                      }],
-                    }),
-
-                  });
-                }
-                if (string === 'ship_date') {
-                  return ({
-                    id: 'ship_date',
-                    Header: 'Ship Date',
-                    accessor: d => Moment(d.ship_date).local().format('MM/DD/YYYY'),
-                    sortMethod: (a, b) => {
-                      a = new Date(a).getTime();
-                      b = new Date(b).getTime();
-                      return b > a ? 1 : -1;
-                    },
-                  });
-                }
-                return ({
-                  Header: string.replace('_', ' ').split(' ')
+                  formModalVisible: true
+                })
+            })}
+            data={
+              this.state.filteredData && this.state.dateRange.length
+                ? this.state.filteredData
+                : this.state.data
+            }
+            columns={keys.map(string => {
+              if (string === "customer_id") {
+                return {
+                  Header: string
+                    .replace("_", " ")
+                    .split(" ")
                     .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                    .join(" "),
                   accessor: string,
-                });
-              })}
-              defaultPageSize={10}
-              className="-striped -highlight"
-            />
-          )
-        }
-
+                  Cell: this.readableCustomerCell,
+                  filterable: true,
+                  filterAll: true,
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {
+                      keys: [
+                        obj => {
+                          const customer = this.state.customers[obj.customer_id];
+                          let name = "INVALID CUSTOMER ID";
+                          if (customer) {
+                            name = customer.customer_id;
+                          }
+                          return name;
+                        }
+                      ]
+                    })
+                };
+              }
+              if (string === "ship_date") {
+                return {
+                  id: "ship_date",
+                  Header: "Ship Date",
+                  accessor: d =>
+                    Moment(d.ship_date)
+                      .local()
+                      .format("MM/DD/YYYY"),
+                  sortMethod: (a, b) => {
+                    a = new Date(a).getTime();
+                    b = new Date(b).getTime();
+                    return b > a ? 1 : -1;
+                  }
+                };
+              }
+              return {
+                Header: string
+                  .replace("_", " ")
+                  .split(" ")
+                  .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(" "),
+                accessor: string
+              };
+            })}
+            defaultPageSize={10}
+            className="-striped -highlight"
+          />
+        )}
       </div>
     );
   }
