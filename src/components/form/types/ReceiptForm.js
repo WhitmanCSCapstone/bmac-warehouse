@@ -1,11 +1,13 @@
 import React from 'react';
+import {
+  Input, DatePicker, Divider, Modal,
+} from 'antd';
+import Moment from 'moment';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Divider, Modal } from 'antd';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
-import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
+import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
 import ProviderAutoComplete from '../ProviderAutoComplete';
-import Moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -47,15 +49,14 @@ const styles = {
   },
 };
 
-var ref = null;
+const ref = null;
 
 class ReceiptForm extends React.Component {
-
   defaultState = {
     provider_id: null,
     recieve_date: null,
     payment_source: null,
-    receive_items: [{},{},{},{},{}],
+    receive_items: [{}, {}, {}, {}, {}],
     billed_amt: null,
     notes: null,
     total_weight: null,
@@ -64,13 +65,13 @@ class ReceiptForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.defaultState, ...props.rowData }
+    this.state = { ...this.defaultState, ...props.rowData };
   }
 
   onChange = (prop, val) => {
     this.setState({
       [prop]: val,
-    })
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -92,22 +93,22 @@ class ReceiptForm extends React.Component {
   }
 
   onNotesChange = (value) => {
-    this.setState({ notes: value })
+    this.setState({ notes: value });
   }
 
   onItemsChange = (prop, index, val) => {
-    var itemsCopy = this.state.receive_items.slice(0); // shallow clone
-    if(itemsCopy[index] === undefined) {
-      itemsCopy[index] = {[prop]: val};
+    const itemsCopy = this.state.receive_items.slice(0); // shallow clone
+    if (itemsCopy[index] === undefined) {
+      itemsCopy[index] = { [prop]: val };
     } else {
       itemsCopy[index][prop] = val;
     }
     this.setState({ receive_items: itemsCopy });
 
-    var total_weight = 0;
-    for(var item of this.state.receive_items) {
-      var stringWeight = item ? item['total_weight'] : '0';
-      var weight = parseInt(stringWeight);
+    let total_weight = 0;
+    for (const item of this.state.receive_items) {
+      const stringWeight = item ? item.total_weight : '0';
+      const weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
@@ -115,19 +116,17 @@ class ReceiptForm extends React.Component {
 
 
   deleteEmptyReceiveItems = (receiveItems) => {
-    var filteredItems = receiveItems.filter( obj => {
-      return obj !== undefined && obj['product'] !== undefined;
-    })
+    const filteredItems = receiveItems.filter(obj => obj !== undefined && obj.product !== undefined);
     return filteredItems;
   }
 
   handleOk = () => {
-    var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
-    var newData = JSON.parse(JSON.stringify(this.state));
+    const emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
+    const newData = JSON.parse(JSON.stringify(this.state));
 
-    newData['receive_items'] = emptiedShipItems;
+    newData.receive_items = emptiedShipItems;
 
-    var row = this.props.rowData
+    const row = this.props.rowData;
 
     if (row && row.uniq_id) {
       // if we are editing a shipment, set in place
@@ -147,51 +146,49 @@ class ReceiptForm extends React.Component {
   }
 
   addReceiveItem = () => {
-    var emptyRow = {
-      'product': undefined,
-      'unit_weight': undefined,
-      'case_lots': undefined,
-      'total_weight': undefined,
+    const emptyRow = {
+      product: undefined,
+      unit_weight: undefined,
+      case_lots: undefined,
+      total_weight: undefined,
     };
 
-    var newReceiveItems = this.state.receive_items
-                           .concat(emptyRow)
-                           .filter( elem => {
-                             return elem !== undefined;
-                           });
+    const newReceiveItems = this.state.receive_items
+      .concat(emptyRow)
+      .filter(elem => elem !== undefined);
 
     this.setState({ receive_items: newReceiveItems });
   }
 
   removeReceiveItem = (removeIndex) => {
-    var itemsCopy = this.state.receive_items.filter( (obj, objIndex) => objIndex !== removeIndex )
+    const itemsCopy = this.state.receive_items.filter((obj, objIndex) => objIndex !== removeIndex);
     this.setState({ receive_items: itemsCopy });
   }
 
   handleDelete = () => {
     db.deleteReceiptObj(this.props.rowData.uniq_id);
-    this.props.closeForm()
+    this.props.closeForm();
     this.props.refreshTable();
   }
 
   render() {
-
     return (
 
       <Modal
         title="Add New Receipt"
         style={{ top: 20 }}
-        width={'50vw'}
-        destroyOnClose={true}
+        width="50vw"
+        destroyOnClose
         visible={this.props.formModalVisible}
         onCancel={this.props.closeForm}
         footer={[
-          <Footer key='footer'
-                       rowData={this.props.rowData}
-                       handleDelete={this.handleDelete}
-                       closeForm={this.props.closeForm}
-                       handleOk={this.handleOk}
-          />
+          <Footer
+            key="footer"
+            rowData={this.props.rowData}
+            handleDelete={this.handleDelete}
+            closeForm={this.props.closeForm}
+            handleOk={this.handleOk}
+          />,
         ]}
       >
 
@@ -201,16 +198,18 @@ class ReceiptForm extends React.Component {
             {/* intentially mispelled "receive" */}
             <div style={styles.formItem}>
               Date:
-              <DatePicker style={styles.datePicker}
-                          onChange={ (date) => this.onChange('recieve_date', date.format('MM/DD/YYYY')) }
-                          format={'MM/DD/YYYY'}
-                          key={`recievedate:${this.state.recieve_date}`}
-                          defaultValue={
+              <DatePicker
+                style={styles.datePicker}
+                onChange={date => this.onChange('recieve_date', date.format('MM/DD/YYYY'))}
+                format="MM/DD/YYYY"
+                key={`recievedate:${this.state.recieve_date}`}
+                defaultValue={
                             this.state.recieve_date
-                                      ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
-                                      : this.state.recieve_date
+                              ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
+                              : this.state.recieve_date
                           }
-                          placeholder="Receive Date" />
+                placeholder="Receive Date"
+              />
             </div>
 
             <div style={styles.formItem}>
@@ -221,7 +220,7 @@ class ReceiptForm extends React.Component {
                 style={styles.fundsSourceDropdown}
                 onClick={this.onClickFundingSource}
                 clearFundingSource={this.clearPaymentSource}
-                required={true}
+                required
                 rowData={this.props.rowData}
                 key={`paymentsource:${this.state.payment_source}`}
               />
@@ -231,7 +230,7 @@ class ReceiptForm extends React.Component {
             <div style={styles.formItem}>
               Provider:
               <ProviderAutoComplete
-                onProviderChange={ (val) => this.onChange('provider_id', val) }
+                onProviderChange={val => this.onChange('provider_id', val)}
                 rowData={this.props.rowData}
               />
             </div>
@@ -258,7 +257,7 @@ class ReceiptForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
-                onChange={ (e) => this.onTextChange('billed_amt', e.target.value) }
+                onChange={e => this.onTextChange('billed_amt', e.target.value)}
               />
             </div>
 
@@ -268,7 +267,7 @@ class ReceiptForm extends React.Component {
             rows={4}
             placeholder="Notes"
             value={this.state.notes}
-            onChange={ (e) => this.onTextChange('notes', e.target.value) }
+            onChange={e => this.onTextChange('notes', e.target.value)}
           />
 
         </div>

@@ -4,20 +4,26 @@
 
 import React from 'react';
 import ReactTable from 'react-table';
-import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
-import { reportKeys,
-         reportType2TableName,
-         reportType2DateAccessor,
-         reportType2FundingSourceRelavancy,
-         reportType2DateRangeRelavancy,
-         radioValue2ReportType } from '../../constants/constants';
-import { populateTableData,
-         getCSVdata } from './utils';
-import { CSVLink} from "react-csv";
-import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter'
-import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
+import {
+  Spin, Button, Icon, DatePicker, Radio,
+} from 'antd';
+import { CSVLink } from 'react-csv';
+import matchSorter from 'match-sorter';
 import Moment from 'moment';
+import {
+  reportKeys,
+  reportType2TableName,
+  reportType2DateAccessor,
+  reportType2FundingSourceRelavancy,
+  reportType2DateRangeRelavancy,
+  radioValue2ReportType,
+} from '../../constants/constants';
+import {
+  populateTableData,
+  getCSVdata,
+} from './utils';
+import withAuthorization from '../../components/withAuthorization';
+import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -39,7 +45,7 @@ const styles = {
 };
 
 class Reports extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       reportType: 'Inventory Shipments',
@@ -50,10 +56,10 @@ class Reports extends React.Component {
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
       dataCSV: null,
-    }
+    };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.updateTable();
   }
 
@@ -66,21 +72,24 @@ class Reports extends React.Component {
   }
 
   updateTable = () => {
-    this.setState({dataCSV: null,
-                   data: null });
+    this.setState({
+      dataCSV: null,
+      data: null,
+    });
     populateTableData(this.state.reportType,
-                      this.state.fundingSource,
-                      this.state.dateRange,
-                      reportType2DateAccessor[this.state.reportType],
-                      (data) => {this.setState({data: data}, console.log('just updated table data'))});
+      this.state.fundingSource,
+      this.state.dateRange,
+      reportType2DateAccessor[this.state.reportType],
+      (data) => { this.setState({ data }, console.log('just updated table data')); });
   }
 
   createCSV = () => {
     getCSVdata(this.state.data,
-               this.state.reportType,
-               (dataCSV) => {this.setState({dataCSV: dataCSV})
-                             console.log('just updated csv data')
-               });
+      this.state.reportType,
+      (dataCSV) => {
+        this.setState({ dataCSV });
+        console.log('just updated csv data');
+      });
   }
 
   onClickFundingSource = (val) => {
@@ -88,14 +97,14 @@ class Reports extends React.Component {
   }
 
   onReportTypeChange = (e) => {
-    var val = e.target.value.toString();
-    var reportType = radioValue2ReportType[val];
-    var tableName = reportType2TableName[reportType];
+    const val = e.target.value.toString();
+    const reportType = radioValue2ReportType[val];
+    const tableName = reportType2TableName[reportType];
     this.setState({
-      reportType: reportType,
+      reportType,
       reportTypeTableName: tableName,
       reportTypeRadioValue: e.target.value,
-      //reset all the settings
+      // reset all the settings
       data: null,
       fundingSource: null,
       dateRange: [],
@@ -105,7 +114,7 @@ class Reports extends React.Component {
 
   onDateChange = (dateRange) => {
     this.setState({
-      dateRange: dateRange,
+      dateRange,
     });
   }
 
@@ -116,31 +125,34 @@ class Reports extends React.Component {
   }
 
   render() {
+    const fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
 
-    var fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
-
-    return(
+    return (
       <div style={styles.container}>
 
         <div style={styles.filters}>
-          <Radio.Group onChange={this.onReportTypeChange}
-                       value={this.state.reportTypeRadioValue}
-                       style={styles.radio}>
+          <Radio.Group
+            onChange={this.onReportTypeChange}
+            value={this.state.reportTypeRadioValue}
+            style={styles.radio}
+          >
 
             <Radio value={1}>Inventory Shipments</Radio>
             <Radio value={2}>Inventory Receipts</Radio>
-            <Radio disabled={true} value={3}>Current Inventory</Radio>
+            <Radio disabled value={3}>Current Inventory</Radio>
             <Radio value={4}>Current Customers</Radio>
             <Radio value={5}>Current Providers</Radio>
 
           </Radio.Group>
 
-          <Radio.Group onChange={this.onStatusChange}
-                       value={this.state.statusRadioValue}
-                       style={styles.radio}>
+          <Radio.Group
+            onChange={this.onStatusChange}
+            value={this.state.statusRadioValue}
+            style={styles.radio}
+          >
 
-            <Radio disabled={true} value={6}>Active</Radio>
-            <Radio disabled={true} value={7}>Inactive/Discontinued</Radio>
+            <Radio disabled value={6}>Active</Radio>
+            <Radio disabled value={7}>Inactive/Discontinued</Radio>
 
           </Radio.Group>
 
@@ -152,83 +164,91 @@ class Reports extends React.Component {
           />
 
           {
-            <RangePicker onChange={this.onDateChange}
-                         format={'MM/DD/YYYY'}
-                         value={this.state.dateRange}
-                         disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
+            <RangePicker
+              onChange={this.onDateChange}
+              format="MM/DD/YYYY"
+              value={this.state.dateRange}
+              disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
             />
           }
 
           {
             this.state.data
-            ? <Button type="primary" onClick={this.createCSV}> Create CSV </Button>
-            : <Button type="primary"> Create CSV <Spin indicator={antIcon} /> </Button>
+              ? <Button type="primary" onClick={this.createCSV}> Create CSV </Button>
+              : (
+                <Button type="primary">
+                  {' '}
+Create CSV
+                  <Spin indicator={antIcon} />
+                  {' '}
+
+                </Button>
+              )
           }
 
           {
             this.state.dataCSV
-            ?
-            <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
-              <Button type="primary" icon="download">
+              ? (
+                <CSVLink filename="report.csv" data={this.state.dataCSV}>
+                  <Button type="primary" icon="download">
                 CSV
-              </Button>
-            </CSVLink>
-            :
-            <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
+                  </Button>
+                </CSVLink>
+              )
+              : (
+                <Button disabled={!this.state.dataCSV} icon="download" type="primary">
               CSV
-            </Button>
+                </Button>
+              )
           }
 
         </div>
 
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
-          columns={reportKeys[this.state.reportType].map(string => {
-              if(string === 'customer_id' && this.state.reportType === 'Inventory Shipments'){
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+          columns={reportKeys[this.state.reportType].map((string) => {
+            if (string === 'customer_id' && this.state.reportType === 'Inventory Shipments') {
+              return ({
+                Header: string.replace('_', ' ').split(' ')
+                  .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
+                accessor: string,
+                filterable: true,
+                filterAll: true,
+                filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ['customer_id'] }),
 
-                })
-              }
-              if(string === 'provider_id' && this.state.reportType === 'Inventory Receipts'){
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+              });
+            }
+            if (string === 'provider_id' && this.state.reportType === 'Inventory Receipts') {
+              return ({
+                Header: string.replace('_', ' ').split(' ')
+                  .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['provider_id'] }),
-                })
-              }
-              if(string === 'ship_date' || string === 'intial_date' || string === 'recieve_date'){
-                  return({
-                    id: string,
-                    Header: string.replace('_',' ').split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '),
-                    accessor: d => Moment(d.ship_date).local().format("MM/DD/YYYY"),
-                    sortMethod: (a, b) => {
-                      a = new Date(a).getTime();
-                      b = new Date(b).getTime();
-                      return b > a ? 1 : -1;
-                    }
-                  })
-              }
-              else{
-                return({
-                  Header: string.replace('_',' ').split(' ')
-                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                accessor: string,
+                filterable: true,
+                filterAll: true,
+                filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ['provider_id'] }),
+              });
+            }
+            if (string === 'ship_date' || string === 'intial_date' || string === 'recieve_date') {
+              return ({
+                id: string,
+                Header: string.replace('_', ' ').split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).map(s => s.charAt(0).toUpperCase() + s.substring(1))
                   .join(' '),
-                  accessor: string,
-                })
-              }
+                accessor: d => Moment(d.ship_date).local().format('MM/DD/YYYY'),
+                sortMethod: (a, b) => {
+                  a = new Date(a).getTime();
+                  b = new Date(b).getTime();
+                  return b > a ? 1 : -1;
+                },
+              });
+            }
+            return ({
+              Header: string.replace('_', ' ').split(' ')
+                .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+                .join(' '),
+              accessor: string,
+            });
           })}
           defaultPageSize={10}
           className="-striped -highlight"
@@ -239,7 +259,7 @@ class Reports extends React.Component {
   }
 }
 
-const authCondition = (authUser) => !!authUser;
+const authCondition = authUser => !!authUser;
 
 const adminOnly = false;
 

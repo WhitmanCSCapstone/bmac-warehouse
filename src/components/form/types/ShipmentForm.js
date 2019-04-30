@@ -1,16 +1,18 @@
 import React from 'react';
-import { db } from '../../../firebase';
 import * as jspdf from 'jspdf';
-import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import {
+  Input, DatePicker, Select, Divider, Modal,
+} from 'antd';
+import Moment from 'moment';
+import { db } from '../../../firebase';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
-import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
+import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
 import CustomerAutoComplete from '../CustomerAutoComplete';
-import Moment from 'moment';
 
 const { TextArea } = Input;
 
-const Option = Select.Option;
+const { Option } = Select;
 
 const styles = {
   form: {
@@ -50,10 +52,9 @@ const styles = {
   },
 };
 
-var ref = null;
+const ref = null;
 
 class ShipmentForm extends React.Component {
-
   defaultState = {
     customer_id: null,
     funds_source: null,
@@ -61,7 +62,7 @@ class ShipmentForm extends React.Component {
     invoice_no: 'null',
     notes: undefined,
     ship_date: null,
-    ship_items: [{},{},{},{},{}],
+    ship_items: [{}, {}, {}, {}, {}],
     ship_rate: undefined,
     ship_via: undefined,
     total_price: undefined,
@@ -71,7 +72,7 @@ class ShipmentForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { ...this.defaultState, ...props.rowData }
+    this.state = { ...this.defaultState, ...props.rowData };
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -83,7 +84,7 @@ class ShipmentForm extends React.Component {
   onChange = (prop, val) => {
     this.setState({
       [prop]: val,
-    })
+    });
   }
 
   onClickFundingSource = (value) => {
@@ -100,37 +101,35 @@ class ShipmentForm extends React.Component {
 
 
   onItemsChange = (prop, index, val) => {
-    var itemsCopy = this.state.ship_items.slice(0); // shallow clone
-    if(itemsCopy[index] === undefined) {
-      itemsCopy[index] = {[prop]: val};
+    const itemsCopy = this.state.ship_items.slice(0); // shallow clone
+    if (itemsCopy[index] === undefined) {
+      itemsCopy[index] = { [prop]: val };
     } else {
       itemsCopy[index][prop] = val;
     }
     this.setState({ ship_items: itemsCopy });
 
-    var total_weight = 0;
-    for(var item of this.state.ship_items) {
-      var stringWeight = item ? item['total_weight'] : '0';
-      var weight = parseInt(stringWeight);
+    let total_weight = 0;
+    for (const item of this.state.ship_items) {
+      const stringWeight = item ? item.total_weight : '0';
+      const weight = parseInt(stringWeight);
       total_weight += isNaN(weight) ? 0 : weight;
     }
     this.setState({ total_weight: total_weight.toString() });
   }
 
   deleteEmptyShipItems = (shipItems) => {
-    var filteredItems = shipItems.filter( obj => {
-      return obj !== undefined && obj['product'] !== undefined;
-    })
+    const filteredItems = shipItems.filter(obj => obj !== undefined && obj.product !== undefined);
     return filteredItems;
   }
 
   handleOk = () => {
-    var emptiedShipItems = this.deleteEmptyShipItems(this.state.ship_items);
-    var newData = JSON.parse(JSON.stringify(this.state));
+    const emptiedShipItems = this.deleteEmptyShipItems(this.state.ship_items);
+    const newData = JSON.parse(JSON.stringify(this.state));
 
-    newData['ship_items'] = emptiedShipItems;
+    newData.ship_items = emptiedShipItems;
 
-    var row = this.props.rowData
+    const row = this.props.rowData;
 
     if (row && row.uniq_id) {
       // if we are editing a shipment, set in place
@@ -155,13 +154,13 @@ class ShipmentForm extends React.Component {
   // @param 3 - String or array of strings to be added to the page. Each line is shifted one line down per font, spacing settings declared before this call.
   handlePdf = () => {
     const pdf = new jspdf();
-    db.onceGetSpecificCustomer(this.state.customer_id).then( (customerObj) => {
-      var customerName = customerObj.child('customer_id').val();
-      var address = customerObj.child('address').val();
-      var city = customerObj.child('city').val();
-      var state = customerObj.child('state').val();
-      var zip = customerObj.child('zip').val();
-      var fullAddress = address + ', ' + city + ', ' + state + ', ' + zip;
+    db.onceGetSpecificCustomer(this.state.customer_id).then((customerObj) => {
+      const customerName = customerObj.child('customer_id').val();
+      const address = customerObj.child('address').val();
+      const city = customerObj.child('city').val();
+      const state = customerObj.child('state').val();
+      const zip = customerObj.child('zip').val();
+      const fullAddress = `${address}, ${city}, ${state}, ${zip}`;
 
       pdf.setFont('helvetica');
       pdf.setFontSize('20');
@@ -172,14 +171,14 @@ class ShipmentForm extends React.Component {
 
       pdf.setFontType('italic');
       pdf.setFontSize('12');
-      pdf.text(10, 40, 'Invoice No:' + this.state.ship_date);
-      pdf.text(10, 50, 'Ship Date: ' + this.state.ship_date);
-      pdf.text(70, 50, 'Ship Via: ' + this.state.ship_via);
-      pdf.text(130, 50, 'Funds Source: ' + this.state.funds_source);
+      pdf.text(10, 40, `Invoice No:${this.state.ship_date}`);
+      pdf.text(10, 50, `Ship Date: ${this.state.ship_date}`);
+      pdf.text(70, 50, `Ship Via: ${this.state.ship_via}`);
+      pdf.text(130, 50, `Funds Source: ${this.state.funds_source}`);
       pdf.text(10, 65, 'Ship To: ');
       pdf.text(15, 75, customerName);
       pdf.text(15, 80, fullAddress);
-      var clean_ship_items = this.deleteEmptyShipItems(this.state.ship_items);
+      const clean_ship_items = this.deleteEmptyShipItems(this.state.ship_items);
 
       pdf.text(10, 90, 'Items Shipped:');
       pdf.setFontType('bold');
@@ -188,46 +187,45 @@ class ShipmentForm extends React.Component {
       pdf.text(115, 100, 'Case Lots');
       pdf.text(140, 100, 'Total Weight');
       pdf.setFontType('normal');
-      var y = 105;
-      var total_case_lots = 0, shipment_weight = 0;
-      for (var i = 0; i < clean_ship_items.length; i++) {
-        (clean_ship_items[i].product) ? pdf.text(30, y, String(clean_ship_items[i].product)) : pdf.text(30, y, "-");
-        (clean_ship_items[i].unit_weight) ? pdf.text(90, y, String(clean_ship_items[i].unit_weight)) : pdf.text(90, y, "-");
-        (clean_ship_items[i].case_lots) ? pdf.text(115, y, String(clean_ship_items[i].case_lots)) : pdf.text(115, y, "-");
-        (clean_ship_items[i].total_weight) ? pdf.text(140, y, String(clean_ship_items[i].total_weight)) : pdf.text(140, y, "-");
+      let y = 105;
+      let total_case_lots = 0; let
+        shipment_weight = 0;
+      for (let i = 0; i < clean_ship_items.length; i++) {
+        (clean_ship_items[i].product) ? pdf.text(30, y, String(clean_ship_items[i].product)) : pdf.text(30, y, '-');
+        (clean_ship_items[i].unit_weight) ? pdf.text(90, y, String(clean_ship_items[i].unit_weight)) : pdf.text(90, y, '-');
+        (clean_ship_items[i].case_lots) ? pdf.text(115, y, String(clean_ship_items[i].case_lots)) : pdf.text(115, y, '-');
+        (clean_ship_items[i].total_weight) ? pdf.text(140, y, String(clean_ship_items[i].total_weight)) : pdf.text(140, y, '-');
         y += 5;
         total_case_lots += parseInt(clean_ship_items[i].case_lots);
         shipment_weight += parseInt(clean_ship_items[i].total_weight);
       }
       pdf.setFontType('bold');
-      pdf.text(90, y+5, 'Totals: ');
-      pdf.text(115, y+5, String(total_case_lots));
-      pdf.text(140, y+5, String(shipment_weight));
-      pdf.text(155, y+5, 'pounds');
+      pdf.text(90, y + 5, 'Totals: ');
+      pdf.text(115, y + 5, String(total_case_lots));
+      pdf.text(140, y + 5, String(shipment_weight));
+      pdf.text(155, y + 5, 'pounds');
       pdf.setFontType('normal');
       pdf.setFontType('italic');
-      pdf.text(10, y+20, 'Rate: ' + this.state.ship_rate);
-      pdf.text(70, y+20, 'Billed Amount: ' + this.state.total_price);
-      pdf.text(10, y+30, 'Notes: ' + this.state.notes);
-      pdf.text(10, y+50, 'BMAC Signature - ____________________________________________');
-      pdf.text(10, y+60, 'Agency Signature - ___________________________________________');
+      pdf.text(10, y + 20, `Rate: ${this.state.ship_rate}`);
+      pdf.text(70, y + 20, `Billed Amount: ${this.state.total_price}`);
+      pdf.text(10, y + 30, `Notes: ${this.state.notes}`);
+      pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
+      pdf.text(10, y + 60, 'Agency Signature - ___________________________________________');
 
       pdf.save('Receipt');
-    },
-    );
+    });
   }
-  handleLabel = () => {
 
+  handleLabel = () => {
     const pdf = new jspdf();
 
-    db.onceGetSpecificCustomer(this.state.customer_id).then( (customerObj) => {
-
-      var customerName = customerObj.child('customer_id').val();
-      var address = customerObj.child('address').val();
-      var city = customerObj.child('city').val();
-      var state = customerObj.child('state').val();
-      var zip = customerObj.child('zip').val();
-      var fullAddress = city + ', ' + state + ', ' + zip;
+    db.onceGetSpecificCustomer(this.state.customer_id).then((customerObj) => {
+      const customerName = customerObj.child('customer_id').val();
+      const address = customerObj.child('address').val();
+      const city = customerObj.child('city').val();
+      const state = customerObj.child('state').val();
+      const zip = customerObj.child('zip').val();
+      const fullAddress = `${city}, ${state}, ${zip}`;
 
       pdf.setFont('Helvetica').setFontSize(28).setFontType('italic');
       pdf.text(10, 60, 'Ship To: ');
@@ -236,65 +234,62 @@ class ShipmentForm extends React.Component {
       pdf.text(50, 90, fullAddress);
 
       pdf.setFontSize(12).setFontType('normal');
-      pdf.text(10, 110, 'Invoice no: ' + this.state.ship_date);
-      pdf.text(130, 110, 'Funds Source: ' + this.state.funds_source);
-      pdf.text(10, 120, 'Ship Date: ' + this.state.ship_date);
-      pdf.text(70, 120, 'Ship Via: ' + this.state.ship_via);
-      pdf.text(130, 120, "Total Weight: " + this.state.total_weight);
+      pdf.text(10, 110, `Invoice no: ${this.state.ship_date}`);
+      pdf.text(130, 110, `Funds Source: ${this.state.funds_source}`);
+      pdf.text(10, 120, `Ship Date: ${this.state.ship_date}`);
+      pdf.text(70, 120, `Ship Via: ${this.state.ship_via}`);
+      pdf.text(130, 120, `Total Weight: ${this.state.total_weight}`);
 
       pdf.save('Label');
-    },
-    );
+    });
   }
 
   addShipmentItem = () => {
-    var emptyRow = {
-      'product': undefined,
-      'unit_weight': undefined,
-      'case_lots': undefined,
-      'total_weight': undefined,
+    const emptyRow = {
+      product: undefined,
+      unit_weight: undefined,
+      case_lots: undefined,
+      total_weight: undefined,
     };
 
-    var newShipItems = this.state.ship_items
-                           .concat(emptyRow)
-                           .filter( elem => {
-                             return elem !== undefined;
-                           });
+    const newShipItems = this.state.ship_items
+      .concat(emptyRow)
+      .filter(elem => elem !== undefined);
 
     this.setState({ ship_items: newShipItems });
   }
 
   removeShipmentItem = (removeIndex) => {
-    var itemsCopy = this.state.ship_items.filter( (obj, objIndex) => objIndex !== removeIndex )
+    const itemsCopy = this.state.ship_items.filter((obj, objIndex) => objIndex !== removeIndex);
     this.setState({ ship_items: itemsCopy });
   }
 
   handleDelete = () => {
     db.deleteShipmentObj(this.props.rowData.uniq_id);
-    this.props.closeForm()
+    this.props.closeForm();
     this.props.refreshTable();
   }
 
   render() {
-
     return (
 
       <Modal
         title="Add New Shipment"
         style={{ top: 20 }}
-        width={'50vw'}
-        destroyOnClose={true}
+        width="50vw"
+        destroyOnClose
         visible={this.props.formModalVisible}
         onCancel={this.props.closeForm}
         footer={[
-          <Footer key='footer'
-                       handleLabel={this.handleLabel}
-                       handlePdf={this.handlePdf}
-                       rowData={this.props.rowData}
-                       handleDelete={this.handleDelete}
-                       closeForm={this.props.closeForm}
-                       handleOk={this.handleOk}
-          />
+          <Footer
+            key="footer"
+            handleLabel={this.handleLabel}
+            handlePdf={this.handlePdf}
+            rowData={this.props.rowData}
+            handleDelete={this.handleDelete}
+            closeForm={this.props.closeForm}
+            handleOk={this.handleOk}
+          />,
         ]}
       >
 
@@ -304,22 +299,24 @@ class ShipmentForm extends React.Component {
 
             <div style={styles.formItem}>
               Date:
-              <DatePicker style={styles.datePicker}
-                          onChange={ (date) => this.onChange('ship_date', date.format('MM/DD/YYYY')) }
-                          format={'MM/DD/YYYY'}
-                          key={`shipdate:${this.state.ship_date}`}
-                          defaultValue={
+              <DatePicker
+                style={styles.datePicker}
+                onChange={date => this.onChange('ship_date', date.format('MM/DD/YYYY'))}
+                format="MM/DD/YYYY"
+                key={`shipdate:${this.state.ship_date}`}
+                defaultValue={
                             this.state.ship_date
-                                      ? Moment(this.state.ship_date, 'MM/DD/YYYY')
-                                      : this.state.ship_date
+                              ? Moment(this.state.ship_date, 'MM/DD/YYYY')
+                              : this.state.ship_date
                           }
-                          placeholder="Ship Date" />
+                placeholder="Ship Date"
+              />
             </div>
 
             <div style={styles.formItem}>
               Customer:
               <CustomerAutoComplete
-                onCustomerChange={ (val) => this.onChange('customer_id', val) }
+                onCustomerChange={val => this.onChange('customer_id', val)}
                 rowData={this.props.rowData}
               />
             </div>
@@ -332,7 +329,7 @@ class ShipmentForm extends React.Component {
                 style={styles.fundsSourceDropdown}
                 onClick={this.onClickFundingSource}
                 clearFundingSource={this.clearFundingSource}
-                required={true}
+                required
                 rowData={this.props.rowData}
                 key={`fundssource:${this.state.funds_source}`}
               />
@@ -341,11 +338,13 @@ class ShipmentForm extends React.Component {
 
             <div style={styles.shipViaContainer}>
               Ship Via:
-              <Select placeholder="Ship Via"
-                      value={this.state.ship_via}
-                      onChange={ (val) => {
-                          this.onChange('ship_via', val)
-                      } }>
+              <Select
+                placeholder="Ship Via"
+                value={this.state.ship_via}
+                onChange={(val) => {
+                  this.onChange('ship_via', val);
+                }}
+              >
                 <Option value="BMAC">BMAC</Option>
                 <Option value="Customer">Customer</Option>
                 <Option value="Other">Other</Option>
@@ -372,7 +371,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Rate"
                 value={this.state.ship_rate}
-                onChange={ (e) => this.onTextChange('ship_rate', e.target.value) }
+                onChange={e => this.onTextChange('ship_rate', e.target.value)}
               />
             </div>
 
@@ -380,7 +379,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.total_price}
-                onChange={ (e) => this.onTextChange('total_price', e.target.value) }
+                onChange={e => this.onTextChange('total_price', e.target.value)}
               />
             </div>
 
@@ -390,7 +389,7 @@ class ShipmentForm extends React.Component {
             rows={4}
             value={this.state.notes}
             placeholder="Notes"
-            onChange={ (e) => this.onTextChange('notes', e.target.value) }
+            onChange={e => this.onTextChange('notes', e.target.value)}
           />
 
         </div>
