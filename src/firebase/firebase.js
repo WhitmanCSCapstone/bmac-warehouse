@@ -9,7 +9,7 @@
  *   messagingSenderId: "974711202408"
  * };
  * firebase.initializeApp(config);
- * export default firebase;*/
+ * export default firebase; */
 
 
 import firebase from 'firebase/app';
@@ -32,14 +32,14 @@ const devConfig = {
   databaseURL: process.env.REACT_APP_DEV_DATABASEURL,
   projectId: process.env.REACT_APP_DEV_PROJECTID,
   storageBucket: process.env.REACT_APP_DEV_STORAGEBUCKET,
-  messagingSenderId: process.env.REACT_APP_DEV_MESSAGINGSENDERID
+  messagingSenderId: process.env.REACT_APP_DEV_MESSAGINGSENDERID,
 };
 
-//const config = process.env.NODE_ENV === 'production'
+// const config = process.env.NODE_ENV === 'production'
 //             ? prodConfig
 //             : devConfig;
 
-const config = devConfig
+const config = devConfig;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);

@@ -7,7 +7,7 @@ const styles = {
 
 class Error extends React.Component {
   render() {
-    return(
+    return (
       <div style={styles.container}>
         <h1>404</h1>
       </div>

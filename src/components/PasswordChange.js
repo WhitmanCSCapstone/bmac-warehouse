@@ -23,12 +23,12 @@ class PasswordChangeForm extends Component {
     const { passwordOne } = this.state;
 
     auth.doPasswordUpdate(passwordOne)
-        .then(() => {
-          this.setState({ ...INITIAL_STATE });
-        })
-        .catch(error => {
-          this.setState(byPropKey('error', error));
-        });
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+      })
+      .catch((error) => {
+        this.setState(byPropKey('error', error));
+      });
 
     event.preventDefault();
   }
@@ -40,9 +40,8 @@ class PasswordChangeForm extends Component {
       error,
     } = this.state;
 
-    const isInvalid =
-      passwordOne !== passwordTwo ||
-      passwordOne === '';
+    const isInvalid = passwordOne !== passwordTwo
+                   || passwordOne === '';
 
     return (
       <form onSubmit={this.onSubmit}>

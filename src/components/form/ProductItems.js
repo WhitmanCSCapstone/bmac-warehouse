@@ -37,11 +37,11 @@ const styles = {
 };
 
 class ProductItems extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       items: null,
-    }
+    };
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -52,9 +52,8 @@ class ProductItems extends React.Component {
   }
 
   render() {
-
     function invisibleBtn() {
-      return(
+      return (
         <Icon
           className="dynamic-delete-button"
           style={styles.iconDisabled}
@@ -63,7 +62,7 @@ class ProductItems extends React.Component {
       );
     }
 
-    return(
+    return (
       <div style={styles.container}>
         <div style={styles.row}>
           <span style={styles.productItem}>Product</span>
@@ -74,44 +73,45 @@ class ProductItems extends React.Component {
         </div>
         {
           !this.state.items ? null :
-          this.state.items.map((obj, index) => {
-            return (
-              <div key={index}
-                   style={styles.row}>
+          this.state.items.map((obj, index) => (
+            <div
+              key={index}
+              style={styles.row}
+            >
 
-                <div style={styles.productItem}>
-                  <ProductAutoComplete
-                    onChange={this.props.onChange}
-                    value={obj ? obj['product'] : undefined}
-                    index={index}
-                  />
-                </div>
+              <div style={styles.productItem}>
+                <ProductAutoComplete
+                  onChange={this.props.onChange}
+                  value={obj ? obj.product : undefined}
+                  index={index}
+                />
+              </div>
 
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Unit Weight"
-                    value={obj ? obj['unit_weight'] : undefined}
-                    onChange={ e => this.props.onChange('unit_weight', index, e.target.value) }
-                  />
-                </div>
+              <div style={styles.formItem}>
+                <Input
+                  placeholder="Unit Weight"
+                  value={obj ? obj.unit_weight : undefined}
+                  onChange={e => this.props.onChange('unit_weight', index, e.target.value)}
+                />
+              </div>
 
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Case Lots"
-                    value={obj ? obj['case_lots'] : undefined}
-                    onChange={ e => this.props.onChange('case_lots', index, e.target.value) }
-                  />
-                </div>
+              <div style={styles.formItem}>
+                <Input
+                  placeholder="Case Lots"
+                  value={obj ? obj.case_lots : undefined}
+                  onChange={e => this.props.onChange('case_lots', index, e.target.value)}
+                />
+              </div>
 
-                <div style={styles.formItem}>
-                  <Input
-                    placeholder="Total Weight"
-                    value={obj ? obj['total_weight'] : undefined}
-                    onChange={ e => this.props.onChange('total_weight', index, e.target.value) }
-                  />
-                </div>
+              <div style={styles.formItem}>
+                <Input
+                  placeholder="Total Weight"
+                  value={obj ? obj.total_weight : undefined}
+                  onChange={e => this.props.onChange('total_weight', index, e.target.value)}
+                />
+              </div>
 
-                {
+              {
                   this.state.items.length === 1
                   ?
                   invisibleBtn()
@@ -120,13 +120,12 @@ class ProductItems extends React.Component {
                     className="dynamic-delete-button"
                     style={styles.icon}
                     type="minus-circle-o"
-                    onClick={ () => this.props.removeProductItem(index) }
+                    onClick={() => this.props.removeProductItem(index)}
                   />
                 }
 
-              </div>
-            );
-          })
+            </div>
+            ))
         }
 
         <div style={styles.formItem}>

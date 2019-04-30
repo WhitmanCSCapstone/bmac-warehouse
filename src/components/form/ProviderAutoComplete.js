@@ -6,34 +6,33 @@ const styles = {
   container: {
     width: '100%',
   },
-}
+};
 
 class ProviderAutoComplete extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       dataSourceTypeItemList: null,
       dictionary: {},
       defaultValue: null,
-    }
+    };
   }
 
-  componentDidMount(){
-    db.onceGetProviders().then(snapshot => {
+  componentDidMount() {
+    db.onceGetProviders().then((snapshot) => {
+      const data = snapshot.val();
+      const dictionary = {};
+      const dataSourceTypeItemList = [];
 
-      var data = snapshot.val();
-      var dictionary = {}
-      var dataSourceTypeItemList = [];
-
-      for(let [key, value] of Object.entries(data)) {
-        let name = value['provider_id'];
-        dataSourceTypeItemList.push({value: key, text: name});
+      for (const [key, value] of Object.entries(data)) {
+        const name = value.provider_id;
+        dataSourceTypeItemList.push({ value: key, text: name });
         dictionary[key] = name;
       }
 
       this.setState({
-        dataSourceTypeItemList: dataSourceTypeItemList,
-        dictionary: dictionary,
+        dataSourceTypeItemList,
+        dictionary,
         defaultValue: this.props.rowData ? dictionary[this.props.rowData.provider_id] : null,
       });
     });
@@ -44,17 +43,18 @@ class ProviderAutoComplete extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <AutoComplete
         dataSource={this.state.dataSourceTypeItemList}
         defaultValue={this.state.defaultValue}
         key={this.state.defaultValue}
         style={styles.container}
-        onChange={ this.onChange }
+        onChange={this.onChange}
         placeholder="Provider"
         filterOption={(inputValue, option) => {
-            if(option.props.children) {
-              return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            if (option.props.children) {
+              return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
+}
             }
         }
       />

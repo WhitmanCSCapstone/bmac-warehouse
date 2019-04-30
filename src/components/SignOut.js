@@ -1,13 +1,13 @@
 import React from 'react';
-import {Button} from 'antd';
+import { Button } from 'antd';
 import { auth } from '../firebase';
 
 const SignOutButton = () =>
-      <Button
-        type="danger"
-        onClick={auth.doSignOut}
-      >
+  (<Button
+    type="danger"
+    onClick={auth.doSignOut}
+  >
         Sign Out
-      </Button>
+  </Button>);
 
 export default SignOutButton;

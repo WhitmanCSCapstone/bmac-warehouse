@@ -3,22 +3,22 @@
  */
 
 import React from 'react';
-import { Spin } from 'antd' ;
+import { Spin } from 'antd';
 
 const styles = {
   container: {
     flexGrow: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 
 class LoadingScreen extends React.Component {
   render() {
-    return(
+    return (
       <div style={styles.container}>
-        <Spin size="large"/>
+        <Spin size="large" />
       </div>
     );
   }
