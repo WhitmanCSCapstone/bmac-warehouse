@@ -74,14 +74,15 @@ class Products extends React.Component {
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if (string === 'product_id') {
-                return {
+                return ({
                   Header: 'Product',
                   accessor: string,
                   filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ['product_id'] }),
                   filterAll: true,
                   filterable:true,
-                })}
+                });
+              }
               if(string === 'initial_date'){
                   return({
                     id: "initial_date",
