@@ -87,8 +87,16 @@ class Products extends React.Component {
                   return({
                     id: "initial_date",
                     Header: 'Initial Date',
-                    accessor: d => Moment(d.initial_date).local().format("MM/DD/YYYY"),
+                    accessor: d => {
+                      if (d.initial_date === '') {
+                        return null;
+                      } else {
+                        return Moment(d.initial_date).local().format('MM/DD/YYYY');
+                      }
+                    },
                     sortMethod: (a, b) => {
+                      a = a === '' ? -Infinity : a
+                      b = b === '' ? -Infinity : b
                       a = new Date(a).getTime();
                       b = new Date(b).getTime();
                       return b > a ? 1 : -1;
