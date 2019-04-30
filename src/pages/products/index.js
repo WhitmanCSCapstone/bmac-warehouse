@@ -12,6 +12,7 @@ import matchSorter from 'match-sorter';
 import ProductForm from '../../components/form/types/ProductForm';
 import { Button } from 'antd';
 import Moment from 'moment';
+import AddFundsSource from '../../components/AddFundsSource';
 
 const keys = tableKeys['products'];
 
@@ -46,6 +47,7 @@ class Products extends React.Component {
   render() {
     return (
       <div style={styles.container}>
+        <AddFundsSource />
         <Button
           type="primary"
           onClick={() => this.setState({ formModalVisible: true, rowData: null })}
@@ -74,33 +76,36 @@ class Products extends React.Component {
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if (string === 'product_id') {
-                return ({
+                return {
                   Header: 'Product',
                   accessor: string,
                   filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ['product_id'] }),
                   filterAll: true,
-                  filterable:true,
-                });
+                  filterable: true
+                };
               }
-              if(string === 'initial_date'){
-                  return({
-                    id: "initial_date",
-                    Header: 'Initial Date',
-                    accessor: d => {
-                      if (d.initial_date === '') {
-                        return null;
-                      } else {
-                        return Moment(d.initial_date).local().format('MM/DD/YYYY');
-                      }
-                    },
-                    sortMethod: (a, b) => {
-                      a = a === '' ? -Infinity : a
-                      b = b === '' ? -Infinity : b
-                      a = new Date(a).getTime();
-                      b = new Date(b).getTime();
-                      return b > a ? 1 : -1;
-                    }})
+              if (string === 'initial_date') {
+                return {
+                  id: 'initial_date',
+                  Header: 'Initial Date',
+                  accessor: d => {
+                    if (d.initial_date === '') {
+                      return null;
+                    } else {
+                      return Moment(d.initial_date)
+                        .local()
+                        .format('MM/DD/YYYY');
+                    }
+                  },
+                  sortMethod: (a, b) => {
+                    a = a === '' ? -Infinity : a;
+                    b = b === '' ? -Infinity : b;
+                    a = new Date(a).getTime();
+                    b = new Date(b).getTime();
+                    return b > a ? 1 : -1;
+                  }
+                };
               }
               if (string === 'initial_date') {
                 return {

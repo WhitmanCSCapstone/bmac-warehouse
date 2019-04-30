@@ -12,6 +12,7 @@ import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ReceiptForm from '../../components/form/types/ReceiptForm';
+import AddFundsSource from '../../components/AddFundsSource';
 
 const keys = tableKeys['receipts'];
 
@@ -88,7 +89,7 @@ class Receipts extends React.Component {
         <div>
           <RangePicker onChange={this.onDateChange} format={'MM/DD/YYYY'} />
         </div>
-
+        <AddFundsSource />
         <Button
           type="primary"
           onClick={() =>
