@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Select, Divider, Modal, Button } from 'antd';
+import { Input, Select, Divider, Modal } from 'antd';
 import Footer from '../Footer';
 
 //This is for the notes section.
@@ -56,7 +56,7 @@ class ProviderForm extends React.Component {
       ...props.rowData
     };
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({
         ...this.defaultState,
@@ -143,7 +143,7 @@ class ProviderForm extends React.Component {
   render() {
     return (
       <Modal
-        title="Add New Provider"
+        title="Provider Form"
         style={{
           top: 20
         }}

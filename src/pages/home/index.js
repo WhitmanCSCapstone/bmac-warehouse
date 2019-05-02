@@ -75,9 +75,14 @@ class Home extends React.Component {
                   Header: 'Customer',
                   accessor: string
                 };
-              else {
+              else if (string === 'ship_date')
                 return {
                   Header: 'Ship Date',
+                  accessor: string
+                };
+              else {
+                return {
+                  Header: 'Funding Source',
                   accessor: string
                 };
               }

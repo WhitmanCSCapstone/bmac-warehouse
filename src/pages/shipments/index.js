@@ -95,7 +95,7 @@ class Shipments extends React.Component {
             })
           }
         >
-          Shipment Form
+          Add New Shipment
         </Button>
 
         <ShipmentForm

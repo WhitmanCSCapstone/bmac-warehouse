@@ -52,7 +52,7 @@ class Products extends React.Component {
           type="primary"
           onClick={() => this.setState({ formModalVisible: true, rowData: null })}
         >
-          Product Form
+          Add New Product
         </Button>
 
         <ProductForm

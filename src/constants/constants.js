@@ -4,7 +4,7 @@ import { getReadableShipmentsTableData } from '../utils/shipments';
 export const tableKeys = {
   shipments: [
     'customer_id',
-    //"funds_source",
+    'funds_source',
     'ship_date'
     //"ship_via",
     //"ship_rate",

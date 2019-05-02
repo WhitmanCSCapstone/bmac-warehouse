@@ -47,8 +47,6 @@ const styles = {
   }
 };
 
-var ref = null;
-
 class ReceiptForm extends React.Component {
   defaultState = {
     provider_id: null,
@@ -72,7 +70,7 @@ class ReceiptForm extends React.Component {
     });
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.props.rowData });
     }
@@ -173,7 +171,7 @@ class ReceiptForm extends React.Component {
   render() {
     return (
       <Modal
-        title="Add New Receipt"
+        title="Receipt Form"
         style={{ top: 20 }}
         width={'50vw'}
         destroyOnClose={true}
