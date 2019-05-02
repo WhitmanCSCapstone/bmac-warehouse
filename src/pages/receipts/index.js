@@ -49,15 +49,10 @@ class Receipts extends React.Component {
         newData.push(entry);
       }
     }
-    this.setState(
-      {
-        filteredData: newData,
-        dateRange: dateRange
-      },
-      function() {
-        console.log(this.state.dateRange);
-      }
-    );
+    this.setState({
+      filteredData: newData,
+      dateRange: dateRange
+    });
   };
 
   componentDidMount() {
@@ -99,7 +94,7 @@ class Receipts extends React.Component {
             })
           }
         >
-          Add New Receipt
+          Receipt Form
         </Button>
 
         <ReceiptForm

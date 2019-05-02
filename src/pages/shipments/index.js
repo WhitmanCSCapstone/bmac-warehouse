@@ -50,15 +50,10 @@ class Shipments extends React.Component {
         newData.push(entry);
       }
     }
-    this.setState(
-      {
-        filteredData: newData,
-        dateRange: dateRange
-      },
-      function() {
-        console.log(this.state.dateRange);
-      }
-    );
+    this.setState({
+      filteredData: newData,
+      dateRange: dateRange
+    });
   };
 
   componentDidMount() {
@@ -100,7 +95,7 @@ class Shipments extends React.Component {
             })
           }
         >
-          Add New Shipment
+          Shipment Form
         </Button>
 
         <ShipmentForm
