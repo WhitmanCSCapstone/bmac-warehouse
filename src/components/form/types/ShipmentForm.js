@@ -50,8 +50,6 @@ const styles = {
   }
 };
 
-var ref = null;
-
 class ShipmentForm extends React.Component {
   defaultState = {
     customer_id: null,
@@ -73,7 +71,7 @@ class ShipmentForm extends React.Component {
     this.state = { ...this.defaultState, ...props.rowData };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
     }
@@ -281,7 +279,7 @@ class ShipmentForm extends React.Component {
   render() {
     return (
       <Modal
-        title="Add New Shipment"
+        title="Shipment Form"
         style={{ top: 20 }}
         width={'50vw'}
         destroyOnClose={true}

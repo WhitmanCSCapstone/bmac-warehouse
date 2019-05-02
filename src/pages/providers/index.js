@@ -50,7 +50,7 @@ class Providers extends React.Component {
           type="primary"
           onClick={() => this.setState({ formModalVisible: true, rowData: null })}
         >
-          Provider Form
+          Add New Provider
         </Button>
 
         <ProviderForm

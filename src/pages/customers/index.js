@@ -48,7 +48,7 @@ class Customers extends React.Component {
           type="primary"
           onClick={() => this.setState({ formModalVisible: true, rowData: null })}
         >
-          Customer Form
+          Add New Customer
         </Button>
         <CustomerForm
           formModalVisible={this.state.formModalVisible}

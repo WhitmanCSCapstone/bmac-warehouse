@@ -65,7 +65,7 @@ class ProductForm extends React.Component {
     this.state = { ...this.defaultState, ...props.rowData };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
     }
@@ -140,7 +140,7 @@ class ProductForm extends React.Component {
   render() {
     return (
       <Modal
-        title="Add New Product"
+        title="Product Form"
         style={{
           top: 20
         }}

@@ -94,7 +94,7 @@ class Receipts extends React.Component {
             })
           }
         >
-          Receipt Form
+          Add New Receipt
         </Button>
 
         <ReceiptForm
