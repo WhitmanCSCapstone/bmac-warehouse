@@ -9,7 +9,7 @@
     "node": true
   },
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": ["error", {"singleQuote": true, "printWidth": 100}],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "max-len": [
