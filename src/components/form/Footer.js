@@ -41,7 +41,7 @@ class Footer extends React.Component {
 
         {this.props.handleLabel ? (
           <Button key="savelabel" type="primary" onClick={this.props.handleLabel}>
-            Create Label
+            Create Shipping Label
           </Button>
         ) : null}
 
