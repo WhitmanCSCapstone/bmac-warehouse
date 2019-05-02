@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:prettier/recommended", "prettier/react"],
+  "extends": ["plugin:prettier/recommended", "prettier/react", "eslint:recommended"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -26,6 +26,7 @@
     "prettier/prettier": ["error", {"singleQuote": true, "printWidth": 100}],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
+    "react/jsx-uses-vars": [2],
     "max-len": [
       "warn",
       {
