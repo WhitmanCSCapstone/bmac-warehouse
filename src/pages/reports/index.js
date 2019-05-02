@@ -75,7 +75,7 @@ class Reports extends React.Component {
       this.state.dateRange,
       reportType2DateAccessor[this.state.reportType],
       data => {
-        this.setState({ data: data }, console.log('just updated table data'));
+        this.setState({ data: data });
       }
     );
   };
@@ -83,7 +83,6 @@ class Reports extends React.Component {
   createCSV = () => {
     getCSVdata(this.state.data, this.state.reportType, dataCSV => {
       this.setState({ dataCSV: dataCSV });
-      console.log('just updated csv data');
     });
   };
 

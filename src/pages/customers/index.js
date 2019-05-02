@@ -48,7 +48,7 @@ class Customers extends React.Component {
           type="primary"
           onClick={() => this.setState({ formModalVisible: true, rowData: null })}
         >
-          Add New Customer
+          Customer Form
         </Button>
         <CustomerForm
           formModalVisible={this.state.formModalVisible}
@@ -89,9 +89,6 @@ class Customers extends React.Component {
                 };
               }
             })}
-            SubComponent={row => {
-              return <ReactTable />;
-            }}
             defaultPageSize={10}
             className="-striped -highlight"
           />
