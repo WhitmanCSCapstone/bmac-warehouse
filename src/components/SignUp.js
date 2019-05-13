@@ -32,7 +32,7 @@ class SignUpForm extends Component {
   }
 
   onSubmit = event => {
-    const { username, email, passwordOne } = this.state;
+    const { username, email, passwordOne, role } = this.state;
 
     const { history } = this.props;
     // Create a user in the Firebase User Table
@@ -40,7 +40,7 @@ class SignUpForm extends Component {
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         // Create a user in our own accessible Firebase Database
-        db.doCreateUser(authUser.user.uid, username, email)
+        db.doCreateUser(authUser.user.uid, username, email, role)
           .then(() => {
             this.setState({ ...INITIAL_STATE });
             history.push(routes.DASHBOARD);
@@ -57,7 +57,7 @@ class SignUpForm extends Component {
   };
 
   render() {
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
+    const { username, email, passwordOne, passwordTwo, error, role } = this.state;
 
     const isInvalid =
       passwordOne !== passwordTwo || passwordOne === '' || email === '' || username === '';
@@ -87,6 +87,12 @@ class SignUpForm extends Component {
           onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
           type="password"
           placeholder="Confirm Password"
+        />
+        <Input
+          value={role}
+          onChange={event => this.setState(byPropKey('role', event.target.value))}
+          type="text"
+          placeholder="Role"
         />
         <Button disabled={isInvalid} htmlType="submit">
           Sign Up
