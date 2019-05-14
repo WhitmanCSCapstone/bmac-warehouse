@@ -49,6 +49,13 @@ class ProductItems extends React.Component {
     return null;
   }
 
+  updateTotalWeight = (obj, index) => {
+    const calculatedTotalWeight = obj['case_lots'] * obj['unit_weight'];
+    if (calculatedTotalWeight) {
+      this.props.onChange('total_weight', index, calculatedTotalWeight.toString());
+    }
+  };
+
   render() {
     function invisibleBtn() {
       return (
@@ -82,7 +89,10 @@ class ProductItems extends React.Component {
                     <Input
                       placeholder="Unit Weight"
                       value={obj ? obj['unit_weight'] : undefined}
-                      onChange={e => this.props.onChange('unit_weight', index, e.target.value)}
+                      onChange={e => {
+                        this.props.onChange('unit_weight', index, e.target.value);
+                        this.updateTotalWeight(obj, index);
+                      }}
                     />
                   </div>
 
@@ -90,7 +100,10 @@ class ProductItems extends React.Component {
                     <Input
                       placeholder="Case Lots"
                       value={obj ? obj['case_lots'] : undefined}
-                      onChange={e => this.props.onChange('case_lots', index, e.target.value)}
+                      onChange={e => {
+                        this.props.onChange('case_lots', index, e.target.value);
+                        this.updateTotalWeight(obj, index);
+                      }}
                     />
                   </div>
 
