@@ -12,37 +12,46 @@ class ProductAutoComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      dataSourceTypeItemList: [],
+      dictionary: {},
+      defaultValue: null
     };
   }
 
   componentDidMount() {
     db.onceGetProducts().then(snapshot => {
-      var data = this.getProductNames(Object.values(snapshot.val()));
-      this.setState({ data: data });
+      const data = snapshot.val();
+      const dictionary = {};
+      const dataSourceTypeItemList = [];
+
+      for (let [key, value] of Object.entries(data)) {
+        let name = value['product_id'];
+        dataSourceTypeItemList.push({ value: key, text: name });
+        dictionary[key] = name;
+      }
+
+      const givenProdName = dictionary[this.props.obj.product];
+
+      this.setState({
+        dataSourceTypeItemList: dataSourceTypeItemList,
+        dictionary: dictionary,
+        defaultValue: givenProdName ? givenProdName : this.props.obj.product
+      });
     });
   }
 
-  getProductNames = data => {
-    var seen = {};
-    for (var product of data) {
-      var name = product['product_id'];
-      // if there's a dupe then skip it
-      // TODO: make it so that it doesn't have to skip dupes
-      if (!(name in seen) && name !== '') {
-        seen[name] = true;
-      }
-    }
-    return Object.keys(seen);
+  onChange = val => {
+    this.props.onProductChange(val);
   };
 
   render() {
     return (
       <AutoComplete
-        dataSource={this.state.data}
+        dataSource={this.state.dataSourceTypeItemList}
+        defaultValue={this.state.defaultValue}
+        key={this.state.defaultValue}
         style={styles.container}
-        value={this.props.value}
-        onChange={value => this.props.onChange('product', this.props.index, value)}
+        onChange={this.onChange}
         placeholder="Product"
         filterOption={(inputValue, option) => {
           if (option.props.children) {
