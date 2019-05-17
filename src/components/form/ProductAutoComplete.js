@@ -28,13 +28,15 @@ class ProductAutoComplete extends React.Component {
 
       products = products.filter(obj => {
         return (
-          // match up products with forms funding src
-          obj[1].funding_source === this.props.fundsSource ||
-          // if no form funding src, list all
-          !this.props.fundsSource ||
-          // if no product funding src, dont filter it out
-          !obj[1].funding_source ||
-          // if product doesn't have a matching funding src but is already listed let it through
+          // filter out prouduct with conflicting funding src
+          ((obj[1].funding_source === this.props.fundsSource ||
+            // if there is no form funds source, list all products
+            !this.props.fundsSource ||
+            // if theres no product funds source, list the product anyway
+            !obj[1].funding_source) &&
+            // filter out if the product is marked as discontinued
+            obj[1].status !== 'discontinued') ||
+          // make an exception to the above rules if the product is hardcoded in already
           obj[0] === this.props.obj.product
         );
       });
