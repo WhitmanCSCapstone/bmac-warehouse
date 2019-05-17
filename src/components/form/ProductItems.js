@@ -56,6 +56,10 @@ class ProductItems extends React.Component {
     }
   };
 
+  onProductChange = (index, val) => {
+    this.props.onChange('product', index, val);
+  };
+
   render() {
     function invisibleBtn() {
       return (
@@ -79,8 +83,8 @@ class ProductItems extends React.Component {
                 <div key={index} style={styles.row}>
                   <div style={styles.productItem}>
                     <ProductAutoComplete
-                      onChange={this.props.onChange}
-                      value={obj ? obj['product'] : undefined}
+                      onProductChange={val => this.onProductChange(index, val)}
+                      obj={obj ? obj : undefined}
                       index={index}
                     />
                   </div>
