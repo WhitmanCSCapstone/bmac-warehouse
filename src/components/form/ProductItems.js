@@ -86,6 +86,7 @@ class ProductItems extends React.Component {
                       onProductChange={val => this.onProductChange(index, val)}
                       obj={obj ? obj : undefined}
                       index={index}
+                      fundsSource={this.props.fundsSource}
                     />
                   </div>
 

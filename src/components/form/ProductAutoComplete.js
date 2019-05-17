@@ -24,7 +24,22 @@ class ProductAutoComplete extends React.Component {
       const dictionary = {};
       const dataSourceTypeItemList = [];
 
-      for (let [key, value] of Object.entries(data)) {
+      let products = Object.entries(data);
+
+      products = products.filter(obj => {
+        return (
+          // match up products with forms funding src
+          obj[1].funding_source === this.props.fundsSource ||
+          // if no form funding src, list all
+          !this.props.fundsSource ||
+          // if no product funding src, dont filter it out
+          !obj[1].funding_source ||
+          // if product doesn't have a matching funding src but is already listed let it through
+          obj[0] === this.props.obj.product
+        );
+      });
+
+      for (let [key, value] of products) {
         let name = value['product_id'];
         dataSourceTypeItemList.push({ value: key, text: name });
         dictionary[key] = name;

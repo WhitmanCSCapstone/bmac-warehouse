@@ -236,6 +236,7 @@ class ReceiptForm extends React.Component {
           <ProductItems
             onChange={this.onItemsChange}
             items={this.state.receive_items}
+            fundsSource={this.props.rowData ? this.props.rowData['funds_source'] : null}
             addProductItem={this.addReceiveItem}
             removeProductItem={this.removeReceiveItem}
           />
