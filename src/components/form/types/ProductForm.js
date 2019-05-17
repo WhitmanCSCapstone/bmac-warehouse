@@ -242,8 +242,8 @@ class ProductForm extends React.Component {
             onChange={this.onStatusChange}
             value={this.state.status}
           >
-            <Option value="Active">Active</Option>
-            <Option value="Discontinued">Discontinued</Option>
+            <Option value="active">Active</Option>
+            <Option value="discontinued">Discontinued</Option>
           </Select>
           <div style={styles.bottomThird}>
             <div style={styles.formItem} />
