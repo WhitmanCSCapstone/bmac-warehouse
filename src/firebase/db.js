@@ -21,6 +21,8 @@ export const onceGetSpecificCustomer = hash => db.ref(`1/customers/` + hash).onc
 
 export const onceGetProducts = () => db.ref('5/products').once('value');
 
+export const onceGetSpecifcProduct = hash => db.ref(`5/products/${hash}`).once('value');
+
 export const onceGetProviders = () => db.ref('3/providers').once('value');
 
 export const onceGetReceipts = () => db.ref('6/contributions').once('value');
