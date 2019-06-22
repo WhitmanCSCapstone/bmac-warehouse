@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon, Input, Button } from 'antd';
+import { db } from '../../firebase';
 import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
@@ -56,6 +57,21 @@ class ProductItems extends React.Component {
     }
   };
 
+  changeUnitWeight = (weight, obj, index) => {
+    this.props.onChange('unit_weight', index, weight);
+    this.updateTotalWeight(obj, index);
+  };
+
+  onProductSelect = (index, obj, val) => {
+    db.onceGetSpecifcProduct(val).then(snapshot => {
+      const product = snapshot.val();
+      if (product) {
+        const unitWeight = product.unit_weight;
+        this.changeUnitWeight(unitWeight, obj, index);
+      }
+    });
+  };
+
   onProductChange = (index, val) => {
     this.props.onChange('product', index, val);
   };
@@ -87,6 +103,7 @@ class ProductItems extends React.Component {
                       obj={obj ? obj : undefined}
                       index={index}
                       fundsSource={this.props.fundsSource}
+                      onProductSelect={val => this.onProductSelect(index, obj, val)}
                     />
                   </div>
 
@@ -94,10 +111,7 @@ class ProductItems extends React.Component {
                     <Input
                       placeholder="Unit Weight"
                       value={obj ? obj['unit_weight'] : undefined}
-                      onChange={e => {
-                        this.props.onChange('unit_weight', index, e.target.value);
-                        this.updateTotalWeight(obj, index);
-                      }}
+                      onChange={e => this.changeUnitWeight(e.target.value, obj, index)}
                     />
                   </div>
 

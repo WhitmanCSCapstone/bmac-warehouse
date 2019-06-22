@@ -69,6 +69,7 @@ class ProductAutoComplete extends React.Component {
         key={this.state.defaultValue}
         style={styles.container}
         onChange={this.onChange}
+        onSelect={val => this.props.onProductSelect(val)}
         placeholder="Product"
         filterOption={(inputValue, option) => {
           if (option.props.children) {
