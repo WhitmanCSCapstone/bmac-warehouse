@@ -13,15 +13,9 @@ export const doCreateUser = (id, username, email, role) =>
 
 export const onceGetUsers = () => db.ref('users').once('value');
 
-export const onceGetSpecifcUser = hash => db.ref(`users/${hash}`).once('value');
-
 export const onceGetCustomers = () => db.ref('1/customers').once('value');
 
-export const onceGetSpecificCustomer = hash => db.ref(`1/customers/` + hash).once('value');
-
 export const onceGetProducts = () => db.ref('5/products').once('value');
-
-export const onceGetSpecifcProduct = hash => db.ref(`5/products/${hash}`).once('value');
 
 export const onceGetProviders = () => db.ref('3/providers').once('value');
 
@@ -32,6 +26,14 @@ export const onceGetShipments = () => db.ref('2/shipments').once('value');
 export const onceGetStaff = () => db.ref('0/persons').once('value');
 
 export const onceGetFundingSources = () => db.ref('4/fundingsources').once('value');
+
+// SPECIFIC
+
+export const onceGetSpecifcProduct = hash => db.ref(`5/products/${hash}`).once('value');
+
+export const onceGetSpecifcUser = hash => db.ref(`users/${hash}`).once('value');
+
+export const onceGetSpecificCustomer = hash => db.ref(`1/customers/` + hash).once('value');
 
 // SET
 
