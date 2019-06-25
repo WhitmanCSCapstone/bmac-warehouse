@@ -1,6 +1,6 @@
 import { db } from '../firebase';
-import { getReadableReceiptsTableData } from '../utils/receipts';
-import { getReadableShipmentsTableData } from '../utils/shipments';
+import { getReadableShipmentsTableData, getReadableReceiptsTableData } from '../utils/misc';
+
 export const tableKeys = {
   shipments: [
     'customer_id',
