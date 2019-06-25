@@ -4,8 +4,7 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
-import { getReadableShipmentsTableData } from '../../utils/shipments';
-import { getReadableReceiptsTableData } from '../../utils/receipts';
+import { getReadableShipmentsTableData, getReadableReceiptsTableData } from '../../utils/misc';
 
 const shipKeys = tableKeys['shipments'];
 const receiptKeys = tableKeys['receipts'];
