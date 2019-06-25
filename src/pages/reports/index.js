@@ -223,7 +223,7 @@ class Reports extends React.Component {
                   matchSorter(rows, filter.value, { keys: ['provider_id'] })
               };
             }
-            if (string === 'ship_date' || string === 'intial_date' || string === 'recieve_date') {
+            if (string === 'ship_date' || string === 'intial_date' || string === 'receive_date') {
               return {
                 id: string,
                 Header: string
