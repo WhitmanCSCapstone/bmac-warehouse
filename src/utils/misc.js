@@ -1,4 +1,5 @@
 import { db } from '../firebase';
+import Moment from 'moment';
 
 export async function getReadableShipmentsTableData() {
   return new Promise((resolve, reject) => {
@@ -66,4 +67,19 @@ function makeProductItemsReadable(row, itemsAccessor, products) {
   }
   row.ship_items = items;
   return row;
+}
+
+export function sortDataByDate(data, accessor, dateRange) {
+  const newData = [];
+  for (var i = 0; i < data.length; i++) {
+    var entry = data[i];
+    var entryDate = Moment(entry[accessor], 'MM/DD/YYYY');
+    if (
+      entryDate.isSameOrAfter(dateRange[0], 'day') &&
+      entryDate.isSameOrBefore(dateRange[1], 'day')
+    ) {
+      newData.push(entry);
+    }
+  }
+  return newData;
 }

@@ -10,6 +10,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
 import Moment from 'moment';
 import { tableKeys } from '../../constants/constants';
+import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
@@ -42,14 +43,7 @@ class Shipments extends React.Component {
   }
 
   onDateChange = dateRange => {
-    var newData = [];
-    for (var i = 0; i < this.state.data.length; i++) {
-      var entry = this.state.data[i];
-      var entryDate = Moment(entry['ship_date'], 'MM/DD/YYYY');
-      if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
-        newData.push(entry);
-      }
-    }
+    const newData = sortDataByDate(this.state.data, 'ship_date', dateRange);
     this.setState({
       filteredData: newData,
       dateRange: dateRange
