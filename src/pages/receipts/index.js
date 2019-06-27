@@ -123,11 +123,7 @@ class Receipts extends React.Component {
             columns={keys.map(string => {
               if (string === 'provider_id') {
                 return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
+                  Header: 'Provider ID',
                   accessor: string,
                   Cell: this.readableProviderCell,
                   filterable: true,
