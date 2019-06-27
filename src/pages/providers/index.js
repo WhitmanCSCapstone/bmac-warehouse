@@ -29,7 +29,6 @@ class Providers extends React.Component {
     this.state = {
       data: null,
       filteredData: null,
-      dateRange: null,
       formModalVisible: false,
       rowData: null
     };
