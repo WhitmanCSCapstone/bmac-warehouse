@@ -215,12 +215,27 @@ class Reports extends React.Component {
                   matchSorter(rows, filter.value, { keys: ['provider_id'] })
               };
             }
-            if (string === 'ship_date' || string === 'intial_date' || string === 'receive_date') {
+            if (string === 'ship_date') {
               return {
                 id: string,
                 Header: 'Ship Date',
                 accessor: d =>
                   Moment(d.ship_date)
+                    .local()
+                    .format('MM/DD/YYYY'),
+                sortMethod: (a, b) => {
+                  a = new Date(a).getTime();
+                  b = new Date(b).getTime();
+                  return b > a ? 1 : -1;
+                }
+              };
+            }
+            if (string === 'recieve_date') {
+              return {
+                id: string,
+                Header: 'Receive Date',
+                accessor: d =>
+                  Moment(d.recieve_date)
                     .local()
                     .format('MM/DD/YYYY'),
                 sortMethod: (a, b) => {

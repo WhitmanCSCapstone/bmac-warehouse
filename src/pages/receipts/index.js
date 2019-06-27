@@ -9,6 +9,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { Button, DatePicker } from 'antd';
 import Moment from 'moment';
 import { tableKeys } from '../../constants/constants';
+import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import matchSorter from 'match-sorter';
 import ReceiptForm from '../../components/form/types/ReceiptForm';
@@ -41,14 +42,7 @@ class Receipts extends React.Component {
   }
 
   onDateChange = dateRange => {
-    var newData = [];
-    for (var i = 0; i < this.state.data.length; i++) {
-      var entry = this.state.data[i];
-      var entryDate = Moment(entry['recieve_date'], 'MM/DD/YYYY');
-      if (entryDate >= dateRange[0] && entryDate <= dateRange[1]) {
-        newData.push(entry);
-      }
-    }
+    const newData = sortDataByDate(this.state.data, 'recieve_date', dateRange);
     this.setState({
       filteredData: newData,
       dateRange: dateRange
@@ -148,7 +142,7 @@ class Receipts extends React.Component {
                   id: 'recieve_date',
                   Header: 'Receive Date',
                   accessor: d =>
-                    Moment(d.initial_date)
+                    Moment(d.recieve_date)
                       .local()
                       .format('MM/DD/YYYY'),
                   sortMethod: (a, b) => {
