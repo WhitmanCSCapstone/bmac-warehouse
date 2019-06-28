@@ -83,3 +83,14 @@ export function sortDataByDate(data, accessor, dateRange) {
   }
   return newData;
 }
+
+/*
+Gets combined weight of a list of shipment or receipt items
+*/
+export function getCombinedWeight(items) {
+  let combined_weight = 0;
+  for (let i = 0; i < items.length; i++) {
+    combined_weight += Number(items[i].total_weight);
+  }
+  return combined_weight;
+}
