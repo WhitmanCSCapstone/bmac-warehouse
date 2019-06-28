@@ -1,6 +1,6 @@
 import Moment from 'moment';
 import { db } from '../../firebase';
-import { sortDataByDate } from '../../utils/misc.js';
+import { sortDataByDate, getCombinedWeight } from '../../utils/misc.js';
 import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
 
 function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
@@ -98,7 +98,7 @@ function getVerboseItems(oldObj, items_accessor) {
   var newObj = oldObj[items_accessor];
   for (let i in newObj) {
     for (let prop in oldObj) {
-      if ('ship_items' !== prop && 'receive_items' !== prop) {
+      if ('ship_items' !== prop && 'receive_items' !== prop && 'total_weight' !== prop) {
         newObj[i][prop] = oldObj[prop];
       }
     }
@@ -113,18 +113,32 @@ export async function getCSVdata(init_data, reportType, callback) {
     var dict = {};
     if (reportType === 'Inventory Shipments') {
       dict = createDictOfItemsSortedByProperty(data, 'product', 'ship_items');
+      array = create2DArrayFromDict(dict, reportType);
     } else if (reportType === 'Inventory Receipts') {
       dict = createDictOfItemsSortedByProperty(data, 'product', 'receive_items');
+      array = create2DArrayFromDict(dict, reportType);
     } else if (reportType === 'Current Customers') {
-      dict = createDictOfItemsSortedByProperty(data, 'customer_id', 'ship_items');
+      array = createCustomersReportArray(data);
     } else if (reportType === 'Current Providers') {
       dict = await createDictOfReceiptsSortedbyProvider(data).then(dict => dict);
     }
-    array = create2DArrayFromDict(dict, reportType);
     callback(array);
   } else {
     callback([]);
   }
+}
+
+function createCustomersReportArray(data) {
+  const array = [];
+  for (let i = 0; i < data.length; i++) {
+    let shipment = data[i];
+    const items = shipment.ship_items;
+    const weight = getCombinedWeight(items);
+    shipment.total_weight = weight;
+    shipment = filterObjKeys(shipment, 'Current Customers');
+    array.push(shipment);
+  }
+  return array;
 }
 
 export async function populateTableData(
@@ -142,7 +156,7 @@ export async function populateTableData(
   callback(data);
 }
 
-export function filterDataByFundingSource(data, fundingSource) {
+function filterDataByFundingSource(data, fundingSource) {
   var newData = [];
   for (var i = 0; i < data.length; i++) {
     var entry = data[i];
