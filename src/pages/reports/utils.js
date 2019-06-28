@@ -3,6 +3,15 @@ import { db } from '../../firebase';
 import { sortDataByDate, getCombinedWeight } from '../../utils/misc.js';
 import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
 
+/*
+Basically throw shipments or receipt at this function and give it
+something sort by, and it'll compile all ship/receive items in a
+dictionary where the key is the uniq values of the thing you asked
+it to sort by and the value is all of the items. I.g. If you want
+to have a list of all shipments ordered into buckets based on what
+customer received them, you would pass the shipment table, ship_items
+as an accessor, and customer_id as the property.
+*/
 function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
   var dict = {};
   for (var i = 0; i < data.length; i++) {
