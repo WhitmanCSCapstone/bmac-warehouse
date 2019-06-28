@@ -50,7 +50,11 @@ function makeRecieptReadable(row, providers, products) {
   const provider_uuid = row['provider_id'];
   const providerObj = providers[provider_uuid];
   const providerName = providerObj ? providerObj['provider_id'] : 'INVALID PROVIDER ID';
+  const providerAddress = providerObj
+    ? providerObj['address'] + ' ' + providerObj['city'] + ' ' + providerObj['zip']
+    : 'no given address';
   row['provider_id'] = providerName;
+  row['address'] = providerAddress;
   row = makeProductItemsReadable(row, 'receive_items', products);
   return row;
 }
@@ -88,9 +92,13 @@ export function sortDataByDate(data, accessor, dateRange) {
 Gets combined weight of a list of shipment or receipt items
 */
 export function getCombinedWeight(items) {
-  let combined_weight = 0;
-  for (let i = 0; i < items.length; i++) {
-    combined_weight += Number(items[i].total_weight);
+  if (items) {
+    let combined_weight = 0;
+    for (let i = 0; i < items.length; i++) {
+      combined_weight += Number(items[i].total_weight);
+    }
+    return combined_weight;
+  } else {
+    return 0;
   }
-  return combined_weight;
 }

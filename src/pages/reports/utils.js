@@ -23,53 +23,6 @@ function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
   return dict;
 }
 
-function createDictOfReceiptsSortedbyProvider(data) {
-  return new Promise(async (resolve, reject) => {
-    var providers = await db.onceGetProviders().then(snapshot => snapshot.val());
-    data = addProviderInfo2Receipts(data, providers);
-    var dict = {};
-    for (var i = 0; i < data.length; i++) {
-      var obj = data[i];
-      var uuid = obj['provider_id'];
-      if (uuid in dict) {
-        dict[uuid].push(obj);
-      } else {
-        dict[uuid] = [];
-      }
-    }
-    resolve(dict);
-  });
-}
-
-function addProviderInfo2Receipts(data, providers) {
-  var newData = [];
-  for (let receipt of data) {
-    var total_weight = 0;
-    var items = receipt['receive_items'];
-    if (items) {
-      for (let item of items) {
-        total_weight += Number(item['total_weight']);
-      }
-      receipt['total_weight'] = total_weight;
-    } else {
-      receipt['total_weight'] = 'NO WEIGHT GIVEN';
-    }
-
-    var uuid = receipt['provider_id'];
-    var obj = providers[uuid];
-    if (obj) {
-      receipt['address'] = obj['address'] + ' ' + obj['city'];
-      receipt['provider_id'] = obj['provider_id'];
-    } else {
-      receipt['address'] = 'INVALID PROVIDER_ID GIVEN';
-      receipt['provider_id'] = 'INVALID PROVIDER_ID GIVEN';
-    }
-
-    newData.push(receipt);
-  }
-  return newData;
-}
-
 function create2DArrayFromDict(dict, reportType) {
   var array = [];
   var keys = Object.keys(dict);
@@ -120,12 +73,25 @@ export async function getCSVdata(init_data, reportType, callback) {
     } else if (reportType === 'Current Customers') {
       array = createCustomersReportArray(data);
     } else if (reportType === 'Current Providers') {
-      dict = await createDictOfReceiptsSortedbyProvider(data).then(dict => dict);
+      array = createProvidersReportArray(data, reportType);
     }
     callback(array);
   } else {
     callback([]);
   }
+}
+
+function createProvidersReportArray(data, reportType) {
+  const array = [];
+  for (let i = 0; i < data.length; i++) {
+    let receipt = data[i];
+    const items = receipt.receive_items;
+    const weight = getCombinedWeight(items);
+    receipt.total_weight = weight;
+    receipt = filterObjKeys(receipt, reportType);
+    array.push(receipt);
+  }
+  return array;
 }
 
 function createCustomersReportArray(data) {
