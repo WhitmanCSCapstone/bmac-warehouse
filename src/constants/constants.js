@@ -151,5 +151,5 @@ export const reportType2FirebaseCallback = {
   'Inventory Receipts': getReadableReceiptsTableData,
   'Current Inventory': null,
   'Current Customers': getReadableShipmentsTableData,
-  'Current Providers': db.onceGetReceipts
+  'Current Providers': getReadableReceiptsTableData
 };
