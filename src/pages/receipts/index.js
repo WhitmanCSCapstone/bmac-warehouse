@@ -7,11 +7,16 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { Button, DatePicker } from 'antd';
-import Moment from 'moment';
 import { tableKeys } from '../../constants/constants';
-import { sortDataByDate } from '../../utils/misc.js';
+import {
+  sortDataByDate,
+  getTableColumnObjForDates,
+  getTableColumnObjForIntegers,
+  getTableColumnObjBasic,
+  getTableColumnObjForFilterableStrings,
+  getTableColumnObjForFilterableHashes
+} from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import ReceiptForm from '../../components/form/types/ReceiptForm';
 import AddFundsSource from '../../components/AddFundsSource';
 
@@ -117,49 +122,20 @@ class Receipts extends React.Component {
             columns={keys.map(string => {
               if (string === 'provider_id') {
                 return {
-                  Header: 'Provider ID',
-                  accessor: string,
-                  Cell: this.readableProviderCell,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, {
-                      keys: [
-                        obj => {
-                          var provider = this.state.providers[obj.provider_id];
-                          var name = 'INVALID PROVIDER ID';
-                          if (provider) {
-                            name = provider.provider_id;
-                          }
-                          return name;
-                        }
-                      ]
-                    })
+                  ...getTableColumnObjForFilterableHashes(string, this.state.providers),
+                  Cell: this.readableProviderCell
                 };
               }
+              if (string === 'payment_source') {
+                return getTableColumnObjForFilterableStrings(string);
+              }
+              if (string === 'billed_amt') {
+                return getTableColumnObjForIntegers(string);
+              }
               if (string === 'recieve_date') {
-                return {
-                  id: 'recieve_date',
-                  Header: 'Receive Date',
-                  accessor: d =>
-                    Moment(d.recieve_date)
-                      .local()
-                      .format('MM/DD/YYYY'),
-                  sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                    return b > a ? 1 : -1;
-                  }
-                };
+                return getTableColumnObjForDates(string);
               } else {
-                return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string
-                };
+                return getTableColumnObjBasic(string);
               }
             })}
             defaultPageSize={10}

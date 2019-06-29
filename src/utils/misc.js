@@ -1,5 +1,6 @@
 import { db } from '../firebase';
 import Moment from 'moment';
+import matchSorter from 'match-sorter';
 
 export async function getReadableShipmentsTableData() {
   return new Promise((resolve, reject) => {
@@ -101,4 +102,77 @@ export function getCombinedWeight(items) {
   } else {
     return 0;
   }
+}
+
+function formatColumnHeader(string) {
+  return string
+    .replace('_', ' ')
+    .split(' ')
+    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
+}
+
+export function getTableColumnObjBasic(string) {
+  return {
+    Header: formatColumnHeader(string),
+    accessor: string
+  };
+}
+
+export function getTableColumnObjForDates(string) {
+  return {
+    ...getTableColumnObjBasic(string),
+    sortMethod: (a, b) => {
+      const m1 = Moment(a, 'MM/DD/YYYY');
+      const m2 = Moment(b, 'MM/DD/YYYY');
+      if (!m1.isValid()) {
+        return 1;
+      }
+      if (!m2.isValid()) {
+        return -1;
+      }
+      return m2.isSameOrAfter(m1) ? 1 : -1;
+    }
+  };
+}
+
+export function getTableColumnObjForIntegers(string) {
+  return {
+    ...getTableColumnObjBasic(string),
+    sortMethod: (a, b) => {
+      const n1 = Number(a);
+      const n2 = Number(b);
+      if (isNaN(n1)) {
+        return -1;
+      }
+      if (isNaN(n2)) {
+        return 1;
+      }
+      return n1 > n2 ? 1 : -1;
+    }
+  };
+}
+
+export function getTableColumnObjForFilterableStrings(string) {
+  return {
+    ...getTableColumnObjBasic(string),
+    filterable: true,
+    filterAll: true,
+    filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: [string] })
+  };
+}
+
+export function getTableColumnObjForFilterableHashes(string, dictionary) {
+  return {
+    ...getTableColumnObjForFilterableStrings(string),
+    filterMethod: (filter, rows) =>
+      matchSorter(rows, filter.value, {
+        keys: [
+          keyObj => {
+            const valObj = dictionary[keyObj[string]];
+            return valObj ? valObj[string] : `INVALID ${string}_ID`;
+          }
+        ]
+      })
+  };
 }

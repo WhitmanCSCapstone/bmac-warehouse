@@ -1,5 +1,3 @@
-import Moment from 'moment';
-import { db } from '../../firebase';
 import { sortDataByDate, getCombinedWeight } from '../../utils/misc.js';
 import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
 

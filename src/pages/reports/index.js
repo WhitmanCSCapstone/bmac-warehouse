@@ -6,6 +6,12 @@ import React from 'react';
 import ReactTable from 'react-table';
 import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
 import {
+  getTableColumnObjForDates,
+  getTableColumnObjForIntegers,
+  getTableColumnObjForFilterableStrings,
+  getTableColumnObjBasic
+} from '../../utils/misc.js';
+import {
   reportKeys,
   reportType2TableName,
   reportType2DateAccessor,
@@ -16,9 +22,7 @@ import {
 import { populateTableData, getCSVdata } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
-import Moment from 'moment';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -195,64 +199,22 @@ class Reports extends React.Component {
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
           columns={reportKeys[this.state.reportType].map(string => {
-            if (string === 'customer_id' && this.state.reportType === 'Inventory Shipments') {
-              return {
-                Header: 'Customer ID',
-                accessor: string,
-                filterable: true,
-                filterAll: true,
-                filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['customer_id'] })
-              };
+            if (string === 'billed_amt' || string === 'unit_weight' || string === 'case_lots') {
+              return getTableColumnObjForIntegers(string);
             }
-            if (string === 'provider_id' && this.state.reportType === 'Inventory Receipts') {
-              return {
-                Header: 'Provider ID',
-                accessor: string,
-                filterable: true,
-                filterAll: true,
-                filterMethod: (filter, rows) =>
-                  matchSorter(rows, filter.value, { keys: ['provider_id'] })
-              };
+            if (
+              string === 'customer_id' ||
+              string === 'provider_id' ||
+              string === 'funds_source' ||
+              string === 'address' ||
+              string === 'product'
+            ) {
+              return getTableColumnObjForFilterableStrings(string);
             }
-            if (string === 'ship_date') {
-              return {
-                id: string,
-                Header: 'Ship Date',
-                accessor: d =>
-                  Moment(d.ship_date)
-                    .local()
-                    .format('MM/DD/YYYY'),
-                sortMethod: (a, b) => {
-                  a = new Date(a).getTime();
-                  b = new Date(b).getTime();
-                  return b > a ? 1 : -1;
-                }
-              };
-            }
-            if (string === 'recieve_date') {
-              return {
-                id: string,
-                Header: 'Receive Date',
-                accessor: d =>
-                  Moment(d.recieve_date)
-                    .local()
-                    .format('MM/DD/YYYY'),
-                sortMethod: (a, b) => {
-                  a = new Date(a).getTime();
-                  b = new Date(b).getTime();
-                  return b > a ? 1 : -1;
-                }
-              };
+            if (string === 'recieve_date' || string === 'ship_date') {
+              return getTableColumnObjForDates(string);
             } else {
-              return {
-                Header: string
-                  .replace('_', ' ')
-                  .split(' ')
-                  .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                  .join(' '),
-                accessor: string
-              };
+              return getTableColumnObjBasic(string);
             }
           })}
           defaultPageSize={10}

@@ -7,11 +7,15 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
+import {
+  getTableColumnObjForDates,
+  getTableColumnObjForIntegers,
+  getTableColumnObjBasic,
+  getTableColumnObjForFilterableStrings
+} from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import ProductForm from '../../components/form/types/ProductForm';
 import { Button } from 'antd';
-import Moment from 'moment';
 import AddFundsSource from '../../components/AddFundsSource';
 
 const keys = tableKeys['products'];
@@ -76,66 +80,18 @@ class Products extends React.Component {
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if (string === 'product_id') {
-                return {
-                  Header: 'Product',
-                  accessor: string,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['product_id'] }),
-                  filterAll: true,
-                  filterable: true
-                };
+                return getTableColumnObjForFilterableStrings(string);
               }
               if (string === 'initial_date') {
-                return {
-                  id: 'initial_date',
-                  Header: 'Initial Date',
-                  accessor: d => {
-                    if (d.initial_date === '') {
-                      return null;
-                    } else {
-                      return Moment(d.initial_date)
-                        .local()
-                        .format('MM/DD/YYYY');
-                    }
-                  },
-                  sortMethod: (a, b) => {
-                    a = a === '' ? -Infinity : a;
-                    b = b === '' ? -Infinity : b;
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                    return b > a ? 1 : -1;
-                  }
-                };
+                return getTableColumnObjForDates(string);
               }
-              if (string === 'initial_date') {
-                return {
-                  id: 'initial_date',
-                  Header: 'Initial Date',
-                  accessor: d =>
-                    Moment(d.initial_date)
-                      .local()
-                      .format('MM/DD/YYYY'),
-                  sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                    return b > a ? 1 : -1;
-                  }
-                };
-              } else if (string === 'unit_weight') {
-                return {
-                  Header: 'Unit Weight',
-                  id: string,
-                  accessor: d => (isNaN(Number(d.unit_weight)) ? 0 : Number(d.unit_weight))
-                };
+              if (string === 'funding_source') {
+                return getTableColumnObjForFilterableStrings(string);
+              }
+              if (string === 'unit_weight') {
+                return getTableColumnObjForIntegers(string);
               } else {
-                return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string
-                };
+                return getTableColumnObjBasic(string);
               }
             })}
             defaultPageSize={10}

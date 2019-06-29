@@ -7,8 +7,8 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
+import { getTableColumnObjBasic, getTableColumnObjForFilterableStrings } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import ProviderForm from '../../components/form/types/ProviderForm';
 import { Button } from 'antd';
 
@@ -72,23 +72,9 @@ class Providers extends React.Component {
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
               if (string === 'provider_id') {
-                return {
-                  Header: 'Provider',
-                  accessor: string,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['provider_id'] })
-                };
+                return getTableColumnObjForFilterableStrings(string);
               } else {
-                return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string
-                };
+                return getTableColumnObjBasic(string);
               }
             })}
             defaultPageSize={10}

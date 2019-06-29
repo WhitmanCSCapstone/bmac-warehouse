@@ -7,8 +7,8 @@ import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
+import { getTableColumnObjBasic, getTableColumnObjForFilterableStrings } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import { Button } from 'antd';
 import CustomerForm from '../../components/form/types/CustomerForm';
 
@@ -69,24 +69,10 @@ class Customers extends React.Component {
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => {
-              if (string === 'customer_id')
-                return {
-                  Header: 'Customer',
-                  accessor: string,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, { keys: ['customer_id'] }),
-                  filterAll: true,
-                  filterable: true
-                };
-              else {
-                return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string
-                };
+              if (string === 'customer_id') {
+                return getTableColumnObjForFilterableStrings(string);
+              } else {
+                return getTableColumnObjBasic(string);
               }
             })}
             defaultPageSize={10}

@@ -1,4 +1,3 @@
-import { db } from '../firebase';
 import { getReadableShipmentsTableData, getReadableReceiptsTableData } from '../utils/misc';
 
 export const tableKeys = {

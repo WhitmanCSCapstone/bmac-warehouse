@@ -8,11 +8,15 @@ import { Button } from 'antd';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
-import Moment from 'moment';
 import { tableKeys } from '../../constants/constants';
-import { sortDataByDate } from '../../utils/misc.js';
+import {
+  sortDataByDate,
+  getTableColumnObjForDates,
+  getTableColumnObjBasic,
+  getTableColumnObjForFilterableStrings,
+  getTableColumnObjForFilterableHashes
+} from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import matchSorter from 'match-sorter';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
 import AddFundsSource from '../../components/AddFundsSource';
 
@@ -118,53 +122,17 @@ class Shipments extends React.Component {
             columns={keys.map(string => {
               if (string === 'customer_id') {
                 return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string,
-                  Cell: this.readableCustomerCell,
-                  filterable: true,
-                  filterAll: true,
-                  filterMethod: (filter, rows) =>
-                    matchSorter(rows, filter.value, {
-                      keys: [
-                        obj => {
-                          var customer = this.state.customers[obj.customer_id];
-                          var name = 'INVALID CUSTOMER ID';
-                          if (customer) {
-                            name = customer.customer_id;
-                          }
-                          return name;
-                        }
-                      ]
-                    })
+                  ...getTableColumnObjForFilterableHashes(string, this.state.customers),
+                  Cell: this.readableCustomerCell
                 };
               }
+              if (string === 'funds_source') {
+                return getTableColumnObjForFilterableStrings(string);
+              }
               if (string === 'ship_date') {
-                return {
-                  id: 'ship_date',
-                  Header: 'Ship Date',
-                  accessor: d =>
-                    Moment(d.ship_date)
-                      .local()
-                      .format('MM/DD/YYYY'),
-                  sortMethod: (a, b) => {
-                    a = new Date(a).getTime();
-                    b = new Date(b).getTime();
-                    return b > a ? 1 : -1;
-                  }
-                };
+                return getTableColumnObjForDates(string);
               } else {
-                return {
-                  Header: string
-                    .replace('_', ' ')
-                    .split(' ')
-                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' '),
-                  accessor: string
-                };
+                return getTableColumnObjBasic(string);
               }
             })}
             defaultPageSize={10}
