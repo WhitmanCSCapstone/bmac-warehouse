@@ -20,7 +20,7 @@ import {
   radioValue2ReportType
 } from '../../constants/constants';
 import { populateTableData, getCSVdata } from './utils';
-import { CSVLink } from 'react-csv';
+import { CSVDownload } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
@@ -53,7 +53,9 @@ class Reports extends React.Component {
       dateRange: [],
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
-      dataCSV: null
+      dataCSV: null,
+      filteredData: null,
+      renderDownloadComponent: false
     };
   }
 
@@ -106,7 +108,8 @@ class Reports extends React.Component {
       data: null,
       fundingSource: null,
       dateRange: [],
-      dataCSV: null
+      dataCSV: null,
+      filteredData: null
     });
   };
 
@@ -120,6 +123,28 @@ class Reports extends React.Component {
     this.setState({
       statusRadioValue: e.target.value
     });
+  };
+
+  updateCSVData = () => {
+    const sortedData = this.reactTable.getResolvedState().sortedData.map(obj => {
+      return obj._original;
+    });
+    this.setState({ filteredData: sortedData });
+  };
+
+  /*
+     So this function exists b/c for a currently unexplainable reason the
+     CSVLink component of the react-csv npm module doesn't rerender even when
+     state being passed to it in its parent component (Reports) has changed.
+     <CSVDownload /> has the same issue but it doesn't take up any UI space
+     and is more concise so every time the download button is called I
+     quickly render and then immediatly un-render <CSVDownload /> in order
+     to have the desired functionality.
+  */
+  activateDownload = () => {
+    this.setState({ renderDownloadComponent: true }, () =>
+      this.setState({ renderDownloadComponent: false })
+    );
   };
 
   render() {
@@ -183,21 +208,25 @@ class Reports extends React.Component {
             </Button>
           )}
 
-          {this.state.dataCSV ? (
-            <CSVLink filename={'report.csv'} data={this.state.dataCSV}>
-              <Button type="primary" icon="download">
-                CSV
-              </Button>
-            </CSVLink>
-          ) : (
-            <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
-              CSV
-            </Button>
+          <Button
+            onClick={this.activateDownload}
+            disabled={this.state.dataCSV ? false : true}
+            icon="download"
+            type="primary"
+          >
+            CSV
+          </Button>
+
+          {!this.state.renderDownloadComponent ? null : (
+            <CSVDownload data={this.state.filteredData || this.state.dataCSV} target="_blank" />
           )}
         </div>
 
         <ReactTable
           data={this.state.dataCSV ? this.state.dataCSV : []}
+          ref={r => (this.reactTable = r)}
+          onFilteredChange={this.updateCSVData}
+          onSortedChange={this.updateCSVData}
           columns={reportKeys[this.state.reportType].map(string => {
             if (string === 'billed_amt' || string === 'unit_weight' || string === 'case_lots') {
               return getTableColumnObjForIntegers(string);
