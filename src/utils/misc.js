@@ -10,7 +10,7 @@ export async function getReadableShipmentsTableData() {
         const products = snapshot.val();
         db.onceGetShipments().then(snapshot => {
           var data = Object.values(snapshot.val());
-          data.map(row => makeShipmentReadable(row, customers, products));
+          data = data.map(row => makeShipmentReadable(row, customers, products));
           // this is to make it act like the Firebase Promises
           var obj = { val: () => data };
           data ? resolve(obj) : reject();
@@ -28,7 +28,7 @@ export function getReadableReceiptsTableData() {
         const products = snapshot.val();
         db.onceGetReceipts().then(snapshot => {
           var data = Object.values(snapshot.val());
-          data.map(row => makeRecieptReadable(row, providers, products));
+          data = data.map(row => makeRecieptReadable(row, providers, products));
           // this is to make it act like the Firebase Promises
           var obj = { val: () => data };
           data ? resolve(obj) : reject();
@@ -43,7 +43,9 @@ function makeShipmentReadable(row, customers, products) {
   const customerObj = customers[customer_uuid];
   const customerName = customerObj ? customerObj['customer_id'] : 'INVALID CUSTOMER ID';
   row['customer_id'] = customerName;
-  row = makeProductItemsReadable(row, 'ship_items', products);
+  let items = row.ship_items;
+  items = makeProductItemsReadable(items, products);
+  row.ship_items = items;
   return row;
 }
 
@@ -56,22 +58,25 @@ function makeRecieptReadable(row, providers, products) {
     : 'no given address';
   row['provider_id'] = providerName;
   row['address'] = providerAddress;
-  row = makeProductItemsReadable(row, 'receive_items', products);
+  let items = row.receive_items;
+  items = makeProductItemsReadable(items, products);
+  row.receive_items = items;
   return row;
 }
 
-function makeProductItemsReadable(row, itemsAccessor, products) {
-  let items = row[itemsAccessor];
+export function makeProductItemsReadable(items, products) {
   if (items) {
-    for (let i = 0; i < items.length; i++) {
-      const product_uuid = items[i].product;
+    let newItems = JSON.parse(JSON.stringify(items));
+    for (let i = 0; i < newItems.length; i++) {
+      const product_uuid = newItems[i].product;
       const productObj = products[product_uuid];
       const product_name = productObj ? productObj.product_id : 'INVALID PRODUCT ID';
-      items[i].product = product_name;
+      newItems[i].product = product_name;
     }
+    return newItems;
+  } else {
+    return items;
   }
-  row.ship_items = items;
-  return row;
 }
 
 export function sortDataByDate(data, accessor, dateRange) {
@@ -96,7 +101,8 @@ export function getCombinedWeight(items) {
   if (items) {
     let combined_weight = 0;
     for (let i = 0; i < items.length; i++) {
-      combined_weight += Number(items[i].total_weight);
+      let itemWeight = Number(items[i].total_weight);
+      combined_weight += isNaN(itemWeight) ? 0 : itemWeight;
     }
     return combined_weight;
   } else {

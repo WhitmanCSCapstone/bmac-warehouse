@@ -39,15 +39,21 @@ class Footer extends React.Component {
           </Button>
         ) : null}
 
-        {this.props.handleLabel ? (
-          <Button key="savelabel" type="primary" onClick={this.props.handleLabel}>
+        {this.props.handleLabelClick ? (
+          <Button key="savelabel" type="primary" onClick={this.props.handleLabelClick}>
             Create Label
           </Button>
         ) : null}
 
-        {this.props.handlePdf ? (
-          <Button key="savepdf" type="primary" onClick={this.props.handlePdf}>
-            Save Invoice
+        {this.props.handleInvoiceClick ? (
+          <Button key="saveInvoice" type="primary" onClick={this.props.handleInvoiceClick}>
+            Create Invoice
+          </Button>
+        ) : null}
+
+        {this.props.handleReceiptClick ? (
+          <Button key="saveReceipt" type="primary" onClick={this.props.handleReceiptClick}>
+            Create Receipt
           </Button>
         ) : null}
 
