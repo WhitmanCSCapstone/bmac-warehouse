@@ -1,6 +1,8 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, DatePicker, Divider, Modal } from 'antd';
+import { getCombinedWeight } from '../../../utils/misc.js';
+import { handleReceiptClick, deleteEmptyProductItems } from './pdfUtils';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
 import FundsSourceDropdownMenu from '../../../components/FundsSourceDropdownMenu';
@@ -101,24 +103,12 @@ class ReceiptForm extends React.Component {
     }
     this.setState({ receive_items: itemsCopy });
 
-    var total_weight = 0;
-    for (var item of this.state.receive_items) {
-      var stringWeight = item ? item['total_weight'] : '0';
-      var weight = parseInt(stringWeight);
-      total_weight += isNaN(weight) ? 0 : weight;
-    }
-    this.setState({ total_weight: total_weight.toString() });
-  };
-
-  deleteEmptyReceiveItems = receiveItems => {
-    var filteredItems = receiveItems.filter(obj => {
-      return obj !== undefined && obj['product'] !== undefined;
-    });
-    return filteredItems;
+    const totalWeight = getCombinedWeight(this.state.receive_items);
+    this.setState({ total_weight: totalWeight.toString() });
   };
 
   handleOk = () => {
-    var emptiedShipItems = this.deleteEmptyReceiveItems(this.state.receive_items);
+    var emptiedShipItems = deleteEmptyProductItems(this.state.receive_items);
     var newData = JSON.parse(JSON.stringify(this.state));
 
     newData['receive_items'] = emptiedShipItems;
@@ -182,6 +172,7 @@ class ReceiptForm extends React.Component {
             key="footer"
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
+            handleReceiptClick={() => handleReceiptClick(this.state)}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
           />
