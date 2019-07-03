@@ -6,10 +6,11 @@ import React from 'react';
 import { db } from '../../firebase';
 import { Button } from 'antd';
 import { DatePicker } from 'antd';
-import { sortDataByDate } from '../../utils/misc.js';
+import { sortDataByDate, sortObjsByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import AddFundsSource from '../../components/AddFundsSource';
 import EditableShipmentTable from './EditableShipmentTable';
+import Moment from 'moment';
 
 const styles = {
   container: {
@@ -55,6 +56,7 @@ class Shipments extends React.Component {
   refreshTable = () => {
     db.onceGetShipments().then(snapshot => {
       var data = Object.values(snapshot.val());
+      sortObjsByDate(data, 'ship_date');
       this.setState({ data: data });
     });
   };
