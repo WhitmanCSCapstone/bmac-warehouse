@@ -12,6 +12,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: 24
+  },
+  tableTitles: {
+    color: '#595959'
   }
 };
 
@@ -87,7 +90,7 @@ class Home extends React.Component {
         <p>
           Welcome to <em>BMAC-Warehouse</em>! Today is {Moment().format('dddd MMMM Do, YYYY')}.
         </p>
-        <h3>Last 10 days Shipments</h3>
+        <h3 style={styles.tableTitles}>Last 10 days Shipments</h3>
 
         <EditableShipmentTable
           formModalVisible={this.state.shipFormModalVisible}
@@ -105,7 +108,7 @@ class Home extends React.Component {
 
         <br />
 
-        <h3>Last 10 days Receipts</h3>
+        <h3 style={styles.tableTitles}>Last 10 days Receipts</h3>
 
         <EditableReceiptTable
           formModalVisible={this.state.receiptFormModalVisible}
