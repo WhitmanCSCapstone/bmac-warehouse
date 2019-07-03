@@ -52,8 +52,8 @@ class Receipts extends React.Component {
     });
   }
 
-  refreshTable = () => {
-    db.onceGetReceipts().then(snapshot => {
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetReceipts(optCallback).then(snapshot => {
       var data = Object.values(snapshot.val());
       sortObjsByDate(data, 'recieve_date');
       this.setState({ data: data });

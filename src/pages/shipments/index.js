@@ -53,8 +53,8 @@ class Shipments extends React.Component {
     });
   }
 
-  refreshTable = () => {
-    db.onceGetShipments().then(snapshot => {
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetShipments(optCallback).then(snapshot => {
       var data = Object.values(snapshot.val());
       sortObjsByDate(data, 'ship_date');
       this.setState({ data: data });

@@ -67,8 +67,7 @@ class StaffForm extends React.Component {
                 error: null,
                 role: ''
               });
-              this.props.closeForm();
-              this.props.refreshTable();
+              this.props.refreshTable(this.props.closeForm);
             })
             .catch(error => {
               this.setState(byPropKey('error', error));

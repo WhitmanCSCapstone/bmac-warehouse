@@ -126,12 +126,10 @@ class ShipmentForm extends React.Component {
     }
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
-    this.props.refreshTable();
-
-    setTimeout(() => {
+    this.props.refreshTable(() => {
       this.props.closeForm();
       this.setState({ ...this.defaultState });
-    }, 1500);
+    });
   };
 
   addShipmentItem = () => {
@@ -156,8 +154,7 @@ class ShipmentForm extends React.Component {
 
   handleDelete = () => {
     db.deleteShipmentObj(this.props.rowData.uniq_id);
-    this.props.closeForm();
-    this.props.refreshTable();
+    this.props.refreshTable(this.props.closeForm);
   };
 
   render() {

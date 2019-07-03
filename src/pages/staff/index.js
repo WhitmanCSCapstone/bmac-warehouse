@@ -31,8 +31,8 @@ class Staff extends React.Component {
     this.refreshTable();
   }
 
-  refreshTable = () => {
-    db.onceGetUsers().then(snapshot => {
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetUsers(optCallback).then(snapshot => {
       var data = snapshot.val();
       data = Object.values(data);
       this.setState({ data: data });
