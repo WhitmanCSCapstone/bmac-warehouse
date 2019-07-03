@@ -182,12 +182,12 @@ class ReceiptForm extends React.Component {
               Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onChange('recieve_date', date.format('MM/DD/YYYY'))}
+                onChange={date => this.onChange('recieve_date', date.format('X'))}
                 format={'MM/DD/YYYY'}
                 key={`recievedate:${this.state.recieve_date}`}
                 defaultValue={
                   this.state.recieve_date
-                    ? Moment(this.state.recieve_date, 'MM/DD/YYYY')
+                    ? Moment.unix(this.state.recieve_date)
                     : this.state.recieve_date
                 }
                 placeholder="Receive Date"

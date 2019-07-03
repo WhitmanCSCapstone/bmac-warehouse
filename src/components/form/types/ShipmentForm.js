@@ -184,13 +184,11 @@ class ShipmentForm extends React.Component {
               Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onChange('ship_date', date.format('MM/DD/YYYY'))}
+                onChange={date => this.onChange('ship_date', date.format('X'))}
                 format={'MM/DD/YYYY'}
                 key={`shipdate:${this.state.ship_date}`}
                 defaultValue={
-                  this.state.ship_date
-                    ? Moment(this.state.ship_date, 'MM/DD/YYYY')
-                    : this.state.ship_date
+                  this.state.ship_date ? Moment.unix(this.state.ship_date) : this.state.ship_date
                 }
                 placeholder="Ship Date"
               />
