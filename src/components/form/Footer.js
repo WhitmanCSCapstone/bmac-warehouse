@@ -27,13 +27,13 @@ class Footer extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        {this.handleDelete ? (
+        {this.props.handleDelete ? (
           <Button
             key="delete"
             style={styles.deleteBtn}
             disabled={this.props.rowData ? false : true}
             type="danger"
-            onClick={this.handleDelete}
+            onClick={this.props.handleDelete}
           >
             Delete
           </Button>
