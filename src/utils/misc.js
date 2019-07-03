@@ -83,7 +83,7 @@ export function sortDataByDate(data, accessor, dateRange) {
   const newData = [];
   for (var i = 0; i < data.length; i++) {
     var entry = data[i];
-    var entryDate = Moment(entry[accessor], 'MM/DD/YYYY');
+    var entryDate = Moment.unix(entry[accessor]);
     if (
       entryDate.isSameOrAfter(dateRange[0], 'day') &&
       entryDate.isSameOrBefore(dateRange[1], 'day')
@@ -129,8 +129,8 @@ export function getTableColumnObjForDates(string) {
   return {
     ...getTableColumnObjBasic(string),
     sortMethod: (a, b) => {
-      const m1 = Moment(a, 'MM/DD/YYYY');
-      const m2 = Moment(b, 'MM/DD/YYYY');
+      const m1 = Moment.unix(a);
+      const m2 = Moment.unix(b);
       if (!m1.isValid()) {
         return 1;
       }
@@ -138,7 +138,8 @@ export function getTableColumnObjForDates(string) {
         return -1;
       }
       return m2.isSameOrAfter(m1) ? 1 : -1;
-    }
+    },
+    Cell: rowData => Moment.unix(rowData.original[string]).format('MMM D, YYYY')
   };
 }
 
@@ -186,8 +187,8 @@ export function getTableColumnObjForFilterableHashes(string, dictionary) {
 // changes in place
 export function sortObjsByDate(data, accessor) {
   data.sort((a, b) => {
-    const aM = Moment(a[accessor], 'MM/DD/YYYY');
-    const bM = Moment(b[accessor], 'MM/DD/YYYY');
+    const aM = Moment.unix(a[accessor]);
+    const bM = Moment.unix(b[accessor]);
     return bM.diff(aM);
   });
 }

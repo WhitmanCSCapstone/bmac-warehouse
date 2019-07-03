@@ -92,7 +92,7 @@ class ProductForm extends React.Component {
   };
   onDateChange = value => {
     if (value != null) {
-      this.setState({ initial_date: value.format('MM/DD/YYYY') });
+      this.setState({ initial_date: value.format('X') });
     }
   };
   onStatusChange = value => {
@@ -215,7 +215,7 @@ class ProductForm extends React.Component {
                 key={`initialdate:${this.state.initial_date}`}
                 defaultValue={
                   this.state.initial_date
-                    ? Moment(this.state.initial_date, 'MM/DD/YYYY')
+                    ? Moment.unix(this.state.initial_date)
                     : this.state.initial_date
                 }
               />

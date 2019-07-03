@@ -1,4 +1,5 @@
 import * as jspdf from 'jspdf';
+import Moment from 'moment';
 import { db } from '../../../firebase';
 import { makeProductItemsReadable, getCombinedWeight } from '../../../utils/misc.js';
 
@@ -69,7 +70,7 @@ export function handleInvoiceClick(state) {
     pdf.setFontType('italic');
     pdf.setFontSize('12');
     pdf.text(10, 40, 'Invoice No:' + state.ship_date);
-    pdf.text(10, 50, 'Ship Date: ' + state.ship_date);
+    pdf.text(10, 50, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
     pdf.text(70, 50, 'Ship Via: ' + state.ship_via);
     pdf.text(130, 50, 'Funds Source: ' + state.funds_source);
     pdf.text(10, 65, 'Ship To: ');
@@ -115,8 +116,8 @@ export function handleReceiptClick(state) {
 
     pdf.setFontType('italic');
     pdf.setFontSize('12');
-    pdf.text(10, 40, 'Invoice No:' + state.recieve_date);
-    pdf.text(10, 50, 'Recieve Date: ' + state.recieve_date);
+    pdf.text(10, 40, 'Invoice No: ' + state.recieve_date);
+    pdf.text(10, 50, 'Recieve Date: ' + Moment.unix(state.recieve_date).format('MMM D, YYYY'));
     pdf.text(130, 50, 'Funds Source: ' + state.payment_source);
     pdf.text(10, 65, 'Provider: ');
     pdf.text(15, 75, providerName);
@@ -169,7 +170,7 @@ export function handleLabelClick(state) {
     pdf.setFontSize(12).setFontType('normal');
     pdf.text(10, 110, 'Invoice no: ' + state.ship_date);
     pdf.text(130, 110, 'Funds Source: ' + state.funds_source);
-    pdf.text(10, 120, 'Ship Date: ' + state.ship_date);
+    pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
     pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
     pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
 
