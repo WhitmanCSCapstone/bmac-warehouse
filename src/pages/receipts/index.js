@@ -4,23 +4,11 @@
 
 import React from 'react';
 import { db } from '../../firebase';
-import ReactTable from 'react-table';
-import LoadingScreen from '../../components/LoadingScreen';
 import { Button, DatePicker } from 'antd';
-import { tableKeys } from '../../constants/constants';
-import {
-  sortDataByDate,
-  getTableColumnObjForDates,
-  getTableColumnObjForIntegers,
-  getTableColumnObjBasic,
-  getTableColumnObjForFilterableStrings,
-  getTableColumnObjForFilterableHashes
-} from '../../utils/misc.js';
+import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import ReceiptForm from '../../components/form/types/ReceiptForm';
 import AddFundsSource from '../../components/AddFundsSource';
-
-const keys = tableKeys['receipts'];
+import EditableReceiptTable from './EditableReceiptTable';
 
 const styles = {
   container: {
@@ -63,17 +51,21 @@ class Receipts extends React.Component {
     });
   }
 
-  readableProviderCell = rowData => {
-    var hash = rowData.original['provider_id'];
-    var obj = this.state.providers[hash];
-    var name = obj ? obj['provider_id'] : 'INVALID PROVIDER_ID';
-    return <span>{name}</span>;
-  };
-
   refreshTable = () => {
     db.onceGetReceipts().then(snapshot => {
       var data = Object.values(snapshot.val());
       this.setState({ data: data });
+    });
+  };
+
+  closeForm = () => {
+    this.setState({ formModalVisible: false });
+  };
+
+  onRowClick = rowInfo => {
+    this.setState({
+      rowData: rowInfo.original,
+      formModalVisible: true
     });
   };
 
@@ -96,52 +88,19 @@ class Receipts extends React.Component {
           Add New Receipt
         </Button>
 
-        <ReceiptForm
+        <EditableReceiptTable
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
+          closeForm={this.closeForm}
           rowData={this.state.rowData}
+          providers={this.state.providers}
+          onRowClick={this.onRowClick}
+          filteredData={this.state.filteredData}
+          dateRange={this.state.dateRange}
+          data={this.state.data}
+          defaultPageSize={10}
+          showPagination={true}
         />
-
-        {!this.state.data || !this.state.providers ? (
-          <LoadingScreen />
-        ) : (
-          <ReactTable
-            getTrProps={(state, rowInfo) => ({
-              onClick: () =>
-                this.setState({
-                  rowData: rowInfo.original,
-                  formModalVisible: true
-                })
-            })}
-            data={
-              this.state.filteredData && this.state.dateRange.length
-                ? this.state.filteredData
-                : this.state.data
-            }
-            columns={keys.map(string => {
-              if (string === 'provider_id') {
-                return {
-                  ...getTableColumnObjForFilterableHashes(string, this.state.providers),
-                  Cell: this.readableProviderCell
-                };
-              }
-              if (string === 'payment_source') {
-                return getTableColumnObjForFilterableStrings(string);
-              }
-              if (string === 'billed_amt') {
-                return getTableColumnObjForIntegers(string);
-              }
-              if (string === 'recieve_date') {
-                return getTableColumnObjForDates(string);
-              } else {
-                return getTableColumnObjBasic(string);
-              }
-            })}
-            defaultPageSize={10}
-            className="-striped -highlight"
-          />
-        )}
       </div>
     );
   }
