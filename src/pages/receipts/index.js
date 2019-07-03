@@ -5,10 +5,11 @@
 import React from 'react';
 import { db } from '../../firebase';
 import { Button, DatePicker } from 'antd';
-import { sortDataByDate } from '../../utils/misc.js';
+import { sortDataByDate, sortObjsByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import AddFundsSource from '../../components/AddFundsSource';
 import EditableReceiptTable from './EditableReceiptTable';
+import Moment from 'moment';
 
 const styles = {
   container: {
@@ -54,6 +55,7 @@ class Receipts extends React.Component {
   refreshTable = () => {
     db.onceGetReceipts().then(snapshot => {
       var data = Object.values(snapshot.val());
+      sortObjsByDate(data, 'recieve_date');
       this.setState({ data: data });
     });
   };
