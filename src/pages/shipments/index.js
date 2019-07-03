@@ -5,22 +5,11 @@
 import React from 'react';
 import { db } from '../../firebase';
 import { Button } from 'antd';
-import ReactTable from 'react-table';
-import LoadingScreen from '../../components/LoadingScreen';
 import { DatePicker } from 'antd';
-import { tableKeys } from '../../constants/constants';
-import {
-  sortDataByDate,
-  getTableColumnObjForDates,
-  getTableColumnObjBasic,
-  getTableColumnObjForFilterableStrings,
-  getTableColumnObjForFilterableHashes
-} from '../../utils/misc.js';
+import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import ShipmentForm from '../../components/form/types/ShipmentForm';
 import AddFundsSource from '../../components/AddFundsSource';
-
-const keys = tableKeys['shipments'];
+import EditableShipmentTable from './EditableShipmentTable';
 
 const styles = {
   container: {
@@ -63,17 +52,21 @@ class Shipments extends React.Component {
     });
   }
 
-  readableCustomerCell = rowData => {
-    var hash = rowData.original['customer_id'];
-    var obj = this.state.customers[hash];
-    var name = obj ? obj['customer_id'] : 'INVALID CUSTOMER_ID';
-    return <span>{name}</span>;
-  };
-
   refreshTable = () => {
     db.onceGetShipments().then(snapshot => {
       var data = Object.values(snapshot.val());
       this.setState({ data: data });
+    });
+  };
+
+  closeForm = () => {
+    this.setState({ formModalVisible: false });
+  };
+
+  onRowClick = rowInfo => {
+    this.setState({
+      rowData: rowInfo.original,
+      formModalVisible: true
     });
   };
 
@@ -96,49 +89,19 @@ class Shipments extends React.Component {
           Add New Shipment
         </Button>
 
-        <ShipmentForm
+        <EditableShipmentTable
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
+          closeForm={this.closeForm}
           rowData={this.state.rowData}
+          customers={this.state.customers}
+          onRowClick={this.onRowClick}
+          filteredData={this.state.filteredData}
+          dateRange={this.state.dateRange}
+          data={this.state.data}
+          defaultPageSize={10}
+          showPagination={true}
         />
-
-        {!this.state.data || !this.state.customers ? (
-          <LoadingScreen />
-        ) : (
-          <ReactTable
-            getTrProps={(state, rowInfo) => ({
-              onClick: () =>
-                this.setState({
-                  rowData: rowInfo.original,
-                  formModalVisible: true
-                })
-            })}
-            data={
-              this.state.filteredData && this.state.dateRange.length
-                ? this.state.filteredData
-                : this.state.data
-            }
-            columns={keys.map(string => {
-              if (string === 'customer_id') {
-                return {
-                  ...getTableColumnObjForFilterableHashes(string, this.state.customers),
-                  Cell: this.readableCustomerCell
-                };
-              }
-              if (string === 'funds_source') {
-                return getTableColumnObjForFilterableStrings(string);
-              }
-              if (string === 'ship_date') {
-                return getTableColumnObjForDates(string);
-              } else {
-                return getTableColumnObjBasic(string);
-              }
-            })}
-            defaultPageSize={10}
-            className="-striped -highlight"
-          />
-        )}
       </div>
     );
   }
