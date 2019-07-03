@@ -44,8 +44,10 @@ class Products extends React.Component {
     this.refreshTable();
   }
 
-  refreshTable = () => {
-    db.onceGetProducts().then(snapshot => this.setState({ data: Object.values(snapshot.val()) }));
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetProducts(optCallback).then(snapshot =>
+      this.setState({ data: Object.values(snapshot.val()) })
+    );
   };
 
   render() {

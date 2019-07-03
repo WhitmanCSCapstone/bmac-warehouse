@@ -37,8 +37,10 @@ class Customers extends React.Component {
     this.refreshTable();
   }
 
-  refreshTable = () => {
-    db.onceGetCustomers().then(snapshot => this.setState({ data: Object.values(snapshot.val()) }));
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetCustomers(optCallback).then(snapshot =>
+      this.setState({ data: Object.values(snapshot.val()) })
+    );
   };
 
   render() {

@@ -38,8 +38,10 @@ class Providers extends React.Component {
     this.refreshTable();
   }
 
-  refreshTable = () => {
-    db.onceGetProviders().then(snapshot => this.setState({ data: Object.values(snapshot.val()) }));
+  refreshTable = (optCallback = () => {}) => {
+    db.onceGetProviders(optCallback).then(snapshot =>
+      this.setState({ data: Object.values(snapshot.val()) })
+    );
   };
 
   render() {

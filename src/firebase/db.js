@@ -11,21 +11,21 @@ export const doCreateUser = (id, username, email, role) =>
 
 //Database API
 
-export const onceGetUsers = () => db.ref('users').once('value');
+export const onceGetUsers = callback => db.ref('users').once('value', callback);
 
-export const onceGetCustomers = () => db.ref('1/customers').once('value');
+export const onceGetCustomers = callback => db.ref('1/customers').once('value', callback);
 
-export const onceGetProducts = () => db.ref('5/products').once('value');
+export const onceGetProducts = callback => db.ref('5/products').once('value', callback);
 
-export const onceGetProviders = () => db.ref('3/providers').once('value');
+export const onceGetProviders = callback => db.ref('3/providers').once('value', callback);
 
-export const onceGetReceipts = () => db.ref('6/contributions').once('value');
+export const onceGetReceipts = callback => db.ref('6/contributions').once('value', callback);
 
-export const onceGetShipments = () => db.ref('2/shipments').once('value');
+export const onceGetShipments = callback => db.ref('2/shipments').once('value', callback);
 
-export const onceGetStaff = () => db.ref('0/persons').once('value');
+export const onceGetStaff = callback => db.ref('0/persons').once('value', callback);
 
-export const onceGetFundingSources = () => db.ref('4/fundingsources').once('value');
+export const onceGetFundingSources = callback => db.ref('4/fundingsources').once('value', callback);
 
 // SPECIFIC
 
