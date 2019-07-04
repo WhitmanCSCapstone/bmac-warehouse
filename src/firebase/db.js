@@ -19,9 +19,17 @@ export const onceGetProducts = callback => db.ref('5/products').once('value', ca
 
 export const onceGetProviders = callback => db.ref('3/providers').once('value', callback);
 
-export const onceGetReceipts = callback => db.ref('6/contributions').once('value', callback);
+export const onceGetReceipts = callback =>
+  db
+    .ref('6/contributions')
+    .orderByChild('recieve_date')
+    .once('value', callback);
 
-export const onceGetShipments = callback => db.ref('2/shipments').once('value', callback);
+export const onceGetShipments = callback =>
+  db
+    .ref('2/shipments')
+    .orderByChild('ship_date')
+    .once('value', callback);
 
 export const onceGetStaff = callback => db.ref('0/persons').once('value', callback);
 
