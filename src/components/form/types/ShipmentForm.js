@@ -84,18 +84,6 @@ class ShipmentForm extends React.Component {
     });
   };
 
-  onClickFundingSource = value => {
-    this.setState({ funds_source: value });
-  };
-
-  clearFundingSource = () => {
-    this.setState({ funds_source: null });
-  };
-
-  onTextChange = (prop, val) => {
-    this.setState({ [prop]: val });
-  };
-
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.ship_items.slice(0); // shallow clone
     if (itemsCopy[index] === undefined) {
@@ -208,8 +196,8 @@ class ShipmentForm extends React.Component {
                 disabled={false}
                 fundingSource={this.state.funds_source}
                 style={styles.fundsSourceDropdown}
-                onClick={this.onClickFundingSource}
-                clearFundingSource={this.clearFundingSource}
+                onClick={value => this.onChange('funds_source', value)}
+                clearFundingSource={() => this.onChange('funds_source', null)}
                 required={true}
                 rowData={this.props.rowData}
                 key={`fundssource:${this.state.funds_source}`}
@@ -249,7 +237,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Rate"
                 value={this.state.ship_rate}
-                onChange={e => this.onTextChange('ship_rate', e.target.value)}
+                onChange={e => this.onChange('ship_rate', e.target.value)}
               />
             </div>
 
@@ -257,7 +245,7 @@ class ShipmentForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.total_price}
-                onChange={e => this.onTextChange('total_price', e.target.value)}
+                onChange={e => this.onChange('total_price', e.target.value)}
               />
             </div>
           </div>
@@ -266,7 +254,7 @@ class ShipmentForm extends React.Component {
             rows={4}
             value={this.state.notes}
             placeholder="Notes"
-            onChange={e => this.onTextChange('notes', e.target.value)}
+            onChange={e => this.onChange('notes', e.target.value)}
           />
         </div>
       </Modal>

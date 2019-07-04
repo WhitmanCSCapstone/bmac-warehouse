@@ -71,43 +71,16 @@ class ProductForm extends React.Component {
     }
   }
 
-  // TODO: DRY using this Functions to update state on change of each input field.
-  onProductNameChange = value => {
-    this.setState({ product_id: value });
-  };
-  onFundingSourceChange = value => {
-    this.setState({ funding_source: value });
-  };
-  onWeightChange = value => {
-    this.setState({ unit_weight: value });
-  };
-  onPriceChange = value => {
-    this.setState({ unit_price: value });
-  };
-  onInitialStockChange = value => {
-    this.setState({ initial_stock: value });
-  };
-  onMinimumStockChange = value => {
-    this.setState({ minimum_stock: value });
-  };
-  onDateChange = value => {
-    if (value != null) {
-      this.setState({ initial_date: Number(value.format('X')) });
-    }
-  };
-  onStatusChange = value => {
-    this.setState({ status: value });
-  };
-  onClickFundingSource = value => {
-    this.setState({ funding_source: value });
+  onChange = (prop, val) => {
+    this.setState({
+      [prop]: val
+    });
   };
 
-  clearFundingSource = () => {
-    this.setState({ funding_source: null });
+  onTextChange = (prop, val) => {
+    this.setState({ [prop]: val });
   };
-  onNotesChange = value => {
-    this.setState({ notes: value });
-  };
+
   //Used to send the data to the databsae and reset the state.
   handleOk = () => {
     var newData = JSON.parse(JSON.stringify(this.state));
@@ -162,7 +135,7 @@ class ProductForm extends React.Component {
             <Input
               value={this.state.product_id}
               placeholder="Product Name"
-              onChange={e => this.onProductNameChange(e.target.value)}
+              onChange={e => this.onChange('product_id', e.target.value)}
             />
           </div>
           <Divider orientation="left">Product Information</Divider>
@@ -173,8 +146,8 @@ class ProductForm extends React.Component {
                 disabled={false}
                 fundingSource={this.state.funding_source}
                 style={styles.fundsSourceDropdown}
-                onClick={this.onClickFundingSource}
-                clearFundingSource={this.clearFundingSource}
+                onClick={value => this.onChange('funding_source', value)}
+                clearFundingSource={() => this.onChange('funding_source', null)}
                 required={true}
                 rowData={this.props.rowData}
                 key={`fundssource:${this.state.funding_source}`}
@@ -186,7 +159,7 @@ class ProductForm extends React.Component {
               <Input
                 value={this.state.unit_weight}
                 placeholder="Unit Weight"
-                onChange={e => this.onWeightChange(e.target.value)}
+                onChange={e => this.onChange('unit_weight', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -194,7 +167,7 @@ class ProductForm extends React.Component {
               <Input
                 value={this.state.unit_price}
                 placeholder="Unit Price"
-                onChange={e => this.onPriceChange(e.target.value)}
+                onChange={e => this.onChange('unit_price', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -202,21 +175,20 @@ class ProductForm extends React.Component {
               <Input
                 value={this.state.initial_stock}
                 placeholder="Initial Stock"
-                onChange={e => this.onInitialStockChange(e.target.value)}
+                onChange={e => this.onChange('initial_stock', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
               Initial Date:
               <DatePicker
                 style={styles.datePicker}
-                onChange={date => this.onDateChange(date)}
+                onChange={date => this.onChange('initial_date', Number(date.format('X')))}
                 placeholder="Initial Date"
+                format={'MM/DD/YYYY'}
                 allowClear={false}
                 key={`initialdate:${this.state.initial_date}`}
                 defaultValue={
-                  this.state.initial_date
-                    ? Moment.unix(this.state.initial_date)
-                    : this.state.initial_date
+                  this.state.initial_date ? Moment.unix(this.state.initial_date) : undefined
                 }
               />
             </div>
@@ -225,7 +197,7 @@ class ProductForm extends React.Component {
               <Input
                 value={this.state.minimum_stock}
                 placeholder="Initial Stock"
-                onChange={e => this.onMinimumStockChange(e.target.value)}
+                onChange={e => this.onChange('minimum_stock', e.target.value)}
               />
             </div>
           </div>
@@ -236,7 +208,7 @@ class ProductForm extends React.Component {
             style={{
               width: 120
             }}
-            onChange={this.onStatusChange}
+            onChange={value => this.onChange('status', value)}
             value={this.state.status}
           >
             <Option value="active">Active</Option>
@@ -249,7 +221,7 @@ class ProductForm extends React.Component {
             value={this.state.notes}
             rows={4}
             placeholder="Notes"
-            onChange={e => this.onNotesChange(e.target.value)}
+            onChange={e => this.onChange('notes', e.target.value)}
           />
         </div>
       </Modal>
