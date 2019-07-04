@@ -32,7 +32,7 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
     case_lots ? pdf.text(115, y, String(case_lots)) : pdf.text(115, y, '-');
     total_weight ? pdf.text(140, y, String(total_weight)) : pdf.text(140, y, '-');
     y += 5;
-    total_case_lots += parseInt(case_lots);
+    total_case_lots += parseInt(case_lots, 10);
   }
 
   pdf.setFontType('bold');
