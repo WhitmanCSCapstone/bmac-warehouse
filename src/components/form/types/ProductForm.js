@@ -92,7 +92,7 @@ class ProductForm extends React.Component {
   };
   onDateChange = value => {
     if (value != null) {
-      this.setState({ initial_date: value.format('X') });
+      this.setState({ initial_date: Number(value.format('X')) });
     }
   };
   onStatusChange = value => {
