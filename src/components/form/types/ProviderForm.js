@@ -65,53 +65,10 @@ class ProviderForm extends React.Component {
     }
   }
 
-  // TODO: DRY using this
-  //onChange = (prop, val) => {
-  //  this.setState({
-  //  prop: val,
-  // })
-  //}
-
-  //Functions to update state on change of each input field.
-  // TODO: Remove if onChange works.
-  onZipChange = value => {
-    this.setState({ zip: value });
-  };
-  onNameChange = value => {
-    this.setState({ provider_id: value });
-  };
-  onAddressChange = value => {
-    this.setState({ address: value });
-  };
-  onCityChange = value => {
-    this.setState({ city: value });
-  };
-  onCountyChange = value => {
-    this.setState({ county: value });
-  };
-  onStateChange = value => {
-    this.setState({ state: value });
-  };
-  onContactPhoneChange = value => {
-    this.setState({ phone: value });
-  };
-  onContactNameChange = value => {
-    this.setState({ contact: value });
-  };
-  onContactEmailChange = value => {
-    this.setState({ email: value });
-  };
-  onClickFundingSource = value => {
-    this.setState({ payment_source: value });
-  };
-  clearPaymentSource = () => {
-    this.setState({ payment_source: null });
-  };
-  onNotesChange = value => {
-    this.setState({ notes: value });
-  };
-  onStatusChange = value => {
-    this.setState({ status: value });
+  onChange = (prop, val) => {
+    this.setState({
+      [prop]: val
+    });
   };
 
   //Used to send the data to the databsae and reset the state.
@@ -165,7 +122,7 @@ class ProviderForm extends React.Component {
             <Input
               value={this.state.provider_id}
               placeholder="Provider Name"
-              onChange={e => this.onNameChange(e.target.value)}
+              onChange={e => this.onChange('provider_id', e.target.value)}
             />
           </div>
 
@@ -176,7 +133,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.address}
                 placeholder="Address"
-                onChange={e => this.onAddressChange(e.target.value)}
+                onChange={e => this.onChange('address', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -184,7 +141,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.city}
                 placeholder="City"
-                onChange={e => this.onCityChange(e.target.value)}
+                onChange={e => this.onChange('city', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -192,7 +149,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.state}
                 placeholder="State"
-                onChange={e => this.onStateChange(e.target.value)}
+                onChange={e => this.onChange('state', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -200,7 +157,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.zip}
                 placeholder="ZIP"
-                onChange={e => this.onZipChange(e.target.value)}
+                onChange={e => this.onChange('zip', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -208,7 +165,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.county}
                 placeholder="County"
-                onChange={e => this.onCountyChange(e.target.value)}
+                onChange={e => this.onChange('county', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -216,7 +173,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.contact}
                 placeholder="Contact Name"
-                onChange={e => this.onContactNameChange(e.target.value)}
+                onChange={e => this.onChange('contact', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -224,7 +181,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.phone}
                 placeholder="Contact Phone"
-                onChange={e => this.onContactPhoneChange(e.target.value)}
+                onChange={e => this.onChange('phone', e.target.value)}
               />
             </div>
             <div style={styles.formItem}>
@@ -232,7 +189,7 @@ class ProviderForm extends React.Component {
               <Input
                 value={this.state.email}
                 placeholder="Contact Email"
-                onChange={e => this.onContactEmailChange(e.target.value)}
+                onChange={e => this.onChange('email', e.target.value)}
               />
             </div>
           </div>
@@ -245,7 +202,7 @@ class ProviderForm extends React.Component {
               style={{
                 width: 120
               }}
-              onChange={this.onStatusChange}
+              onChange={value => this.onChange('status', value)}
               value={this.state.status}
             >
               <Option value="Active">Active</Option>
@@ -257,7 +214,7 @@ class ProviderForm extends React.Component {
               value={this.state.notes}
               rows={4}
               placeholder="Notes"
-              onChange={e => this.onNotesChange(e.target.value)}
+              onChange={e => this.onChange('notes', e.target.value)}
             />
           </div>
         </div>

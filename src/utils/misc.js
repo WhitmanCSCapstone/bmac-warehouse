@@ -139,7 +139,11 @@ export function getTableColumnObjForDates(string) {
       }
       return m2.isSameOrAfter(m1) ? 1 : -1;
     },
-    Cell: rowData => Moment.unix(rowData.original[string]).format('MMM D, YYYY')
+    Cell: rowData => {
+      const posixNum = rowData.original[string];
+      let date = Moment.unix(rowData.original[string]).format('MMM D, YYYY');
+      return posixNum ? date : undefined;
+    }
   };
 }
 

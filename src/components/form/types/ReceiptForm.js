@@ -78,22 +78,6 @@ class ReceiptForm extends React.Component {
     }
   }
 
-  onClickFundingSource = value => {
-    this.setState({ payment_source: value });
-  };
-
-  clearPaymentSource = () => {
-    this.setState({ payment_source: null });
-  };
-
-  onTextChange = (prop, val) => {
-    this.setState({ [prop]: val });
-  };
-
-  onNotesChange = value => {
-    this.setState({ notes: value });
-  };
-
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.receive_items.slice(0); // shallow clone
     if (itemsCopy[index] === undefined) {
@@ -200,8 +184,8 @@ class ReceiptForm extends React.Component {
                 disabled={false}
                 fundingSource={this.state.payment_source}
                 style={styles.fundsSourceDropdown}
-                onClick={this.onClickFundingSource}
-                clearFundingSource={this.clearPaymentSource}
+                onClick={value => this.onChange('payment_source', value)}
+                clearFundingSource={() => this.onChange('payment_source', null)}
                 required={true}
                 rowData={this.props.rowData}
                 key={`paymentsource:${this.state.payment_source}`}
@@ -236,7 +220,7 @@ class ReceiptForm extends React.Component {
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
-                onChange={e => this.onTextChange('billed_amt', e.target.value)}
+                onChange={e => this.onChange('billed_amt', e.target.value)}
               />
             </div>
           </div>
@@ -245,7 +229,7 @@ class ReceiptForm extends React.Component {
             rows={4}
             placeholder="Notes"
             value={this.state.notes}
-            onChange={e => this.onTextChange('notes', e.target.value)}
+            onChange={e => this.onChange('notes', e.target.value)}
           />
         </div>
       </Modal>
