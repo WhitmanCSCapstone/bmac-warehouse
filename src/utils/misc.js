@@ -183,12 +183,3 @@ export function getTableColumnObjForFilterableHashes(string, dictionary) {
       })
   };
 }
-
-// changes in place
-export function sortObjsByDate(data, accessor) {
-  data.sort((a, b) => {
-    const aM = Moment.unix(a[accessor]);
-    const bM = Moment.unix(b[accessor]);
-    return bM.diff(aM);
-  });
-}

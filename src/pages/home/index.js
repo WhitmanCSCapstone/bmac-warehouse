@@ -2,7 +2,7 @@ import React from 'react';
 import Moment from 'moment';
 import { db } from '../../firebase';
 import withAuthorization from '../../components/withAuthorization';
-import { sortDataByDate, sortObjsByDate } from '../../utils/misc';
+import { sortDataByDate } from '../../utils/misc';
 import EditableShipmentTable from '../shipments/EditableShipmentTable';
 import EditableReceiptTable from '../receipts/EditableReceiptTable';
 
@@ -39,19 +39,23 @@ class Home extends React.Component {
 
   refreshShipmentTable = () => {
     db.onceGetShipments().then(snapshot => {
-      let data = Object.values(snapshot.val());
+      let data = [];
+      snapshot.forEach(child => {
+        data.push(child.val());
+      });
       data = sortDataByDate(data, 'ship_date', this.state.dateRange);
-      sortObjsByDate(data, 'ship_date');
-      this.setState({ shipData: data });
+      this.setState({ shipData: data.reverse() });
     });
   };
 
   refreshReceiptTable = () => {
     db.onceGetReceipts().then(snapshot => {
-      let data = Object.values(snapshot.val());
+      let data = [];
+      snapshot.forEach(child => {
+        data.push(child.val());
+      });
       data = sortDataByDate(data, 'recieve_date', this.state.dateRange);
-      sortObjsByDate(data, 'recieve_date');
-      this.setState({ receiptData: data });
+      this.setState({ receiptData: data.reverse() });
     });
   };
 
