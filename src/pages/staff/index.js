@@ -4,19 +4,11 @@ import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
 import withAuthorization from '../../components/withAuthorization';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import StaffForm from '../../components/form/types/StaffForm';
+import { styles } from '../styles.js';
 
 const keys = tableKeys['users'];
-
-const styles = {
-  container: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24
-  }
-};
 
 class Staff extends React.Component {
   constructor(props) {
@@ -42,9 +34,19 @@ class Staff extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <Button type="primary" onClick={() => this.setState({ formModalVisible: true })}>
-          Add New User
-        </Button>
+        <div style={styles.controller}>
+          <Button
+            type="primary"
+            style={styles.addNew}
+            onClick={() =>
+              this.setState({
+                formModalVisible: true
+              })
+            }
+          >
+            <Icon type="plus" />
+          </Button>
+        </div>
         <StaffForm
           formModalVisible={this.state.formModalVisible}
           refreshTable={this.refreshTable}

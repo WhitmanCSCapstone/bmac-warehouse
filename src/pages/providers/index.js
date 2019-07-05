@@ -10,18 +10,10 @@ import { tableKeys } from '../../constants/constants';
 import { getTableColumnObjBasic, getTableColumnObjForFilterableStrings } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import ProviderForm from '../../components/form/types/ProviderForm';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
+import { styles } from '../styles.js';
 
 const keys = tableKeys['providers'];
-
-const styles = {
-  container: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24
-  }
-};
 
 class Providers extends React.Component {
   constructor(props) {
@@ -47,12 +39,20 @@ class Providers extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <Button
-          type="primary"
-          onClick={() => this.setState({ formModalVisible: true, rowData: null })}
-        >
-          Add New Provider
-        </Button>
+        <div style={styles.controller}>
+          <Button
+            type="primary"
+            style={styles.addNew}
+            onClick={() =>
+              this.setState({
+                formModalVisible: true,
+                rowData: null
+              })
+            }
+          >
+            <Icon type="plus" />
+          </Button>
+        </div>
 
         <ProviderForm
           formModalVisible={this.state.formModalVisible}
