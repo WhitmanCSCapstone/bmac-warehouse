@@ -11,40 +11,37 @@
  * firebase.initializeApp(config);
  * export default firebase;*/
 
-import firebase from 'firebase/app';
+import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
-/* const prodConfig = {
- *   apiKey: YOUR_API_KEY,
- *   authDomain: YOUR_AUTH_DOMAIN,
- *   databaseURL: YOUR_DATABASE_URL,
- *   projectId: YOUR_PROJECT_ID,
- *   storageBucket: '',
- *   messagingSenderId: YOUR_MESSAGING_SENDER_ID,
- * };
- * */
+const prodConfig = {
+  apiKey: process.env.REACT_APP_PROD_API_KEY,
+  authDomain: process.env.REACT_APP_PROD_AUTHDOMAIN,
+  databaseURL: process.env.REACT_APP_PROD_DATABASEURL,
+  projectId: process.env.REACT_APP_PROD_PROJECTID,
+  storageBucket: process.env.REACT_APP_PROD_STORAGEBUCKET,
+  messagingSenderId: process.env.REACT_APP_PROD_MESSAGINGSENDERID
+};
 
 const devConfig = {
   apiKey: process.env.REACT_APP_DEV_API_KEY,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
+  authDomain: process.env.REACT_APP_DEV_AUTHDOMAIN,
   databaseURL: process.env.REACT_APP_DEV_DATABASEURL,
   projectId: process.env.REACT_APP_DEV_PROJECTID,
   storageBucket: process.env.REACT_APP_DEV_STORAGEBUCKET,
   messagingSenderId: process.env.REACT_APP_DEV_MESSAGINGSENDERID
 };
 
-//const config = process.env.NODE_ENV === 'production'
-//             ? prodConfig
-//             : devConfig;
+const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
 
-const config = devConfig;
+console.log('build: ', process.env.NODE_ENV);
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(config);
+if (!app.apps.length) {
+  app.initializeApp(config);
 }
 
-const auth = firebase.auth();
-const db = firebase.database();
+const auth = app.auth();
+const db = app.database();
 
 export { db, auth };
