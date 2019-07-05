@@ -15,19 +15,10 @@ import {
 } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import ProductForm from '../../components/form/types/ProductForm';
-import { Button } from 'antd';
-import AddFundsSource from '../../components/AddFundsSource';
+import { Button, Icon } from 'antd';
+import { styles } from '../styles.js';
 
 const keys = tableKeys['products'];
-
-const styles = {
-  container: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24
-  }
-};
 
 class Products extends React.Component {
   constructor(props) {
@@ -53,13 +44,20 @@ class Products extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <AddFundsSource />
-        <Button
-          type="primary"
-          onClick={() => this.setState({ formModalVisible: true, rowData: null })}
-        >
-          Add New Product
-        </Button>
+        <div style={styles.controller}>
+          <Button
+            type="primary"
+            style={styles.addNew}
+            onClick={() =>
+              this.setState({
+                formModalVisible: true,
+                rowData: null
+              })
+            }
+          >
+            <Icon type="plus" />
+          </Button>
+        </div>
 
         <ProductForm
           formModalVisible={this.state.formModalVisible}

@@ -4,21 +4,13 @@
 
 import React from 'react';
 import { db } from '../../firebase';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import { DatePicker } from 'antd';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import AddFundsSource from '../../components/AddFundsSource';
 import EditableShipmentTable from './EditableShipmentTable';
-
-const styles = {
-  container: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24
-  }
-};
+import { styles } from '../styles.js';
 
 const { RangePicker } = DatePicker;
 
@@ -76,21 +68,24 @@ class Shipments extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <div>
+        <div style={styles.controller}>
           <RangePicker onChange={this.onDateChange} format={'MM/DD/YYYY'} />
+
+          <Button
+            type="primary"
+            style={styles.addNew}
+            onClick={() =>
+              this.setState({
+                formModalVisible: true,
+                rowData: null
+              })
+            }
+          >
+            <Icon type="plus" />
+          </Button>
+
+          <AddFundsSource />
         </div>
-        <AddFundsSource />
-        <Button
-          type="primary"
-          onClick={() =>
-            this.setState({
-              formModalVisible: true,
-              rowData: null
-            })
-          }
-        >
-          Add New Shipment
-        </Button>
 
         <EditableShipmentTable
           formModalVisible={this.state.formModalVisible}
