@@ -19,7 +19,7 @@ import {
   reportType2DateRangeRelavancy,
   radioValue2ReportType
 } from '../../constants/constants';
-import { populateTableData, getCSVdata } from './utils';
+import { populateTableData, getCSVdata, makeDatesReadable } from './utils';
 import { CSVDownload } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
@@ -218,7 +218,12 @@ class Reports extends React.Component {
           </Button>
 
           {!this.state.renderDownloadComponent ? null : (
-            <CSVDownload data={this.state.filteredData || this.state.dataCSV} target="_blank" />
+            <CSVDownload
+              data={
+                makeDatesReadable(this.state.filteredData) || makeDatesReadable(this.state.dataCSV)
+              }
+              target="_blank"
+            />
           )}
         </div>
 

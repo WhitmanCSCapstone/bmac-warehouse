@@ -1,15 +1,16 @@
 import { sortDataByDate, getCombinedWeight } from '../../utils/misc.js';
 import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
+import Moment from 'moment';
 
 /*
-Basically throw shipments or receipt at this function and give it
-something sort by, and it'll compile all ship/receive items in a
-dictionary where the key is the uniq values of the thing you asked
-it to sort by and the value is all of the items. I.g. If you want
-to have a list of all shipments ordered into buckets based on what
-customer received them, you would pass the shipment table, ship_items
-as an accessor, and customer_id as the property.
-*/
+   Basically throw shipments or receipt at this function and give it
+   something sort by, and it'll compile all ship/receive items in a
+   dictionary where the key is the uniq values of the thing you asked
+   it to sort by and the value is all of the items. I.g. If you want
+   to have a list of all shipments ordered into buckets based on what
+   customer received them, you would pass the shipment table, ship_items
+   as an accessor, and customer_id as the property.
+ */
 function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
   var dict = {};
   for (var i = 0; i < data.length; i++) {
@@ -146,6 +147,21 @@ function filterDataByFundingSource(data, fundingSource) {
     var entryFS = entry['funds_source'];
     if (entryFS === fundingSource) {
       newData.push(entry);
+    }
+  }
+  return newData;
+}
+
+export function makeDatesReadable(data) {
+  const newData = JSON.parse(JSON.stringify(data));
+  if (newData) {
+    for (let obj of newData) {
+      if ('ship_date' in obj) {
+        obj['ship_date'] = Moment.unix(obj['ship_date']).format('MMM D, YYYY');
+      }
+      if ('recieve_date' in obj) {
+        obj['recieve_date'] = Moment.unix(obj['recieve_date']).format('MMM D, YYYY');
+      }
     }
   }
   return newData;
