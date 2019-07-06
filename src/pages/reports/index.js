@@ -20,7 +20,7 @@ import {
   radioValue2ReportType
 } from '../../constants/constants';
 import { populateTableData, getCSVdata, makeDatesReadable } from './utils';
-import { CSVDownload } from 'react-csv';
+import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
@@ -132,21 +132,6 @@ class Reports extends React.Component {
     this.setState({ filteredData: sortedData });
   };
 
-  /*
-     So this function exists b/c for a currently unexplainable reason the
-     CSVLink component of the react-csv npm module doesn't rerender even when
-     state being passed to it in its parent component (Reports) has changed.
-     <CSVDownload /> has the same issue but it doesn't take up any UI space
-     and is more concise so every time the download button is called I
-     quickly render and then immediatly un-render <CSVDownload /> in order
-     to have the desired functionality.
-  */
-  activateDownload = () => {
-    this.setState({ renderDownloadComponent: true }, () =>
-      this.setState({ renderDownloadComponent: false })
-    );
-  };
-
   render() {
     var fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
 
@@ -166,7 +151,6 @@ class Reports extends React.Component {
             <Radio value={4}>Current Customers</Radio>
             <Radio value={5}>Current Providers</Radio>
           </Radio.Group>
-
           <Radio.Group
             onChange={this.onStatusChange}
             value={this.state.statusRadioValue}
@@ -179,7 +163,6 @@ class Reports extends React.Component {
               Inactive/Discontinued
             </Radio>
           </Radio.Group>
-
           <FundsSourceDropdownMenu
             disabled={fundingSourceDisabled}
             fundingSource={this.state.fundingSource}
@@ -199,32 +182,30 @@ class Reports extends React.Component {
           {this.state.data ? (
             <Button type="primary" onClick={this.createCSV}>
               {' '}
-              Create CSV{' '}
+              Generate CSV{' '}
             </Button>
           ) : (
             <Button type="primary">
               {' '}
-              Create CSV <Spin indicator={antIcon} />{' '}
+              Generate CSV <Spin indicator={antIcon} />{' '}
             </Button>
           )}
 
-          <Button
-            onClick={this.activateDownload}
-            disabled={this.state.dataCSV ? false : true}
-            icon="download"
-            type="primary"
+          <CSVLink
+            data={
+              makeDatesReadable(this.state.filteredData) ||
+              makeDatesReadable(this.state.dataCSV) ||
+              []
+            }
+            filename={`${this.state.reportType
+              .split(' ')
+              .join('_')
+              .toLowerCase()}.csv`}
           >
-            CSV
-          </Button>
-
-          {!this.state.renderDownloadComponent ? null : (
-            <CSVDownload
-              data={
-                makeDatesReadable(this.state.filteredData) || makeDatesReadable(this.state.dataCSV)
-              }
-              target="_blank"
-            />
-          )}
+            <Button disabled={this.state.dataCSV ? false : true} icon="download" type="primary">
+              CSV
+            </Button>
+          </CSVLink>
         </div>
 
         <ReactTable
