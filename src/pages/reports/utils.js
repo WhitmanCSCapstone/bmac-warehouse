@@ -66,6 +66,12 @@ function getVerboseItems(oldObj, items_accessor) {
   return newObj;
 }
 
+function alphabatizeByProduct(data) {
+  data.sort((a, b) => {
+    return a.product > b.product ? 0 : -1;
+  });
+}
+
 export async function getCSVdata(init_data, reportType, callback) {
   var data = JSON.parse(JSON.stringify(init_data)); // deep clone
   if (data) {
@@ -74,13 +80,17 @@ export async function getCSVdata(init_data, reportType, callback) {
     if (reportType === 'Inventory Shipments') {
       dict = createDictOfItemsSortedByProperty(data, 'product', 'ship_items');
       array = create2DArrayFromDict(dict, reportType);
+      alphabatizeByProduct(array);
     } else if (reportType === 'Inventory Receipts') {
       dict = createDictOfItemsSortedByProperty(data, 'product', 'receive_items');
       array = create2DArrayFromDict(dict, reportType);
+      alphabatizeByProduct(array);
     } else if (reportType === 'Current Customers') {
       array = createCustomersReportArray(data);
+      alphabatizeByProduct(array);
     } else if (reportType === 'Current Providers') {
       array = createProvidersReportArray(data, reportType);
+      alphabatizeByProduct(array);
     }
     callback(array);
   } else {
