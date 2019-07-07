@@ -92,6 +92,12 @@ export const tableKeys = {
     //"notes",
     //"password",
     //"uniq_id",
+  ],
+
+  fundingSources: [
+    //"code",
+    'id'
+    //"uniq_id"
   ]
 };
 

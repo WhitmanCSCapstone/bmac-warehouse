@@ -57,6 +57,9 @@ export const setProductObj = (index, newData) => db.ref(`5/products/${index}`).s
 
 export const setCustomerObj = (index, newData) => db.ref(`1/customers/${index}`).set(newData);
 
+export const setFundingSourceObj = (index, newData) =>
+  db.ref(`4/fundingsources/${index}`).set(newData);
+
 // DELETE
 
 export const deleteShipmentObj = index => db.ref(`2/shipments/${index}`).remove();
@@ -79,7 +82,7 @@ export const pushShipmentObj = newData => {
     });
 };
 
-export const pushFundingSource = newData => {
+export const pushFundingSourceObj = newData => {
   db.ref('4/fundingsources')
     .push(newData)
     .then(snapshot => {

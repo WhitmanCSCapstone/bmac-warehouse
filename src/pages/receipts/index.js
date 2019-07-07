@@ -7,10 +7,8 @@ import { db } from '../../firebase';
 import { Button, DatePicker, Icon } from 'antd';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import AddFundsSource from '../../components/AddFundsSource';
 import EditableReceiptTable from './EditableReceiptTable';
 import { styles } from '../styles.js';
-
 const { RangePicker } = DatePicker;
 
 class Receipts extends React.Component {
@@ -82,8 +80,6 @@ class Receipts extends React.Component {
           >
             <Icon type="plus" />
           </Button>
-
-          <AddFundsSource />
         </div>
 
         <EditableReceiptTable

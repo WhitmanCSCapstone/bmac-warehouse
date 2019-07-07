@@ -8,7 +8,6 @@ import { Button, Icon } from 'antd';
 import { DatePicker } from 'antd';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
-import AddFundsSource from '../../components/AddFundsSource';
 import EditableShipmentTable from './EditableShipmentTable';
 import { styles } from '../styles.js';
 
@@ -83,8 +82,6 @@ class Shipments extends React.Component {
           >
             <Icon type="plus" />
           </Button>
-
-          <AddFundsSource />
         </div>
 
         <EditableShipmentTable
