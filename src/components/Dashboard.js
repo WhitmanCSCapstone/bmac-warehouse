@@ -16,6 +16,7 @@ import Providers from '../pages/providers';
 import Customers from '../pages/customers';
 import Reports from '../pages/reports';
 import Help from '../pages/help';
+import FundingSources from '../pages/fundingSources';
 
 import './Dashboard.css';
 import { Layout, Menu } from 'antd';
@@ -91,6 +92,7 @@ const pages = {
   shipments: Shipments,
   receipts: Receipts,
   products: Products,
+  fundingSources: FundingSources,
   staff: Staff,
   providers: Providers,
   customers: Customers,
@@ -165,7 +167,9 @@ class Dashboard extends React.Component {
                 return (
                   <Menu.Item key={name}>
                     <Link to={`${match.url}/${name}`}>
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
+                      {name !== 'fundingSources'
+                        ? name.charAt(0).toUpperCase() + name.slice(1)
+                        : 'Funding Sources'}
                     </Link>
                   </Menu.Item>
                 );
@@ -176,7 +180,7 @@ class Dashboard extends React.Component {
           <Layout style={styles.layout}>
             <Header style={styles.header}>
               <span key="plsUpdate" style={styles.title}>
-                {this.state.current}
+                {this.state.current !== 'FundingSources' ? this.state.current : 'Funding Sources'}
               </span>
               <div style={styles.signOutButton}>
                 <SignOutButton type="danger" />
