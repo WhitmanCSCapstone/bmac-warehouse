@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Button, Modal } from 'antd';
+import { Input, Modal } from 'antd';
 import Footer from '../Footer';
 
 class FundingSourceForm extends React.Component {
