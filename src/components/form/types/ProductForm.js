@@ -1,7 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, Select, Divider, Modal, DatePicker } from 'antd';
-import FundsSourceDropdownMenu from '../../FundsSourceDropdownMenu';
+import FundsSourceAutoComplete from '../FundsSourceAutoComplete';
 import Moment from 'moment';
 import Footer from '../Footer';
 
@@ -142,15 +142,10 @@ class ProductForm extends React.Component {
           <div style={styles.topThird}>
             <div style={styles.formItem}>
               Funding Source:
-              <FundsSourceDropdownMenu
-                disabled={false}
-                fundingSource={this.state.funding_source}
-                style={styles.fundsSourceDropdown}
-                onClick={value => this.onChange('funding_source', value)}
-                clearFundingSource={() => this.onChange('funding_source', null)}
-                required={true}
+              <FundsSourceAutoComplete
+                onFundsSourceChange={val => this.onChange('funds_source', val)}
+                accessor={'funding_source'}
                 rowData={this.props.rowData}
-                key={`fundssource:${this.state.funding_source}`}
               />
             </div>
 
