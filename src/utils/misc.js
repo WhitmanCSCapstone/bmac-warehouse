@@ -1,3 +1,4 @@
+import React from 'react';
 import { db } from '../firebase';
 import Moment from 'moment';
 import matchSorter from 'match-sorter';
@@ -8,12 +9,15 @@ export async function getReadableShipmentsTableData() {
       var customers = snapshot.val();
       db.onceGetProducts().then(snapshot => {
         const products = snapshot.val();
-        db.onceGetShipments().then(snapshot => {
-          var data = Object.values(snapshot.val());
-          data = data.map(row => makeShipmentReadable(row, customers, products));
-          // this is to make it act like the Firebase Promises
-          var obj = { val: () => data };
-          data ? resolve(obj) : reject();
+        db.onceGetFundingSources().then(snapshot => {
+          const fundingSources = snapshot.val();
+          db.onceGetShipments().then(snapshot => {
+            let data = Object.values(snapshot.val());
+            data = data.map(row => makeShipmentReadable(row, customers, products, fundingSources));
+            // this is to make it act like the Firebase Promises
+            var obj = { val: () => data };
+            data ? resolve(obj) : reject();
+          });
         });
       });
     });
@@ -26,22 +30,27 @@ export function getReadableReceiptsTableData() {
       var providers = snapshot.val();
       db.onceGetProducts().then(snapshot => {
         const products = snapshot.val();
-        db.onceGetReceipts().then(snapshot => {
-          var data = Object.values(snapshot.val());
-          data = data.map(row => makeRecieptReadable(row, providers, products));
-          // this is to make it act like the Firebase Promises
-          var obj = { val: () => data };
-          data ? resolve(obj) : reject();
+        db.onceGetFundingSources().then(snapshot => {
+          const fundingSources = snapshot.val();
+          db.onceGetReceipts().then(snapshot => {
+            var data = Object.values(snapshot.val());
+            data = data.map(row => makeRecieptReadable(row, providers, products, fundingSources));
+            // this is to make it act like the Firebase Promises
+            var obj = { val: () => data };
+            data ? resolve(obj) : reject();
+          });
         });
       });
     });
   });
 }
 
-function makeShipmentReadable(row, customers, products) {
+function makeShipmentReadable(row, customers, products, fundingSources) {
   const customer_uuid = row['customer_id'];
   const customerObj = customers[customer_uuid];
   const customerName = customerObj ? customerObj['customer_id'] : 'INVALID CUSTOMER ID';
+  const fundingSource = fundingSources[row['funds_source']]['id'];
+  row['funds_source'] = fundingSource;
   row['customer_id'] = customerName;
   let items = row.ship_items;
   items = makeProductItemsReadable(items, products);
@@ -49,7 +58,7 @@ function makeShipmentReadable(row, customers, products) {
   return row;
 }
 
-function makeRecieptReadable(row, providers, products) {
+function makeRecieptReadable(row, providers, products, fundingSources) {
   const provider_uuid = row['provider_id'];
   const providerObj = providers[provider_uuid];
   const providerName = providerObj ? providerObj['provider_id'] : 'INVALID PROVIDER ID';
@@ -58,6 +67,8 @@ function makeRecieptReadable(row, providers, products) {
     : 'no given address';
   row['provider_id'] = providerName;
   row['address'] = providerAddress;
+  const fundingSource = fundingSources[row['payment_source']]['id'];
+  row['payment_source'] = fundingSource;
   let items = row.receive_items;
   items = makeProductItemsReadable(items, products);
   row.receive_items = items;
@@ -186,4 +197,13 @@ export function getTableColumnObjForFilterableHashes(string, dictionary) {
         ]
       })
   };
+}
+
+export function readableFundingSourceCell(rowData, fundingSources, accessor) {
+  const hash = rowData.original[accessor];
+  const obj = fundingSources[hash];
+  // error msg changes depending on table to preserve intended behavior from old app
+  const errorMsg = accessor === 'funding_source' ? '' : `INVALID ${accessor}`;
+  const name = obj ? obj['id'] : errorMsg;
+  return <span>{name}</span>;
 }

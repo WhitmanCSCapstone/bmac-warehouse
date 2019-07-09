@@ -4,8 +4,8 @@ import LoadingScreen from '../../components/LoadingScreen';
 import {
   getTableColumnObjForDates,
   getTableColumnObjBasic,
-  getTableColumnObjForFilterableStrings,
-  getTableColumnObjForFilterableHashes
+  getTableColumnObjForFilterableHashes,
+  readableFundingSourceCell
 } from '../../utils/misc.js';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
 import { tableKeys } from '../../constants/constants';
@@ -29,7 +29,7 @@ function EditableShipmentTable(props) {
         rowData={props.rowData}
       />
 
-      {!props.data || !props.customers ? (
+      {!props.data || !props.customers || !props.fundingSources ? (
         <LoadingScreen />
       ) : (
         <ReactTable
@@ -45,7 +45,11 @@ function EditableShipmentTable(props) {
               };
             }
             if (string === 'funds_source') {
-              return getTableColumnObjForFilterableStrings(string);
+              return {
+                ...getTableColumnObjForFilterableHashes(string, props.fundingSources),
+                Cell: rowData =>
+                  readableFundingSourceCell(rowData, props.fundingSources, 'funds_source')
+              };
             }
             if (string === 'ship_date') {
               return getTableColumnObjForDates(string);
