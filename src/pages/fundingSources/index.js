@@ -73,7 +73,6 @@ class FundingSources extends React.Component {
             })}
             data={this.state.data ? this.state.data : []}
             columns={keys.map(string => getTableColumnObjBasic(string))}
-            defaultPageSize={10}
             className="-striped -highlight"
             defaultPageSize={this.state.data.length}
             showPagination={false}
