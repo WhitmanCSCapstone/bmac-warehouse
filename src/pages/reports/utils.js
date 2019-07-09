@@ -125,31 +125,12 @@ function createCustomersReportArray(data) {
   return array;
 }
 
-export async function populateTableData(
-  reportType,
-  fundingSource,
-  dateRange,
-  date_accessor,
-  callback
-) {
+export async function populateTableData(reportType, dateRange, date_accessor, callback) {
   var firebaseCallback = reportType2FirebaseCallback[reportType];
   var data = await firebaseCallback().then(snapshot => snapshot.val());
   data = typeof data === 'object' ? Object.values(data) : data;
   data = dateRange.length ? sortDataByDate(data, date_accessor, dateRange) : data;
-  data = fundingSource ? filterDataByFundingSource(data, fundingSource) : data;
   callback(data);
-}
-
-function filterDataByFundingSource(data, fundingSource) {
-  var newData = [];
-  for (var i = 0; i < data.length; i++) {
-    var entry = data[i];
-    var entryFS = entry['funds_source'];
-    if (entryFS === fundingSource) {
-      newData.push(entry);
-    }
-  }
-  return newData;
 }
 
 export function makeDatesReadable(data) {
