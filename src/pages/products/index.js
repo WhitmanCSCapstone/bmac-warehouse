@@ -94,7 +94,12 @@ class Products extends React.Component {
               }
               if (string === 'funding_source') {
                 return {
-                  ...getTableColumnObjForFilterableHashes(string, this.state.fundingSources),
+                  ...getTableColumnObjForFilterableHashes(
+                    string,
+                    this.state.fundingSources,
+                    true,
+                    'id'
+                  ),
                   Cell: rowData =>
                     readableFundingSourceCell(rowData, this.state.fundingSources, 'funding_source')
                 };

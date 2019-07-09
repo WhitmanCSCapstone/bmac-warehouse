@@ -46,7 +46,7 @@ function EditableShipmentTable(props) {
             }
             if (string === 'funds_source') {
               return {
-                ...getTableColumnObjForFilterableHashes(string, props.fundingSources),
+                ...getTableColumnObjForFilterableHashes(string, props.fundingSources, true, 'id'),
                 Cell: rowData =>
                   readableFundingSourceCell(rowData, props.fundingSources, 'funds_source')
               };

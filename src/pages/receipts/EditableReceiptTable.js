@@ -47,7 +47,7 @@ function EditableReceiptTable(props) {
             }
             if (string === 'payment_source') {
               return {
-                ...getTableColumnObjForFilterableHashes(string, props.fundingSources),
+                ...getTableColumnObjForFilterableHashes(string, props.fundingSources, true, 'id'),
                 Cell: rowData =>
                   readableFundingSourceCell(rowData, props.fundingSources, 'payment_source')
               };
