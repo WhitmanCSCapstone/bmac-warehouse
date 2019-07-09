@@ -175,24 +175,40 @@ export function getTableColumnObjForIntegers(string) {
   };
 }
 
-export function getTableColumnObjForFilterableStrings(string) {
+export function getTableColumnObjForFilterableStrings(string, exactMatch = false) {
   return {
     ...getTableColumnObjBasic(string),
     filterable: true,
     filterAll: true,
-    filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: [string] })
+    filterMethod: (filter, rows) =>
+      matchSorter(rows, filter.value, {
+        keys: [
+          {
+            threshold: matchSorter.rankings[exactMatch ? 'WORD_STARTS_WITH' : 'MATCH'],
+            key: string
+          },
+          string
+        ]
+      })
   };
 }
 
-export function getTableColumnObjForFilterableHashes(string, dictionary) {
+export function getTableColumnObjForFilterableHashes(
+  string,
+  dictionary,
+  exactMatch = false,
+  accessor = string
+) {
   return {
     ...getTableColumnObjForFilterableStrings(string),
     filterMethod: (filter, rows) =>
       matchSorter(rows, filter.value, {
+        threshold: matchSorter.rankings[exactMatch ? 'WORD_STARTS_WITH' : 'MATCH'],
+        key: accessor,
         keys: [
           keyObj => {
             const valObj = dictionary[keyObj[string]];
-            return valObj ? valObj[string] : `INVALID ${string}_ID`;
+            return valObj ? valObj[accessor] : `INVALID ${string}_ID`;
           }
         ]
       })

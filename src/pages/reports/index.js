@@ -218,13 +218,17 @@ class Reports extends React.Component {
               return getTableColumnObjForIntegers(string);
             }
             if (
-              string === 'customer_id' ||
-              string === 'provider_id' ||
-              string === 'address' ||
-              string === 'product' ||
               string === 'funds_source' ||
               string === 'payment_source' ||
               string === 'funding_source'
+            ) {
+              return getTableColumnObjForFilterableStrings(string, true);
+            }
+            if (
+              string === 'customer_id' ||
+              string === 'provider_id' ||
+              string === 'address' ||
+              string === 'product'
             ) {
               return getTableColumnObjForFilterableStrings(string);
             }
