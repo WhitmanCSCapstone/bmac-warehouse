@@ -72,28 +72,30 @@ export function handleInvoiceClick(state) {
     pdf.text(10, 40, 'Invoice No:' + state.ship_date);
     pdf.text(10, 50, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
     pdf.text(70, 50, 'Ship Via: ' + state.ship_via);
-    pdf.text(130, 50, 'Funds Source: ' + state.funds_source);
-    pdf.text(10, 65, 'Ship To: ');
-    pdf.text(15, 75, customerName);
-    pdf.text(15, 80, fullAddress);
+    db.onceGetSpecificFundingSource(state.funds_source).then(fundsSrcObj => {
+      pdf.text(130, 50, 'Funds Source: ' + fundsSrcObj.child('id').val());
+      pdf.text(10, 65, 'Ship To: ');
+      pdf.text(15, 75, customerName);
+      pdf.text(15, 80, fullAddress);
 
-    db.onceGetProducts().then(snapshot => {
-      const products = snapshot.val();
-      const items = makeProductItemsReadable(state.ship_items, products);
-      const clean_ship_items = deleteEmptyProductItems(items);
-      let y = 105;
+      db.onceGetProducts().then(snapshot => {
+        const products = snapshot.val();
+        const items = makeProductItemsReadable(state.ship_items, products);
+        const clean_ship_items = deleteEmptyProductItems(items);
+        let y = 105;
 
-      y = writeProductItemsToPdfAndReturnY(pdf, clean_ship_items, y);
+        y = writeProductItemsToPdfAndReturnY(pdf, clean_ship_items, y);
 
-      pdf.setFontType('normal');
-      pdf.setFontType('italic');
-      pdf.text(10, y + 20, 'Rate: ' + state.ship_rate);
-      pdf.text(70, y + 20, 'Billed Amount: ' + state.total_price);
-      pdf.text(10, y + 30, 'Notes: ' + state.notes);
-      pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
-      pdf.text(10, y + 60, 'Agency Signature - ___________________________________________');
+        pdf.setFontType('normal');
+        pdf.setFontType('italic');
+        pdf.text(10, y + 20, 'Rate: ' + state.ship_rate);
+        pdf.text(70, y + 20, 'Billed Amount: ' + state.total_price);
+        pdf.text(10, y + 30, 'Notes: ' + state.notes);
+        pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
+        pdf.text(10, y + 60, 'Agency Signature - ___________________________________________');
 
-      pdf.save('shipment_invoice');
+        pdf.save('shipment_invoice');
+      });
     });
   });
 }
@@ -118,26 +120,28 @@ export function handleReceiptClick(state) {
     pdf.setFontSize('12');
     pdf.text(10, 40, 'Invoice No: ' + state.recieve_date);
     pdf.text(10, 50, 'Recieve Date: ' + Moment.unix(state.recieve_date).format('MMM D, YYYY'));
-    pdf.text(130, 50, 'Funds Source: ' + state.payment_source);
-    pdf.text(10, 65, 'Provider: ');
-    pdf.text(15, 75, providerName);
-    pdf.text(15, 80, fullAddress);
+    db.onceGetSpecificFundingSource(state.payment_source).then(fundsSrcObj => {
+      pdf.text(130, 50, 'Funds Source: ' + fundsSrcObj.child('id').val());
+      pdf.text(10, 65, 'Provider: ');
+      pdf.text(15, 75, providerName);
+      pdf.text(15, 80, fullAddress);
 
-    db.onceGetProducts().then(snapshot => {
-      const products = snapshot.val();
-      const items = makeProductItemsReadable(state.receive_items, products);
-      const clean_recieve_items = deleteEmptyProductItems(items);
-      let y = 105;
+      db.onceGetProducts().then(snapshot => {
+        const products = snapshot.val();
+        const items = makeProductItemsReadable(state.receive_items, products);
+        const clean_recieve_items = deleteEmptyProductItems(items);
+        let y = 105;
 
-      y = writeProductItemsToPdfAndReturnY(pdf, clean_recieve_items, y);
+        y = writeProductItemsToPdfAndReturnY(pdf, clean_recieve_items, y);
 
-      pdf.setFontType('normal');
-      pdf.setFontType('italic');
-      pdf.text(70, y + 20, 'Billed Amount: ' + state.billed_amt);
-      pdf.text(10, y + 30, 'Notes: ' + state.notes);
-      pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
+        pdf.setFontType('normal');
+        pdf.setFontType('italic');
+        pdf.text(70, y + 20, 'Billed Amount: ' + state.billed_amt);
+        pdf.text(10, y + 30, 'Notes: ' + state.notes);
+        pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
 
-      pdf.save('receipt');
+        pdf.save('receipt');
+      });
     });
   });
 }
@@ -169,12 +173,14 @@ export function handleLabelClick(state) {
 
     pdf.setFontSize(12).setFontType('normal');
     pdf.text(10, 110, 'Invoice no: ' + state.ship_date);
-    pdf.text(130, 110, 'Funds Source: ' + state.funds_source);
-    pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
-    pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
-    pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
+    db.onceGetSpecificFundingSource(state.funds_source).then(fundsSrcObj => {
+      pdf.text(130, 110, 'Funds Source: ' + fundsSrcObj.child('id').val());
+      pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
+      pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
+      pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
 
-    pdf.save('Label');
+      pdf.save('Label');
+    });
   });
 }
 

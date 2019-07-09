@@ -45,6 +45,9 @@ export const onceGetSpecificCustomer = hash => db.ref(`1/customers/` + hash).onc
 
 export const onceGetSpecificProvider = hash => db.ref(`3/providers/` + hash).once('value');
 
+export const onceGetSpecificFundingSource = hash =>
+  db.ref(`4/fundingsources/` + hash).once('value');
+
 // SET
 
 export const setShipmentObj = (index, newData) => db.ref(`2/shipments/${index}`).set(newData);
