@@ -15,14 +15,12 @@ import {
   reportKeys,
   reportType2TableName,
   reportType2DateAccessor,
-  reportType2FundingSourceRelavancy,
   reportType2DateRangeRelavancy,
   radioValue2ReportType
 } from '../../constants/constants';
 import { populateTableData, getCSVdata, makeDatesReadable } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
-import FundsSourceDropdownMenu from '../../components/FundsSourceDropdownMenu';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 const { RangePicker } = DatePicker;
@@ -49,7 +47,6 @@ class Reports extends React.Component {
       reportType: 'Inventory Shipments',
       reportTypeTableName: 'shipments',
       data: null,
-      fundingSource: null,
       dateRange: [],
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
@@ -66,7 +63,6 @@ class Reports extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       this.state.reportTypeTableName !== prevState.reportTypeTableName ||
-      this.state.fundingSource !== prevState.fundingSource ||
       this.state.dateRange !== prevState.dateRange
     ) {
       this.updateTable();
@@ -77,7 +73,6 @@ class Reports extends React.Component {
     this.setState({ dataCSV: null, data: null });
     populateTableData(
       this.state.reportType,
-      this.state.fundingSource,
       this.state.dateRange,
       reportType2DateAccessor[this.state.reportType],
       data => {
@@ -92,10 +87,6 @@ class Reports extends React.Component {
     });
   };
 
-  onClickFundingSource = val => {
-    this.setState({ fundingSource: val });
-  };
-
   onReportTypeChange = e => {
     var val = e.target.value.toString();
     var reportType = radioValue2ReportType[val];
@@ -106,7 +97,6 @@ class Reports extends React.Component {
       reportTypeRadioValue: e.target.value,
       //reset all the settings
       data: null,
-      fundingSource: null,
       dateRange: [],
       dataCSV: null,
       filteredData: null
@@ -133,8 +123,6 @@ class Reports extends React.Component {
   };
 
   render() {
-    var fundingSourceDisabled = !reportType2FundingSourceRelavancy[this.state.reportType];
-
     return (
       <div style={styles.container}>
         <div style={styles.filters}>
@@ -163,12 +151,6 @@ class Reports extends React.Component {
               Inactive/Discontinued
             </Radio>
           </Radio.Group>
-          <FundsSourceDropdownMenu
-            disabled={fundingSourceDisabled}
-            fundingSource={this.state.fundingSource}
-            onClick={this.onClickFundingSource}
-            required={false}
-          />
 
           {
             <RangePicker
