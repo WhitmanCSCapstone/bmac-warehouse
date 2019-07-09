@@ -11,7 +11,9 @@ import {
   getTableColumnObjForDates,
   getTableColumnObjForIntegers,
   getTableColumnObjBasic,
-  getTableColumnObjForFilterableStrings
+  getTableColumnObjForFilterableStrings,
+  getTableColumnObjForFilterableHashes,
+  readableFundingSourceCell
 } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import ProductForm from '../../components/form/types/ProductForm';
@@ -27,6 +29,7 @@ class Products extends React.Component {
       data: null,
       rowData: null,
       products: null,
+      fundingSources: null,
       formModalVisible: false
     };
   }
@@ -39,6 +42,10 @@ class Products extends React.Component {
     db.onceGetProducts(optCallback).then(snapshot =>
       this.setState({ data: Object.values(snapshot.val()) })
     );
+
+    db.onceGetFundingSources().then(snapshot => {
+      this.setState({ fundingSources: snapshot.val() });
+    });
   };
 
   render() {
@@ -66,7 +73,7 @@ class Products extends React.Component {
           rowData={this.state.rowData}
         />
 
-        {!this.state.data ? (
+        {!this.state.data || !this.state.fundingSources ? (
           <LoadingScreen />
         ) : (
           <ReactTable
@@ -86,7 +93,11 @@ class Products extends React.Component {
                 return getTableColumnObjForDates(string);
               }
               if (string === 'funding_source') {
-                return getTableColumnObjForFilterableStrings(string);
+                return {
+                  ...getTableColumnObjForFilterableHashes(string, this.state.fundingSources),
+                  Cell: rowData =>
+                    readableFundingSourceCell(rowData, this.state.fundingSources, 'funding_source')
+                };
               }
               if (string === 'unit_weight') {
                 return getTableColumnObjForIntegers(string);

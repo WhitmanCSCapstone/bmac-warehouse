@@ -5,8 +5,8 @@ import {
   getTableColumnObjForDates,
   getTableColumnObjForIntegers,
   getTableColumnObjBasic,
-  getTableColumnObjForFilterableStrings,
-  getTableColumnObjForFilterableHashes
+  getTableColumnObjForFilterableHashes,
+  readableFundingSourceCell
 } from '../../utils/misc.js';
 import ReceiptForm from '../../components/form/types/ReceiptForm';
 import { tableKeys } from '../../constants/constants';
@@ -30,7 +30,7 @@ function EditableReceiptTable(props) {
         rowData={props.rowData}
       />
 
-      {!props.data || !props.providers ? (
+      {!props.data || !props.providers || !props.fundingSources ? (
         <LoadingScreen />
       ) : (
         <ReactTable
@@ -46,7 +46,11 @@ function EditableReceiptTable(props) {
               };
             }
             if (string === 'payment_source') {
-              return getTableColumnObjForFilterableStrings(string);
+              return {
+                ...getTableColumnObjForFilterableHashes(string, props.fundingSources),
+                Cell: rowData =>
+                  readableFundingSourceCell(rowData, props.fundingSources, 'payment_source')
+              };
             }
             if (string === 'billed_amt') {
               return getTableColumnObjForIntegers(string);

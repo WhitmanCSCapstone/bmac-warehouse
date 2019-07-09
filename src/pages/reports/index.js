@@ -220,9 +220,11 @@ class Reports extends React.Component {
             if (
               string === 'customer_id' ||
               string === 'provider_id' ||
-              string === 'funds_source' ||
               string === 'address' ||
-              string === 'product'
+              string === 'product' ||
+              string === 'funds_source' ||
+              string === 'payment_source' ||
+              string === 'funding_source'
             ) {
               return getTableColumnObjForFilterableStrings(string);
             }

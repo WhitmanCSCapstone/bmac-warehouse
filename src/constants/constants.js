@@ -102,11 +102,24 @@ export const tableKeys = {
 };
 
 export const reportKeys = {
-  'Inventory Shipments': ['product', 'ship_date', 'customer_id', 'case_lots'],
-  'Inventory Receipts': ['product', 'recieve_date', 'provider_id', 'total_weight'],
+  'Inventory Shipments': ['product', 'ship_date', 'funds_source', 'customer_id', 'case_lots'],
+  'Inventory Receipts': [
+    'product',
+    'recieve_date',
+    'payment_source',
+    'provider_id',
+    'total_weight'
+  ],
   'Current Inventory': [],
   'Current Customers': ['customer_id', 'ship_date', 'funds_source', 'total_weight'],
-  'Current Providers': ['provider_id', 'address', 'recieve_date', 'billed_amt', 'total_weight']
+  'Current Providers': [
+    'provider_id',
+    'address',
+    'payment_source',
+    'recieve_date',
+    'billed_amt',
+    'total_weight'
+  ]
 };
 
 export const radioValue2ReportType = {

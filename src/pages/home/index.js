@@ -33,7 +33,9 @@ class Home extends React.Component {
       filteredReceiptData: null,
       receiptFormModalVisible: false,
       receiptRowData: null,
-      providers: null
+      providers: null,
+
+      fundingSources: null
     };
   }
 
@@ -86,6 +88,11 @@ class Home extends React.Component {
       var data = snapshot.val();
       this.setState({ providers: data });
     });
+
+    db.onceGetFundingSources().then(snapshot => {
+      let data = snapshot.val();
+      this.setState({ fundingSources: data });
+    });
   }
 
   render() {
@@ -102,6 +109,7 @@ class Home extends React.Component {
           closeForm={() => this.setState({ shipFormModalVisible: false })}
           rowData={this.state.shipRowData}
           customers={this.state.customers}
+          fundingSources={this.state.fundingSources}
           onRowClick={this.onShipmentRowClick}
           filteredData={this.state.filteredShipData}
           dateRange={this.state.dateRange}
@@ -120,6 +128,7 @@ class Home extends React.Component {
           closeForm={() => this.setState({ receiptFormModalVisible: false })}
           rowData={this.state.receiptRowData}
           providers={this.state.providers}
+          fundingSources={this.state.fundingSources}
           onRowClick={this.onReceiptRowClick}
           filteredData={this.state.filteredReceiptData}
           dateRange={this.state.dateRange}

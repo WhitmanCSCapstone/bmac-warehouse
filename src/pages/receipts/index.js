@@ -20,7 +20,8 @@ class Receipts extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      providers: null
+      providers: null,
+      fundingSources: null
     };
   }
 
@@ -38,6 +39,11 @@ class Receipts extends React.Component {
     db.onceGetProviders().then(snapshot => {
       var data = snapshot.val();
       this.setState({ providers: data });
+    });
+
+    db.onceGetFundingSources().then(snapshot => {
+      let data = snapshot.val();
+      this.setState({ fundingSources: data });
     });
   }
 
@@ -88,6 +94,7 @@ class Receipts extends React.Component {
           closeForm={this.closeForm}
           rowData={this.state.rowData}
           providers={this.state.providers}
+          fundingSources={this.state.fundingSources}
           onRowClick={this.onRowClick}
           filteredData={this.state.filteredData}
           dateRange={this.state.dateRange}

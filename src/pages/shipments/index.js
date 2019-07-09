@@ -22,7 +22,8 @@ class Shipments extends React.Component {
       dateRange: null,
       formModalVisible: false,
       rowData: null,
-      customers: null
+      customers: null,
+      fundingSources: null
     };
   }
 
@@ -40,6 +41,10 @@ class Shipments extends React.Component {
     db.onceGetCustomers().then(snapshot => {
       var data = snapshot.val();
       this.setState({ customers: data });
+    });
+
+    db.onceGetFundingSources().then(snapshot => {
+      this.setState({ fundingSources: snapshot.val() });
     });
   }
 
@@ -90,6 +95,7 @@ class Shipments extends React.Component {
           closeForm={this.closeForm}
           rowData={this.state.rowData}
           customers={this.state.customers}
+          fundingSources={this.state.fundingSources}
           onRowClick={this.onRowClick}
           filteredData={this.state.filteredData}
           dateRange={this.state.dateRange}
