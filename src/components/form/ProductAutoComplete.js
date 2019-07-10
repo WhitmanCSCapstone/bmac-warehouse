@@ -1,6 +1,5 @@
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { db } from '../../firebase';
 
 const styles = {
   container: {
@@ -13,49 +12,40 @@ class ProductAutoComplete extends React.Component {
     super(props);
     this.state = {
       dataSourceTypeItemList: [],
-      dictionary: {},
       defaultValue: null
     };
   }
 
   componentDidMount() {
-    db.onceGetProducts().then(snapshot => {
-      const data = snapshot.val();
-      const dictionary = {};
-      const dataSourceTypeItemList = [];
+    const dataSourceTypeItemList = [];
+    const productObjs = Object.values(this.props.products);
 
-      let products = Object.entries(data);
-
-      products = products.filter(obj => {
-        const funds_source = obj[1].funding_source;
-        return (
-          // filter out prouduct with conflicting funding src
-          ((funds_source === this.props.fundsSource ||
-            // if there is no form funds source, list all products
-            !this.props.fundsSource ||
-            // if theres no product funds source, list the product anyway
-            !funds_source) &&
-            // filter out if the product is marked as discontinued
-            obj[1].status !== 'discontinued') ||
-          // make an exception to the above rules if the product is hardcoded in already
-          obj[0] === this.props.obj.product
-        );
+    for (let i = 0; i < productObjs.length; i++) {
+      dataSourceTypeItemList.push({
+        value: productObjs[i].uniq_id,
+        text: productObjs[i].product_id
       });
+    }
 
-      for (let [key, value] of products) {
-        let name = value['product_id'];
-        dataSourceTypeItemList.push({ value: key, text: name });
-        dictionary[key] = name;
-      }
+    const prodObj = this.props.products[this.props.obj.product];
+    const givenProdName = prodObj ? prodObj['product_id'] : undefined;
 
-      const givenProdName = dictionary[this.props.obj.product];
-
-      this.setState({
-        dataSourceTypeItemList: dataSourceTypeItemList,
-        dictionary: dictionary,
-        defaultValue: givenProdName ? givenProdName : this.props.obj.product
-      });
+    this.setState({
+      dataSourceTypeItemList: dataSourceTypeItemList,
+      defaultValue: givenProdName ? givenProdName : this.props.obj.product
     });
+  }
+
+  isRelevant(product) {
+    if (!product) {
+      return false;
+    }
+    const fsHash = product.funding_source;
+    const fundsSource = this.props.fundingSources[fsHash];
+    return (
+      product.status !== 'discontinued' &&
+      (fsHash === this.props.fundsSource || !fundsSource || !this.props.fundsSource)
+    );
   }
 
   onChange = val => {
@@ -74,7 +64,11 @@ class ProductAutoComplete extends React.Component {
         placeholder="Product"
         filterOption={(inputValue, option) => {
           if (option.props.children) {
-            return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
+            const pHash = option.key;
+            const product = this.props.products[pHash];
+            if (this.isRelevant(product)) {
+              return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
+            }
           }
         }}
       />
