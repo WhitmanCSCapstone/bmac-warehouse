@@ -181,7 +181,7 @@ class ReceiptForm extends React.Component {
             <div style={styles.formItem}>
               Payment Source:
               <FundsSourceAutoComplete
-                onFundsSourceChange={val => this.onChange('funds_source', val)}
+                onFundsSourceChange={val => this.onChange('payment_source', val)}
                 accessor={'payment_source'}
                 rowData={this.props.rowData}
               />
@@ -203,7 +203,13 @@ class ReceiptForm extends React.Component {
           <ProductItems
             onChange={this.onItemsChange}
             items={this.state.receive_items}
-            fundsSource={this.props.rowData ? this.props.rowData['payment_source'] : null}
+            fundsSource={
+              this.state.payment_source
+                ? this.state.payment_source
+                : this.props.rowData
+                ? this.props.rowData['payment_source']
+                : null
+            }
             addProductItem={this.addReceiveItem}
             removeProductItem={this.removeReceiveItem}
           />

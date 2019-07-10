@@ -220,7 +220,13 @@ class ShipmentForm extends React.Component {
           <ProductItems
             onChange={this.onItemsChange}
             items={this.state.ship_items}
-            fundsSource={this.props.rowData ? this.props.rowData['funds_source'] : null}
+            fundsSource={
+              this.state.funds_source
+                ? this.state.funds_source
+                : this.props.rowData
+                ? this.props.rowData['funds_source']
+                : null
+            }
             addProductItem={this.addShipmentItem}
             removeProductItem={this.removeShipmentItem}
           />
