@@ -49,7 +49,8 @@ function makeShipmentReadable(row, customers, products, fundingSources) {
   const customer_uuid = row['customer_id'];
   const customerObj = customers[customer_uuid];
   const customerName = customerObj ? customerObj['customer_id'] : 'INVALID CUSTOMER ID';
-  const fundingSource = fundingSources[row['funds_source']]['id'];
+  const fundingSourceObj = fundingSources[row['funds_source']];
+  const fundingSource = fundingSourceObj ? fundingSourceObj['id'] : undefined;
   row['funds_source'] = fundingSource;
   row['customer_id'] = customerName;
   let items = row.ship_items;
@@ -67,7 +68,8 @@ function makeRecieptReadable(row, providers, products, fundingSources) {
     : 'no given address';
   row['provider_id'] = providerName;
   row['address'] = providerAddress;
-  const fundingSource = fundingSources[row['payment_source']]['id'];
+  const fundingSourceObj = fundingSources[row['payment_source']];
+  const fundingSource = fundingSourceObj ? fundingSourceObj['id'] : undefined;
   row['payment_source'] = fundingSource;
   let items = row.receive_items;
   items = makeProductItemsReadable(items, products);
