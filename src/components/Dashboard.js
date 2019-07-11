@@ -1,5 +1,6 @@
 import React from 'react';
 import withAuthorization from './withAuthorization';
+import LoadingScreen from './LoadingScreen';
 import SignOutButton from './SignOut';
 import { db } from '../firebase';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
@@ -186,7 +187,9 @@ class Dashboard extends React.Component {
 
     return (
       <Router>
-        {!this.hasLoaded() ? null : (
+        {!this.hasLoaded() ? (
+          <LoadingScreen />
+        ) : (
           <Layout>
             <Sider style={styles.slider}>
               <div style={styles.sliderTitle}>BMAC Warehouse</div>
