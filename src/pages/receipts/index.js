@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import { Button, DatePicker, Icon } from 'antd';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
@@ -15,46 +14,23 @@ class Receipts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
-      rowData: null,
-      providers: null,
-      fundingSources: null
+      rowData: null
     };
   }
 
   onDateChange = dateRange => {
-    const newData = sortDataByDate(this.state.data, 'recieve_date', dateRange);
+    const newData = sortDataByDate(this.props.receipts, 'recieve_date', dateRange);
     this.setState({
       filteredData: newData,
       dateRange: dateRange
     });
   };
 
-  componentDidMount() {
-    this.refreshTable();
-
-    db.onceGetProviders().then(snapshot => {
-      var data = snapshot.val();
-      this.setState({ providers: data });
-    });
-
-    db.onceGetFundingSources().then(snapshot => {
-      let data = snapshot.val();
-      this.setState({ fundingSources: data });
-    });
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetReceipts(optCallback).then(snapshot => {
-      let data = [];
-      snapshot.forEach(child => {
-        data.push(child.val());
-      });
-      this.setState({ data: data.reverse() });
-    });
+    this.props.refreshTables(['receipts'], optCallback);
   };
 
   closeForm = () => {
@@ -93,14 +69,15 @@ class Receipts extends React.Component {
           refreshTable={this.refreshTable}
           closeForm={this.closeForm}
           rowData={this.state.rowData}
-          providers={this.state.providers}
-          fundingSources={this.state.fundingSources}
+          providers={this.props.providers}
+          fundingSources={this.props.fundingSources}
           onRowClick={this.onRowClick}
           filteredData={this.state.filteredData}
           dateRange={this.state.dateRange}
-          data={this.state.data}
+          data={this.props.receipts}
           defaultPageSize={10}
           showPagination={true}
+          products={this.props.products}
         />
       </div>
     );

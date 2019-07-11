@@ -1,5 +1,4 @@
 import React from 'react';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
@@ -14,21 +13,12 @@ class Staff extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       formModalVisible: false
     };
   }
 
-  componentDidMount() {
-    this.refreshTable();
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetUsers(optCallback).then(snapshot => {
-      var data = snapshot.val();
-      data = Object.values(data);
-      this.setState({ data: data });
-    });
+    this.props.refreshTables(['users'], optCallback);
   };
 
   render() {
@@ -52,11 +42,11 @@ class Staff extends React.Component {
           refreshTable={this.refreshTable}
           closeForm={() => this.setState({ formModalVisible: false })}
         />{' '}
-        {!this.state.data ? (
+        {!this.props.users ? (
           <LoadingScreen />
         ) : (
           <ReactTable
-            data={this.state.data ? this.state.data : []}
+            data={this.props.users ? Object.values(this.props.users) : []}
             columns={keys.map(string => {
               return {
                 Header: string

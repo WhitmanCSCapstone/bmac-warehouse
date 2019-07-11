@@ -196,6 +196,7 @@ class ShipmentForm extends React.Component {
                 onFundsSourceChange={val => this.onChange('funds_source', val)}
                 accessor={'funds_source'}
                 rowData={this.props.rowData}
+                fundingSources={this.props.fundingSources}
               />
             </div>
 
@@ -220,6 +221,8 @@ class ShipmentForm extends React.Component {
           <ProductItems
             onChange={this.onItemsChange}
             items={this.state.ship_items}
+            fundingSources={this.props.fundingSources}
+            products={this.props.products}
             fundsSource={
               this.state.funds_source
                 ? this.state.funds_source

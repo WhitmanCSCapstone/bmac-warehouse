@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
@@ -19,20 +18,13 @@ class FundingSources extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       rowData: null,
       formModalVisible: false
     };
   }
 
-  componentDidMount() {
-    this.refreshTable();
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetFundingSources(optCallback).then(snapshot =>
-      this.setState({ data: Object.values(snapshot.val()) })
-    );
+    this.props.refreshTables(['fundingSources'], optCallback);
   };
 
   render() {
@@ -60,7 +52,7 @@ class FundingSources extends React.Component {
           rowData={this.state.rowData}
         />
 
-        {!this.state.data ? (
+        {!this.props.fundingSources ? (
           <LoadingScreen />
         ) : (
           <ReactTable
@@ -71,10 +63,10 @@ class FundingSources extends React.Component {
                   formModalVisible: true
                 })
             })}
-            data={this.state.data ? this.state.data : []}
+            data={this.props.fundingSources ? Object.values(this.props.fundingSources) : []}
             columns={keys.map(string => getTableColumnObjBasic(string))}
             className="-striped -highlight"
-            defaultPageSize={this.state.data.length}
+            defaultPageSize={Object.values(this.props.fundingSources).length}
             showPagination={false}
           />
         )}

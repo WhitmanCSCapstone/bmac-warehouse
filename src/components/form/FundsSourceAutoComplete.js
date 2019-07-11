@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import { AutoComplete } from 'antd';
 
 const styles = {
@@ -23,24 +22,22 @@ class FundsSourceAutoComplete extends React.Component {
   }
 
   componentDidMount() {
-    db.onceGetFundingSources().then(snapshot => {
-      var data = snapshot.val();
-      var dictionary = {};
-      var dataSourceTypeItemList = [];
+    var data = Object.entries(this.props.fundingSources);
+    var dictionary = {};
+    var dataSourceTypeItemList = [];
 
-      for (let [key, value] of Object.entries(data)) {
-        let name = value['id'];
-        dataSourceTypeItemList.push({ value: key, text: name });
-        dictionary[key] = name;
-      }
+    for (let [key, value] of data) {
+      let name = value['id'];
+      dataSourceTypeItemList.push({ value: key, text: name });
+      dictionary[key] = name;
+    }
 
-      this.setState({
-        dataSourceTypeItemList: dataSourceTypeItemList,
-        dictionary: dictionary,
-        defaultValue: this.props.rowData
-          ? dictionary[this.props.rowData[this.props.accessor]]
-          : undefined
-      });
+    this.setState({
+      dataSourceTypeItemList: dataSourceTypeItemList,
+      dictionary: dictionary,
+      defaultValue: this.props.rowData
+        ? dictionary[this.props.rowData[this.props.accessor]]
+        : undefined
     });
   }
 

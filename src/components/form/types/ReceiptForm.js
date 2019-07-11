@@ -184,6 +184,7 @@ class ReceiptForm extends React.Component {
                 onFundsSourceChange={val => this.onChange('payment_source', val)}
                 accessor={'payment_source'}
                 rowData={this.props.rowData}
+                fundingSources={this.props.fundingSources}
               />
             </div>
 
@@ -203,6 +204,8 @@ class ReceiptForm extends React.Component {
           <ProductItems
             onChange={this.onItemsChange}
             items={this.state.receive_items}
+            fundingSources={this.props.fundingSources}
+            products={this.props.products}
             fundsSource={
               this.state.payment_source
                 ? this.state.payment_source
