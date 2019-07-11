@@ -42,6 +42,9 @@ class ProductAutoComplete extends React.Component {
     }
     const fsHash = product.funding_source;
     const fundsSource = this.props.fundingSources[fsHash];
+    // if product matches shipment/receipt funds source, or there is
+    // no given shipment/receipt funds source, or the given product has
+    // no funds source, AND the product isn't discontinued, return true
     return (
       product.status !== 'discontinued' &&
       (fsHash === this.props.fundsSource || !fundsSource || !this.props.fundsSource)
