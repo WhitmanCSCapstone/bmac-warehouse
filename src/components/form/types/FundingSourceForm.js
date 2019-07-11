@@ -48,18 +48,6 @@ class FundingSourceForm extends React.Component {
     });
   };
 
-  onOk = () => {
-    //Push the new funding source to the db.
-    var id = JSON.parse(JSON.stringify(this.state.id));
-    db.pushFundingSource({ id });
-    this.setState({ formModalVisible: false });
-    //Refresh the table
-    db.onceGetFundingSources().then(snapshot => {
-      var data = this.cleanFundingSourcesData(Object.values(snapshot.val()));
-      this.setState({ fundingSources: data });
-    });
-  };
-
   render() {
     return (
       <div>
