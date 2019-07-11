@@ -9,8 +9,16 @@ const styles = {
   container: {
     flexGrow: 1,
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100vw',
+    height: '100vh'
+  },
+  text: {
+    marginLeft: '0.5em',
+    fontSize: 'x-large',
+    fontWeight: 'bold'
   }
 };
 
@@ -19,6 +27,7 @@ class LoadingScreen extends React.Component {
     return (
       <div style={styles.container}>
         <Spin size="large" />
+        <span style={styles.text}>Loading...</span>
       </div>
     );
   }
