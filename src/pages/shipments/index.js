@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import { Button, Icon } from 'antd';
 import { DatePicker } from 'antd';
 import { sortDataByDate } from '../../utils/misc.js';
@@ -17,45 +16,23 @@ class Shipments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       filteredData: null,
       dateRange: null,
       formModalVisible: false,
-      rowData: null,
-      customers: null,
-      fundingSources: null
+      rowData: null
     };
   }
 
   onDateChange = dateRange => {
-    const newData = sortDataByDate(this.state.data, 'ship_date', dateRange);
+    const newData = sortDataByDate(this.props.data, 'ship_date', dateRange);
     this.setState({
       filteredData: newData,
       dateRange: dateRange
     });
   };
 
-  componentDidMount() {
-    this.refreshTable();
-
-    db.onceGetCustomers().then(snapshot => {
-      var data = snapshot.val();
-      this.setState({ customers: data });
-    });
-
-    db.onceGetFundingSources().then(snapshot => {
-      this.setState({ fundingSources: snapshot.val() });
-    });
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetShipments(optCallback).then(snapshot => {
-      let data = [];
-      snapshot.forEach(child => {
-        data.push(child.val());
-      });
-      this.setState({ data: data.reverse() });
-    });
+    this.props.refreshTables(['shipments'], optCallback);
   };
 
   closeForm = () => {
@@ -94,14 +71,15 @@ class Shipments extends React.Component {
           refreshTable={this.refreshTable}
           closeForm={this.closeForm}
           rowData={this.state.rowData}
-          customers={this.state.customers}
-          fundingSources={this.state.fundingSources}
+          customers={this.props.customers}
+          fundingSources={this.props.fundingSources}
           onRowClick={this.onRowClick}
           filteredData={this.state.filteredData}
           dateRange={this.state.dateRange}
-          data={this.state.data}
+          data={this.props.shipments}
           defaultPageSize={10}
           showPagination={true}
+          products={this.props.products}
         />
       </div>
     );

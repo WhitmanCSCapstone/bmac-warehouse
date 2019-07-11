@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
@@ -26,26 +25,13 @@ class Products extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       rowData: null,
-      products: null,
-      fundingSources: null,
       formModalVisible: false
     };
   }
 
-  componentDidMount() {
-    this.refreshTable();
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetProducts(optCallback).then(snapshot =>
-      this.setState({ data: Object.values(snapshot.val()) })
-    );
-
-    db.onceGetFundingSources().then(snapshot => {
-      this.setState({ fundingSources: snapshot.val() });
-    });
+    this.props.refreshTables(['products'], optCallback);
   };
 
   render() {
@@ -71,9 +57,10 @@ class Products extends React.Component {
           refreshTable={this.refreshTable}
           closeForm={() => this.setState({ formModalVisible: false })}
           rowData={this.state.rowData}
+          fundingSources={this.props.fundingSources}
         />
 
-        {!this.state.data || !this.state.fundingSources ? (
+        {!this.props.products ? (
           <LoadingScreen />
         ) : (
           <ReactTable
@@ -84,7 +71,7 @@ class Products extends React.Component {
                   formModalVisible: true
                 })
             })}
-            data={this.state.data ? this.state.data : []}
+            data={this.props.products ? Object.values(this.props.products) : []}
             columns={keys.map(string => {
               if (string === 'product_id') {
                 return getTableColumnObjForFilterableStrings(string);
@@ -96,12 +83,12 @@ class Products extends React.Component {
                 return {
                   ...getTableColumnObjForFilterableHashes(
                     string,
-                    this.state.fundingSources,
+                    this.props.fundingSources,
                     true,
                     'id'
                   ),
                   Cell: rowData =>
-                    readableFundingSourceCell(rowData, this.state.fundingSources, 'funding_source')
+                    readableFundingSourceCell(rowData, this.props.fundingSources, 'funding_source')
                 };
               }
               if (string === 'unit_weight') {

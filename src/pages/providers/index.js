@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { db } from '../../firebase';
 import ReactTable from 'react-table';
 import LoadingScreen from '../../components/LoadingScreen';
 import { tableKeys } from '../../constants/constants';
@@ -19,21 +18,14 @@ class Providers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
       filteredData: null,
       formModalVisible: false,
       rowData: null
     };
   }
 
-  componentDidMount() {
-    this.refreshTable();
-  }
-
   refreshTable = (optCallback = () => {}) => {
-    db.onceGetProviders(optCallback).then(snapshot =>
-      this.setState({ data: Object.values(snapshot.val()) })
-    );
+    this.props.refreshTables(['providers'], optCallback);
   };
 
   render() {
@@ -60,7 +52,7 @@ class Providers extends React.Component {
           closeForm={() => this.setState({ formModalVisible: false })}
           rowData={this.state.rowData}
         />
-        {!this.state.data ? (
+        {!this.props.providers ? (
           <LoadingScreen />
         ) : (
           <ReactTable
@@ -71,7 +63,7 @@ class Providers extends React.Component {
                   formModalVisible: true
                 })
             })}
-            data={this.state.data ? this.state.data : []}
+            data={this.props.providers ? Object.values(this.props.providers) : []}
             columns={keys.map(string => {
               if (string === 'provider_id') {
                 return getTableColumnObjForFilterableStrings(string);

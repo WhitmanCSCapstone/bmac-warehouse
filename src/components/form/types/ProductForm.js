@@ -146,6 +146,7 @@ class ProductForm extends React.Component {
                 onFundsSourceChange={val => this.onChange('funds_source', val)}
                 accessor={'funding_source'}
                 rowData={this.props.rowData}
+                fundingSources={this.props.fundingSources}
               />
             </div>
 

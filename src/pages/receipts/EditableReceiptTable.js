@@ -28,6 +28,8 @@ function EditableReceiptTable(props) {
         refreshTable={props.refreshTable}
         closeForm={props.closeForm}
         rowData={props.rowData}
+        fundingSources={props.fundingSources}
+        products={props.products}
       />
 
       {!props.data || !props.providers || !props.fundingSources ? (

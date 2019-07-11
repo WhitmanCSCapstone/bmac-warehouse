@@ -1,4 +1,5 @@
 import { getReadableShipmentsTableData, getReadableReceiptsTableData } from '../utils/misc';
+import { db } from '../firebase';
 
 export const tableKeys = {
   shipments: [
@@ -170,4 +171,14 @@ export const reportType2FirebaseCallback = {
   'Current Inventory': null,
   'Current Customers': getReadableShipmentsTableData,
   'Current Providers': getReadableReceiptsTableData
+};
+
+export const table2Promise = {
+  shipments: db.onceGetShipments,
+  receipts: db.onceGetReceipts,
+  products: db.onceGetProducts,
+  users: db.onceGetUsers,
+  providers: db.onceGetProviders,
+  customers: db.onceGetCustomers,
+  fundingSources: db.onceGetFundingSources
 };

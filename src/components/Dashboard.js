@@ -3,6 +3,8 @@ import withAuthorization from './withAuthorization';
 import SignOutButton from './SignOut';
 import { db } from '../firebase';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { getTablePromise } from '../utils/misc';
+import { table2Promise } from '../constants/constants';
 import * as roles from '../constants/roles';
 import * as routes from '../constants/routes';
 
@@ -117,11 +119,30 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       current: cleanPathname(props.location.pathname),
-      pages: { ...pages }
+      pages: { ...pages },
+      shipments: null,
+      receipts: null,
+      products: null,
+      providers: null,
+      customers: null,
+      fundingSources: null,
+      users: null,
+      initialLoadIsComplete: false
     };
   }
 
+  refreshTables = (tables = [], optCallback = () => {}) => {
+    for (const table of tables) {
+      const promise = () => getTablePromise(table, optCallback);
+      promise().then(data => {
+        this.setState({ [table]: data });
+      });
+    }
+  };
+
   componentDidMount() {
+    this.refreshTables(Object.keys(table2Promise));
+
     // auto route to home page on login
     if (this.props.location.pathname === routes.DASHBOARD) {
       this.props.history.push(routes.HOME);
@@ -148,68 +169,95 @@ class Dashboard extends React.Component {
     this.setState({ current: upperCase });
   };
 
+  hasLoaded = () => {
+    const condition =
+      !!this.state.shipments &&
+      !!this.state.receipts &&
+      !!this.state.products &&
+      !!this.state.providers &&
+      !!this.state.users &&
+      !!this.state.customers &&
+      !!this.state.fundingSources;
+    return condition;
+  };
+
   render() {
     const { match } = this.props; // coming from React Router.
 
     return (
       <Router>
-        <Layout>
-          <Sider style={styles.slider}>
-            <div style={styles.sliderTitle}>BMAC Warehouse</div>
-            <Menu
-              onClick={e => this.handleClick(e)}
-              selectedKeys={[this.state.current]}
-              mode="vertical"
-              theme="dark"
-              style={styles.menu}
-            >
-              {Object.keys(this.state.pages).map(name => {
-                return (
-                  <Menu.Item key={name}>
-                    <Link to={`${match.url}/${name}`}>
-                      {name !== 'fundingSources'
-                        ? name.charAt(0).toUpperCase() + name.slice(1)
-                        : 'Funding Sources'}
-                    </Link>
-                  </Menu.Item>
-                );
-              })}
-            </Menu>
-          </Sider>
-
-          <Layout style={styles.layout}>
-            <Header style={styles.header}>
-              <span key="plsUpdate" style={styles.title}>
-                {this.state.current !== 'FundingSources' ? this.state.current : 'Funding Sources'}
-              </span>
-              <div style={styles.signOutButton}>
-                <SignOutButton type="danger" />
-              </div>
-            </Header>
-
-            <Content style={styles.content}>
-              <Switch>
-                {Object.keys(pages).map(name => {
+        {!this.hasLoaded() ? null : (
+          <Layout>
+            <Sider style={styles.slider}>
+              <div style={styles.sliderTitle}>BMAC Warehouse</div>
+              <Menu
+                onClick={e => this.handleClick(e)}
+                selectedKeys={[this.state.current]}
+                mode="vertical"
+                theme="dark"
+                style={styles.menu}
+              >
+                {Object.keys(this.state.pages).map(name => {
                   return (
-                    <Route
-                      exact
-                      path={`${match.path}/${name}`}
-                      component={pages[name]}
-                      key={name}
-                    />
+                    <Menu.Item key={name}>
+                      <Link to={`${match.url}/${name}`}>
+                        {name.charAt(0).toUpperCase() + name.slice(1)}
+                      </Link>
+                    </Menu.Item>
                   );
                 })}
-              </Switch>
-            </Content>
+              </Menu>
+            </Sider>
 
-            <Footer style={styles.footer}>
-              Whitman Capstone Project 2018-2019
-              <br />
-              Copyright ©2019 Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, and Pablo
-              Fernandez
-            </Footer>
+            <Layout style={styles.layout}>
+              <Header style={styles.header}>
+                <span key="plsUpdate" style={styles.title}>
+                  {this.state.current}
+                </span>
+                <div style={styles.signOutButton}>
+                  <SignOutButton type="danger" />
+                </div>
+              </Header>
+
+              <Content style={styles.content}>
+                <Switch>
+                  {Object.keys(pages).map(name => {
+                    return (
+                      <Route
+                        exact
+                        path={`${match.path}/${name}`}
+                        render={props => {
+                          const Component = pages[name];
+                          return (
+                            <Component
+                              {...props}
+                              shipments={this.state.shipments}
+                              receipts={this.state.receipts}
+                              products={this.state.products}
+                              providers={this.state.providers}
+                              customers={this.state.customers}
+                              users={this.state.users}
+                              fundingSources={this.state.fundingSources}
+                              refreshTables={this.refreshTables}
+                            />
+                          );
+                        }}
+                        key={name}
+                      />
+                    );
+                  })}
+                </Switch>
+              </Content>
+
+              <Footer style={styles.footer}>
+                Whitman Capstone Project 2018-2019
+                <br />
+                Copyright ©2019 Rajesh Narayan, Paul Milloy, Ben Limpich, Jules Choquart, and Pablo
+                Fernandez
+              </Footer>
+            </Layout>
           </Layout>
-        </Layout>
+        )}
       </Router>
     );
   }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Icon, Input, Button } from 'antd';
-import { db } from '../../firebase';
 import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
@@ -39,23 +38,8 @@ class ProductItems extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: null,
-      products: null,
-      fundingSources: null
+      items: null
     };
-  }
-
-  componentDidMount() {
-    db.onceGetProducts().then(snapshot => {
-      let products = snapshot.val();
-      db.onceGetFundingSources().then(snapshot => {
-        const fundingSources = snapshot.val();
-        this.setState({
-          products: products,
-          fundingSources: fundingSources
-        });
-      });
-    });
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -78,13 +62,11 @@ class ProductItems extends React.Component {
   };
 
   onProductSelect = (index, obj, val) => {
-    db.onceGetSpecifcProduct(val).then(snapshot => {
-      const product = snapshot.val();
-      if (product) {
-        const unitWeight = product.unit_weight;
-        this.changeUnitWeight(unitWeight, obj, index);
-      }
-    });
+    const product = this.props.products[val];
+    if (product) {
+      const unitWeight = product.unit_weight;
+      this.changeUnitWeight(unitWeight, obj, index);
+    }
   };
 
   onProductChange = (index, val) => {
@@ -107,7 +89,7 @@ class ProductItems extends React.Component {
           <span style={styles.formItem}>Total Weight</span>
           {invisibleBtn()}
         </div>
-        {!this.state.items || !this.state.fundingSources || !this.state.products
+        {!this.state.items
           ? null
           : this.state.items.map((obj, index) => {
               return (
@@ -119,8 +101,8 @@ class ProductItems extends React.Component {
                       index={index}
                       fundsSource={this.props.fundsSource}
                       onProductSelect={val => this.onProductSelect(index, obj, val)}
-                      products={this.state.products}
-                      fundingSources={this.state.fundingSources}
+                      products={this.props.products}
+                      fundingSources={this.props.fundingSources}
                     />
                   </div>
 

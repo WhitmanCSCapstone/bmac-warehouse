@@ -27,6 +27,8 @@ function EditableShipmentTable(props) {
         refreshTable={props.refreshTable}
         closeForm={props.closeForm}
         rowData={props.rowData}
+        fundingSources={props.fundingSources}
+        products={props.products}
       />
 
       {!props.data || !props.customers || !props.fundingSources ? (

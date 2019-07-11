@@ -2,6 +2,7 @@ import React from 'react';
 import { db } from '../firebase';
 import Moment from 'moment';
 import matchSorter from 'match-sorter';
+import { table2Promise } from '../constants/constants';
 
 export async function getReadableShipmentsTableData() {
   return new Promise((resolve, reject) => {
@@ -224,4 +225,26 @@ export function readableFundingSourceCell(rowData, fundingSources, accessor) {
   const errorMsg = accessor === 'funding_source' ? '' : `INVALID ${accessor}`;
   const name = obj ? obj['id'] : errorMsg;
   return <span>{name}</span>;
+}
+
+export function getTablePromise(table, optCallback) {
+  if (table === 'shipments' || table === 'receipts') {
+    return new Promise((resolve, reject) => {
+      table2Promise[table](optCallback).then(snapshot => {
+        let tempArray = [];
+        snapshot.forEach(child => {
+          tempArray.push(child.val());
+        });
+        const data = tempArray.reverse();
+        resolve(data);
+      });
+    });
+  } else {
+    return new Promise((resolve, reject) => {
+      table2Promise[table](optCallback).then(snapshot => {
+        const data = snapshot.val();
+        resolve(data);
+      });
+    });
+  }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import Moment from 'moment';
-import { db } from '../../firebase';
 import withAuthorization from '../../components/withAuthorization';
 import { sortDataByDate } from '../../utils/misc';
 import EditableShipmentTable from '../shipments/EditableShipmentTable';
@@ -21,44 +20,26 @@ const styles = {
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    const dateRange = [Moment().add(-10, 'days'), Moment().add(1000, 'days')];
     this.state = {
-      dateRange: [Moment().add(-10, 'days'), Moment().add(1000, 'days')],
-      shipData: null,
-      filteredShipData: null,
+      dateRange: dateRange,
+      shipData: props.shipments,
+      filteredShipData: sortDataByDate(props.shipments, 'ship_date', dateRange),
       shipFormModalVisible: false,
       shipRowData: null,
-      customers: null,
-
-      receiptsData: null,
-      filteredReceiptData: null,
+      receiptsData: props.receipts,
+      filteredReceiptData: sortDataByDate(props.receipts, 'recieve_date', dateRange),
       receiptFormModalVisible: false,
-      receiptRowData: null,
-      providers: null,
-
-      fundingSources: null
+      receiptRowData: null
     };
   }
 
-  refreshShipmentTable = () => {
-    db.onceGetShipments().then(snapshot => {
-      let data = [];
-      snapshot.forEach(child => {
-        data.push(child.val());
-      });
-      data = sortDataByDate(data, 'ship_date', this.state.dateRange);
-      this.setState({ shipData: data.reverse() });
-    });
+  refreshShipmentTable = (optCallback = () => {}) => {
+    this.props.refreshTables(['shipments'], optCallback);
   };
 
-  refreshReceiptTable = () => {
-    db.onceGetReceipts().then(snapshot => {
-      let data = [];
-      snapshot.forEach(child => {
-        data.push(child.val());
-      });
-      data = sortDataByDate(data, 'recieve_date', this.state.dateRange);
-      this.setState({ receiptData: data.reverse() });
-    });
+  refreshReceiptTable = (optCallback = () => {}) => {
+    this.props.refreshTables(['receipts'], optCallback);
   };
 
   onShipmentRowClick = rowInfo => {
@@ -75,24 +56,21 @@ class Home extends React.Component {
     });
   };
 
-  componentDidMount() {
-    this.refreshShipmentTable();
-    this.refreshReceiptTable();
-
-    db.onceGetCustomers().then(snapshot => {
-      var data = snapshot.val();
-      this.setState({ customers: data });
-    });
-
-    db.onceGetProviders().then(snapshot => {
-      var data = snapshot.val();
-      this.setState({ providers: data });
-    });
-
-    db.onceGetFundingSources().then(snapshot => {
-      let data = snapshot.val();
-      this.setState({ fundingSources: data });
-    });
+  componentDidUpdate(prevProps) {
+    if (this.props.shipments !== prevProps.shipments) {
+      this.setState({
+        filteredShipData: sortDataByDate(this.props.shipments, 'ship_date', this.state.dateRange)
+      });
+    }
+    if (this.props.receipts !== prevProps.receipts) {
+      this.setState({
+        filteredReceiptData: sortDataByDate(
+          this.props.receipts,
+          'recieve_date',
+          this.state.dateRange
+        )
+      });
+    }
   }
 
   render() {
@@ -108,14 +86,15 @@ class Home extends React.Component {
           refreshTable={this.refreshShipmentTable}
           closeForm={() => this.setState({ shipFormModalVisible: false })}
           rowData={this.state.shipRowData}
-          customers={this.state.customers}
-          fundingSources={this.state.fundingSources}
+          customers={this.props.customers}
+          fundingSources={this.props.fundingSources}
           onRowClick={this.onShipmentRowClick}
           filteredData={this.state.filteredShipData}
           dateRange={this.state.dateRange}
           data={this.state.shipData}
-          defaultPageSize={this.state.shipData ? this.state.shipData.length : 0}
+          defaultPageSize={this.state.filteredShipData ? this.state.filteredShipData.length : 0}
           showPagination={false}
+          products={this.props.products}
         />
 
         <br />
@@ -127,14 +106,17 @@ class Home extends React.Component {
           refreshTable={this.refreshReceiptTable}
           closeForm={() => this.setState({ receiptFormModalVisible: false })}
           rowData={this.state.receiptRowData}
-          providers={this.state.providers}
-          fundingSources={this.state.fundingSources}
+          providers={this.props.providers}
+          fundingSources={this.props.fundingSources}
           onRowClick={this.onReceiptRowClick}
           filteredData={this.state.filteredReceiptData}
           dateRange={this.state.dateRange}
-          data={this.state.receiptData}
-          defaultPageSize={this.state.receiptData ? this.state.receiptData.length : 0}
+          data={this.props.receipts}
+          defaultPageSize={
+            this.state.filteredReceiptData ? this.state.filteredReceiptData.length : 0
+          }
           showPagination={false}
+          products={this.props.products}
         />
       </div>
     );
