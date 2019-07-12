@@ -173,3 +173,32 @@ export function getTablePromise(table, optCallback) {
     });
   }
 }
+
+function isProductRelevant(product, fundsSrcHashToFilterBy, fundingSources) {
+  if (!product) {
+    return false;
+  }
+  const fsHash = product.funding_source;
+  const fundsSrcToFilterBy = fundingSources[fundsSrcHashToFilterBy];
+  const fundsSource = fundingSources[fsHash];
+  // if product matches shipment/receipt funds source, or there is
+  // no given shipment/receipt funds source, or the given product has
+  // no funds source, AND the product isn't discontinued, return true
+  return (
+    product.status !== 'discontinued' &&
+    (fsHash === fundsSrcHashToFilterBy || !fundsSource || !fundsSrcToFilterBy)
+  );
+}
+
+export function getAutocompleteOptionsList(productObjs, fundsSrcHashToFilterBy, fundingSources) {
+  const autocompleteOptionsList = [];
+  for (let i = 0; i < productObjs.length; i++) {
+    if (isProductRelevant(productObjs[i], fundsSrcHashToFilterBy, fundingSources)) {
+      autocompleteOptionsList.push({
+        value: productObjs[i].uniq_id,
+        text: productObjs[i].product_id
+      });
+    }
+  }
+  return autocompleteOptionsList;
+}
