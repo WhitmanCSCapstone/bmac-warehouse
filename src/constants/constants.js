@@ -148,14 +148,6 @@ export const reportType2DateAccessor = {
   'Current Providers': 'recieve_date' // uses reciepts table
 };
 
-export const reportType2FundingSourceRelavancy = {
-  'Inventory Shipments': true,
-  'Inventory Receipts': false,
-  'Current Inventory': true,
-  'Current Customers': true,
-  'Current Providers': false
-};
-
 export const reportType2DateRangeRelavancy = {
   'Inventory Shipments': true,
   'Inventory Receipts': true,
