@@ -1,5 +1,5 @@
-import { sortDataByDate, getCombinedWeight } from '../../utils/misc.js';
-import { reportType2FirebaseCallback, reportKeys } from '../../constants/constants';
+import { getCombinedWeight } from '../../utils/misc.js';
+import { reportKeys } from '../../constants/constants';
 import Moment from 'moment';
 
 /*
@@ -11,7 +11,15 @@ import Moment from 'moment';
    customer received them, you would pass the shipment table, ship_items
    as an accessor, and customer_id as the property.
  */
-function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
+function createDictOfItemsSortedByProperty(
+  data,
+  property_arg,
+  items_accessor,
+  customers,
+  providers,
+  fundingSources,
+  products
+) {
   var dict = {};
   for (var i = 0; i < data.length; i++) {
     var obj = data[i];
@@ -20,15 +28,35 @@ function createDictOfItemsSortedByProperty(data, property_arg, items_accessor) {
       for (var n = 0; n < items.length; n++) {
         var item = items[n];
         var property = item[property_arg];
+        item = makeItemReadable(item, customers, providers, fundingSources, products);
         if (property in dict) {
-          dict[property].push(items[n]);
+          dict[property].push(item);
         } else {
-          dict[property] = [items[n]];
+          dict[property] = [item];
         }
       }
     }
   }
   return dict;
+}
+
+function makeItemReadable(item, customers, providers, fundingSources, products) {
+  let newItem = JSON.parse(JSON.stringify(item));
+  const propsToCheck = [
+    { prop: 'customer_id', dict: customers, accessor: 'customer_id' },
+    { prop: 'provider_id', dict: providers, accessor: 'provider_id' },
+    { prop: 'funds_source', dict: fundingSources, accessor: 'id' },
+    { prop: 'payment_source', dict: fundingSources, accessor: 'id' },
+    { prop: 'product', dict: products, accessor: 'product_id' }
+  ];
+  for (const prop of propsToCheck) {
+    if (prop.prop in newItem) {
+      let obj = prop.dict[newItem[prop.prop]];
+      let name = obj ? obj[prop.accessor] : `INVALID ${prop.prop.toUpperCase()}`;
+      newItem[prop.prop] = name;
+    }
+  }
+  return newItem;
 }
 
 function create2DArrayFromDict(dict, reportType) {
@@ -73,24 +101,48 @@ function alphabatizeByProduct(data) {
   });
 }
 
-export async function getCSVdata(init_data, reportType, callback) {
+export async function getCSVdata(
+  init_data,
+  reportType,
+  callback,
+  customers,
+  fundingSources,
+  providers,
+  products
+) {
   var data = JSON.parse(JSON.stringify(init_data)); // deep clone
   if (data) {
     var array = [];
     var dict = {};
     if (reportType === 'Inventory Shipments') {
-      dict = createDictOfItemsSortedByProperty(data, 'product', 'ship_items');
+      dict = createDictOfItemsSortedByProperty(
+        data,
+        'product',
+        'ship_items',
+        customers,
+        providers,
+        fundingSources,
+        products
+      );
       array = create2DArrayFromDict(dict, reportType);
       alphabatizeByProduct(array);
     } else if (reportType === 'Inventory Receipts') {
-      dict = createDictOfItemsSortedByProperty(data, 'product', 'receive_items');
+      dict = createDictOfItemsSortedByProperty(
+        data,
+        'product',
+        'receive_items',
+        customers,
+        providers,
+        fundingSources,
+        products
+      );
       array = create2DArrayFromDict(dict, reportType);
       alphabatizeByProduct(array);
     } else if (reportType === 'Current Customers') {
-      array = createCustomersReportArray(data);
+      array = createCustomersReportArray(data, reportType, customers, fundingSources);
       alphabatizeByProduct(array);
     } else if (reportType === 'Current Providers') {
-      array = createProvidersReportArray(data, reportType);
+      array = createProvidersReportArray(data, reportType, providers, fundingSources);
       alphabatizeByProduct(array);
     }
     callback(array);
@@ -99,7 +151,7 @@ export async function getCSVdata(init_data, reportType, callback) {
   }
 }
 
-function createProvidersReportArray(data, reportType) {
+function createProvidersReportArray(data, reportType, providers, fundingSources) {
   const array = [];
   for (let i = 0; i < data.length; i++) {
     let receipt = data[i];
@@ -107,30 +159,30 @@ function createProvidersReportArray(data, reportType) {
     const weight = getCombinedWeight(items);
     receipt.total_weight = weight;
     receipt = filterObjKeys(receipt, reportType);
+    const provider = providers[receipt.provider_id];
+    const payment_source = fundingSources[receipt.payment_source];
+    receipt.provider_id = provider ? provider.provider_id : 'INVALID PROVIDER_ID';
+    receipt.payment_source = payment_source ? payment_source.id : 'INVALID PAYMENT_SOURCE';
     array.push(receipt);
   }
   return array;
 }
 
-function createCustomersReportArray(data) {
+function createCustomersReportArray(data, reportType, customers, fundingSources) {
   const array = [];
   for (let i = 0; i < data.length; i++) {
     let shipment = data[i];
     const items = shipment.ship_items;
     const weight = getCombinedWeight(items);
     shipment.total_weight = weight;
-    shipment = filterObjKeys(shipment, 'Current Customers');
+    shipment = filterObjKeys(shipment, reportType);
+    const customer = customers[shipment.customer_id];
+    const funds_source = fundingSources[shipment.funds_source];
+    shipment.customer_id = customer ? customer.customer_id : undefined;
+    shipment.funds_source = funds_source ? funds_source.id : undefined;
     array.push(shipment);
   }
   return array;
-}
-
-export async function populateTableData(reportType, dateRange, date_accessor, callback) {
-  var firebaseCallback = reportType2FirebaseCallback[reportType];
-  var data = await firebaseCallback().then(snapshot => snapshot.val());
-  data = typeof data === 'object' ? Object.values(data) : data;
-  data = dateRange.length ? sortDataByDate(data, date_accessor, dateRange) : data;
-  callback(data);
 }
 
 export function makeDatesReadable(data) {
