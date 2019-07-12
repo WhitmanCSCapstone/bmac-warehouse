@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon, Input, Button } from 'antd';
+import { getAutocompleteOptionsList } from '../../utils/misc.js';
 import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
@@ -37,16 +38,33 @@ const styles = {
 class ProductItems extends React.Component {
   constructor(props) {
     super(props);
+    const productObjs = Object.values(this.props.products);
+    const autocompleteOptionsList = getAutocompleteOptionsList(
+      productObjs,
+      this.props.fundsSource,
+      props.fundingSources
+    );
+
     this.state = {
-      items: null
+      items: props.items,
+      autocompleteOptionsList: autocompleteOptionsList
     };
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.items !== props.items) {
-      return { items: props.items };
+  componentDidUpdate(prevProps) {
+    if (this.props.items !== prevProps.items) {
+      this.setState({ items: this.props.items });
     }
-    return null;
+    if (this.props.fundsSource !== prevProps.fundsSource) {
+      const productObjs = Object.values(this.props.products);
+      this.setState({
+        autocompleteOptionsList: getAutocompleteOptionsList(
+          productObjs,
+          this.props.fundsSource,
+          this.props.fundingSources
+        )
+      });
+    }
   }
 
   updateTotalWeight = (obj, index) => {
@@ -99,7 +117,7 @@ class ProductItems extends React.Component {
                       onProductChange={val => this.onProductChange(index, val)}
                       obj={obj ? obj : undefined}
                       index={index}
-                      fundsSource={this.props.fundsSource}
+                      autocompleteOptionsList={this.state.autocompleteOptionsList}
                       onProductSelect={val => this.onProductSelect(index, obj, val)}
                       products={this.props.products}
                       fundingSources={this.props.fundingSources}
