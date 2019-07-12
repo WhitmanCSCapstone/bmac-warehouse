@@ -1,4 +1,3 @@
-import { getReadableShipmentsTableData, getReadableReceiptsTableData } from '../utils/misc';
 import { db } from '../firebase';
 
 export const tableKeys = {
@@ -163,14 +162,6 @@ export const reportType2DateRangeRelavancy = {
   'Current Inventory': false,
   'Current Customers': true,
   'Current Providers': true
-};
-
-export const reportType2FirebaseCallback = {
-  'Inventory Shipments': getReadableShipmentsTableData,
-  'Inventory Receipts': getReadableReceiptsTableData,
-  'Current Inventory': null,
-  'Current Customers': getReadableShipmentsTableData,
-  'Current Providers': getReadableReceiptsTableData
 };
 
 export const table2Promise = {

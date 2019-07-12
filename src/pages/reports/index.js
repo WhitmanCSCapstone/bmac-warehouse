@@ -9,7 +9,8 @@ import {
   getTableColumnObjForDates,
   getTableColumnObjForIntegers,
   getTableColumnObjForFilterableStrings,
-  getTableColumnObjBasic
+  getTableColumnObjBasic,
+  sortDataByDate
 } from '../../utils/misc.js';
 import {
   reportKeys,
@@ -18,7 +19,7 @@ import {
   reportType2DateRangeRelavancy,
   radioValue2ReportType
 } from '../../constants/constants';
-import { populateTableData, getCSVdata, makeDatesReadable } from './utils';
+import { getCSVdata, makeDatesReadable } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 
@@ -43,60 +44,61 @@ const styles = {
 class Reports extends React.Component {
   constructor(props) {
     super(props);
+    const defaultReportType = 'Inventory Shipments';
+    const tableName = reportType2TableName[defaultReportType];
     this.state = {
-      reportType: 'Inventory Shipments',
-      reportTypeTableName: 'shipments',
-      data: null,
+      reportType: defaultReportType,
+      reportTypeTableName: tableName,
+      data: props[tableName],
       dateRange: [],
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
       dataCSV: null,
-      filteredData: null,
-      renderDownloadComponent: false
+      filteredData: null
     };
   }
 
   componentDidMount() {
-    this.updateTable();
+    this.createCSV();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      this.state.reportTypeTableName !== prevState.reportTypeTableName ||
-      this.state.dateRange !== prevState.dateRange
-    ) {
-      this.updateTable();
+    if (this.state.reportTypeTableName !== prevState.reportTypeTableName) {
+      this.setState({ data: this.props[this.state.reportTypeTableName] }, this.createCSV);
+    }
+    if (this.state.dateRange !== prevState.dateRange) {
+      const accessor = reportType2DateAccessor[this.state.reportType];
+      const data = this.state.dateRange.length
+        ? sortDataByDate(this.state.data, accessor, this.state.dateRange)
+        : this.state.data;
+      this.setState({ data: data }, this.createCSV);
     }
   }
 
-  updateTable = () => {
-    this.setState({ dataCSV: null, data: null });
-    populateTableData(
+  createCSV = () => {
+    getCSVdata(
+      this.state.data,
       this.state.reportType,
-      this.state.dateRange,
-      reportType2DateAccessor[this.state.reportType],
-      data => {
-        this.setState({ data: data });
-      }
+      dataCSV => {
+        this.setState({ dataCSV: dataCSV });
+      },
+      this.props.customers,
+      this.props.fundingSources,
+      this.props.providers,
+      this.props.products
     );
   };
 
-  createCSV = () => {
-    getCSVdata(this.state.data, this.state.reportType, dataCSV => {
-      this.setState({ dataCSV: dataCSV });
-    });
-  };
-
   onReportTypeChange = e => {
-    var val = e.target.value.toString();
-    var reportType = radioValue2ReportType[val];
-    var tableName = reportType2TableName[reportType];
+    let val = e.target.value.toString();
+    let reportType = radioValue2ReportType[val];
+    let tableName = reportType2TableName[reportType];
     this.setState({
       reportType: reportType,
       reportTypeTableName: tableName,
       reportTypeRadioValue: e.target.value,
       //reset all the settings
-      data: null,
+      data: this.props[tableName],
       dateRange: [],
       dataCSV: null,
       filteredData: null
@@ -160,18 +162,6 @@ class Reports extends React.Component {
               disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
             />
           }
-
-          {this.state.data ? (
-            <Button type="primary" onClick={this.createCSV}>
-              {' '}
-              Generate CSV{' '}
-            </Button>
-          ) : (
-            <Button type="primary">
-              {' '}
-              Generate CSV <Spin indicator={antIcon} />{' '}
-            </Button>
-          )}
 
           <CSVLink
             data={
