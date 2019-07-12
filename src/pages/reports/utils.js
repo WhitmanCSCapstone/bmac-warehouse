@@ -95,9 +95,9 @@ function getVerboseItems(oldObj, items_accessor) {
   return newObj;
 }
 
-function alphabatizeByProduct(data) {
+function alphabatizeByProperty(data, prop) {
   data.sort((a, b) => {
-    return a.product > b.product ? 0 : -1;
+    return a[prop] > b[prop] ? 0 : -1;
   });
 }
 
@@ -125,7 +125,7 @@ export async function getCSVdata(
         products
       );
       array = create2DArrayFromDict(dict, reportType);
-      alphabatizeByProduct(array);
+      alphabatizeByProperty(array, 'product');
     } else if (reportType === 'Inventory Receipts') {
       dict = createDictOfItemsSortedByProperty(
         data,
@@ -137,13 +137,13 @@ export async function getCSVdata(
         products
       );
       array = create2DArrayFromDict(dict, reportType);
-      alphabatizeByProduct(array);
+      alphabatizeByProperty(array, 'product');
     } else if (reportType === 'Current Customers') {
       array = createCustomersReportArray(data, reportType, customers, fundingSources);
-      alphabatizeByProduct(array);
+      alphabatizeByProperty(array, 'customer_id');
     } else if (reportType === 'Current Providers') {
       array = createProvidersReportArray(data, reportType, providers, fundingSources);
-      alphabatizeByProduct(array);
+      alphabatizeByProperty(array, 'provider_id');
     }
     callback(array);
   } else {
