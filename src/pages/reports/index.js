@@ -68,7 +68,7 @@ class Reports extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       this.state.dateRange !== prevState.dateRange ||
-      this.state.reportTypeTableName !== prevState.reportTypeTableName
+      this.state.reportTypeRadioValue !== prevState.reportTypeRadioValue
     ) {
       const accessor = reportType2DateAccessor[this.state.reportType];
       const data = this.state.dateRange.length
