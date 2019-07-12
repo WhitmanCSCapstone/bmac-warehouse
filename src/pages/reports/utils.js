@@ -160,6 +160,10 @@ function createProvidersReportArray(data, reportType, providers, fundingSources)
     receipt.total_weight = weight;
     receipt = filterObjKeys(receipt, reportType);
     const provider = providers[receipt.provider_id];
+    if (provider) {
+      receipt.address =
+        provider.address + ' ' + provider.city + ' ' + provider.state + ' ' + provider.zip;
+    }
     const payment_source = fundingSources[receipt.payment_source];
     receipt.provider_id = provider ? provider.provider_id : 'INVALID PROVIDER_ID';
     receipt.payment_source = payment_source ? payment_source.id : 'INVALID PAYMENT_SOURCE';
