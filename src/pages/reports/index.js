@@ -4,6 +4,7 @@
 
 import React from 'react';
 import ReactTable from 'react-table';
+import Moment from 'moment';
 import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
 import {
   getTableColumnObjForDates,
@@ -46,11 +47,13 @@ class Reports extends React.Component {
     super(props);
     const defaultReportType = 'Inventory Shipments';
     const tableName = reportType2TableName[defaultReportType];
+    const accessor = reportType2DateAccessor[defaultReportType];
+    const dateRange = [Moment().add(-30, 'days'), Moment()];
     this.state = {
       reportType: defaultReportType,
       reportTypeTableName: tableName,
-      data: props[tableName],
-      dateRange: [],
+      data: sortDataByDate(props[tableName], accessor, dateRange),
+      dateRange: dateRange,
       reportTypeRadioValue: 1,
       statusRadioValue: 6,
       dataCSV: null,
@@ -63,13 +66,13 @@ class Reports extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.reportTypeTableName !== prevState.reportTypeTableName) {
-      this.setState({ data: this.props[this.state.reportTypeTableName] }, this.createCSV);
-    }
-    if (this.state.dateRange !== prevState.dateRange) {
+    if (
+      this.state.dateRange !== prevState.dateRange ||
+      this.state.reportTypeTableName !== prevState.reportTypeTableName
+    ) {
       const accessor = reportType2DateAccessor[this.state.reportType];
       const data = this.state.dateRange.length
-        ? sortDataByDate(this.state.data, accessor, this.state.dateRange)
+        ? sortDataByDate(this.props[this.state.reportTypeTableName], accessor, this.state.dateRange)
         : this.state.data;
       this.setState({ data: data }, this.createCSV);
     }
@@ -99,7 +102,6 @@ class Reports extends React.Component {
       reportTypeRadioValue: e.target.value,
       //reset all the settings
       data: this.props[tableName],
-      dateRange: [],
       dataCSV: null,
       filteredData: null
     });
