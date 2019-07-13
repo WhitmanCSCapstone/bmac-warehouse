@@ -78,7 +78,7 @@ class ProductItems extends React.Component {
     const product = this.props.products[val];
     if (product) {
       const unitWeight = product.unit_weight;
-      const material_number = product.material_number;
+      let material_number = product.material_number ? product.material_number : null;
       this.props.onChange('material_number', index, material_number);
       this.changeUnitWeight(unitWeight, obj, index);
     }

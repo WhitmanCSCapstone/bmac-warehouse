@@ -74,7 +74,7 @@ class ReceiptForm extends React.Component {
 
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.receive_items.slice(0); // shallow clone
-    if (itemsCopy[index] === undefined) {
+    if (!itemsCopy[index]) {
       itemsCopy[index] = { [prop]: val };
     } else {
       itemsCopy[index][prop] = val;
@@ -109,10 +109,11 @@ class ReceiptForm extends React.Component {
 
   addReceiveItem = () => {
     var emptyRow = {
-      product: undefined,
-      unit_weight: undefined,
-      case_lots: undefined,
-      total_weight: undefined
+      product: null,
+      material_number: null,
+      unit_weight: null,
+      case_lots: null,
+      total_weight: null
     };
 
     var newReceiveItems = this.state.receive_items.concat(emptyRow).filter(elem => {
