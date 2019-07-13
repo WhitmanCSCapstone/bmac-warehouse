@@ -12,12 +12,18 @@ function writeBmacAddressToPdf(pdf) {
 function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
   let y = Number(JSON.parse(JSON.stringify(y_old)));
 
+  const base_x = 5;
+  const prodX = base_x;
+  const unitWeightX = prodX + 95;
+  const caseLotX = unitWeightX + 30;
+  const totalWeightX = caseLotX + 30;
+
   pdf.text(10, 90, 'Items Shipped:');
   pdf.setFontType('bold');
-  pdf.text(20, 100, 'Product');
-  pdf.text(90, 100, 'Unit Weight');
-  pdf.text(115, 100, 'Case Lots');
-  pdf.text(140, 100, 'Total Weight');
+  pdf.text(prodX, 100, 'Product');
+  pdf.text(unitWeightX, 100, 'Unit Weight');
+  pdf.text(caseLotX, 100, 'Case Lots');
+  pdf.text(totalWeightX, 100, 'Total Weight');
   pdf.setFontType('normal');
 
   let total_case_lots = 0;
@@ -27,19 +33,19 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
     const unit_weight = items[i].unit_weight;
     const case_lots = items[i].case_lots;
     const total_weight = items[i].total_weight;
-    product ? pdf.text(20, y, String(product)) : pdf.text(30, y, '-');
-    unit_weight ? pdf.text(90, y, String(unit_weight)) : pdf.text(90, y, '-');
-    case_lots ? pdf.text(115, y, String(case_lots)) : pdf.text(115, y, '-');
-    total_weight ? pdf.text(140, y, String(total_weight)) : pdf.text(140, y, '-');
+    product ? pdf.text(prodX, y, String(product)) : pdf.text(prodX, y, '-');
+    unit_weight ? pdf.text(unitWeightX, y, String(unit_weight)) : pdf.text(unitWeightX, y, '-');
+    case_lots ? pdf.text(caseLotX, y, String(case_lots)) : pdf.text(caseLotX, y, '-');
+    total_weight ? pdf.text(totalWeightX, y, String(total_weight)) : pdf.text(totalWeightX, y, '-');
     y += 5;
     total_case_lots += parseInt(case_lots, 10);
   }
 
   pdf.setFontType('bold');
-  pdf.text(90, y + 5, 'Totals: ');
-  pdf.text(115, y + 5, String(total_case_lots));
-  pdf.text(140, y + 5, String(getCombinedWeight(items)));
-  pdf.text(155, y + 5, 'pounds');
+  pdf.text(unitWeightX, y + 5, 'Totals: ');
+  pdf.text(caseLotX, y + 5, String(total_case_lots));
+  pdf.text(totalWeightX, y + 5, String(getCombinedWeight(items)));
+  pdf.text(totalWeightX + 15, y + 5, 'pounds');
 
   return y;
 }
