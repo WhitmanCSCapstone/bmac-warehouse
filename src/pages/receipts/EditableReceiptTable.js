@@ -23,14 +23,17 @@ function readableProviderCell(rowData, providers) {
 function EditableReceiptTable(props) {
   return (
     <div>
-      <ReceiptForm
-        formModalVisible={props.formModalVisible}
-        refreshTable={props.refreshTable}
-        closeForm={props.closeForm}
-        rowData={props.rowData}
-        fundingSources={props.fundingSources}
-        products={props.products}
-      />
+      {!props.shouldFormBeMounted ? null : (
+        <ReceiptForm
+          modalVisible={props.modalVisible}
+          refreshTable={props.refreshTable}
+          closeForm={props.closeForm}
+          closeModal={props.closeModal}
+          rowData={props.rowData}
+          fundingSources={props.fundingSources}
+          products={props.products}
+        />
+      )}
 
       {!props.data || !props.providers || !props.fundingSources ? (
         <LoadingScreen />

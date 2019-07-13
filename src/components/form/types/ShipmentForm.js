@@ -72,12 +72,6 @@ class ShipmentForm extends React.Component {
     this.state = { ...this.defaultState, ...props.rowData };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.rowData !== prevProps.rowData) {
-      this.setState({ ...this.defaultState, ...this.props.rowData });
-    }
-  }
-
   onChange = (prop, val) => {
     this.setState({
       [prop]: val
@@ -115,8 +109,7 @@ class ShipmentForm extends React.Component {
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable(() => {
-      this.props.closeForm();
-      this.setState({ ...this.defaultState });
+      this.props.closeModal();
     });
   };
 
@@ -142,7 +135,7 @@ class ShipmentForm extends React.Component {
 
   handleDelete = () => {
     db.deleteShipmentObj(this.props.rowData.uniq_id);
-    this.props.refreshTable(this.props.closeForm);
+    this.props.refreshTable(this.props.closeModal);
   };
 
   render() {
@@ -150,10 +143,11 @@ class ShipmentForm extends React.Component {
       <Modal
         title="Shipment Form"
         style={{ top: 20 }}
-        width={'50vw'}
+        width={'60vw'}
         destroyOnClose={true}
-        visible={this.props.formModalVisible}
-        onCancel={this.props.closeForm}
+        visible={this.props.modalVisible}
+        onCancel={this.props.closeModal}
+        afterClose={this.props.closeForm}
         footer={[
           <Footer
             key="footer"
@@ -161,7 +155,7 @@ class ShipmentForm extends React.Component {
             handleInvoiceClick={() => handleInvoiceClick(this.state)}
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
-            closeForm={this.props.closeForm}
+            closeModal={this.props.closeModal}
             handleOk={this.handleOk}
           />
         ]}

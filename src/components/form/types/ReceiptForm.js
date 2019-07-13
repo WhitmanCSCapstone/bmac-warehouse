@@ -72,12 +72,6 @@ class ReceiptForm extends React.Component {
     });
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.rowData !== prevProps.rowData) {
-      this.setState({ ...this.props.rowData });
-    }
-  }
-
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.receive_items.slice(0); // shallow clone
     if (itemsCopy[index] === undefined) {
@@ -109,8 +103,7 @@ class ReceiptForm extends React.Component {
 
     // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
     this.props.refreshTable(() => {
-      this.props.closeForm();
-      this.setState({ ...this.defaultState });
+      this.props.closeModal();
     });
   };
 
@@ -136,7 +129,7 @@ class ReceiptForm extends React.Component {
 
   handleDelete = () => {
     db.deleteReceiptObj(this.props.rowData.uniq_id);
-    this.props.refreshTable(this.props.closeForm);
+    this.props.refreshTable(this.props.closeModal);
   };
 
   render() {
@@ -144,17 +137,18 @@ class ReceiptForm extends React.Component {
       <Modal
         title="Receipt Form"
         style={{ top: 20 }}
-        width={'50vw'}
+        width={'60vw'}
         destroyOnClose={true}
-        visible={this.props.formModalVisible}
-        onCancel={this.props.closeForm}
+        visible={this.props.modalVisible}
+        afterClose={this.props.closeForm}
+        onCancel={this.props.closeModal}
         footer={[
           <Footer
             key="footer"
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
             handleReceiptClick={() => handleReceiptClick(this.state)}
-            closeForm={this.props.closeForm}
+            closeModal={this.props.closeModal}
             handleOk={this.handleOk}
           />
         ]}
