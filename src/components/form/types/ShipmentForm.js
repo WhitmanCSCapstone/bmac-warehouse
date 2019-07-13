@@ -55,14 +55,14 @@ class ShipmentForm extends React.Component {
   defaultState = {
     customer_id: null,
     funds_source: null,
-    invoice_date: 'null',
-    invoice_no: 'null',
-    notes: undefined,
+    invoice_date: null,
+    invoice_no: null,
+    notes: null,
     ship_date: null,
     ship_items: [{}, {}, {}, {}, {}],
-    ship_rate: undefined,
-    ship_via: undefined,
-    total_price: undefined,
+    ship_rate: null,
+    ship_via: null,
+    total_price: null,
     total_weight: null,
     uniq_id: null
   };
@@ -80,7 +80,7 @@ class ShipmentForm extends React.Component {
 
   onItemsChange = (prop, index, val) => {
     var itemsCopy = this.state.ship_items.slice(0); // shallow clone
-    if (itemsCopy[index] === undefined) {
+    if (!itemsCopy[index]) {
       itemsCopy[index] = { [prop]: val };
     } else {
       itemsCopy[index][prop] = val;
@@ -115,10 +115,11 @@ class ShipmentForm extends React.Component {
 
   addShipmentItem = () => {
     var emptyRow = {
-      product: undefined,
-      unit_weight: undefined,
-      case_lots: undefined,
-      total_weight: undefined
+      product: null,
+      material_number: null,
+      unit_weight: null,
+      case_lots: null,
+      total_weight: null
     };
 
     var newShipItems = this.state.ship_items.concat(emptyRow).filter(elem => {
@@ -198,7 +199,7 @@ class ShipmentForm extends React.Component {
               Ship Via:
               <Select
                 placeholder="Ship Via"
-                value={this.state.ship_via}
+                value={this.state.ship_via ? this.state.ship_via : undefined}
                 onChange={val => {
                   this.onChange('ship_via', val);
                 }}
