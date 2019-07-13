@@ -71,9 +71,14 @@ class Reports extends React.Component {
       this.state.reportTypeRadioValue !== prevState.reportTypeRadioValue
     ) {
       const accessor = reportType2DateAccessor[this.state.reportType];
-      const data = this.state.dateRange.length
-        ? sortDataByDate(this.props[this.state.reportTypeTableName], accessor, this.state.dateRange)
-        : this.state.data;
+      const data =
+        this.state.dateRange.length === 2
+          ? sortDataByDate(
+              this.props[this.state.reportTypeTableName],
+              accessor,
+              this.state.dateRange
+            )
+          : this.props[this.state.reportTypeTableName];
       this.setState({ data: data }, this.createCSV);
     }
   }

@@ -25,7 +25,7 @@ class Shipments extends React.Component {
   }
 
   onDateChange = dateRange => {
-    const newData = sortDataByDate(this.props.data, 'ship_date', dateRange);
+    const newData = sortDataByDate(this.props.shipments, 'ship_date', dateRange);
     this.setState({
       filteredData: newData,
       dateRange: dateRange
