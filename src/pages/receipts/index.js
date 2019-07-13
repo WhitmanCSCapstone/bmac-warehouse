@@ -16,7 +16,8 @@ class Receipts extends React.Component {
     this.state = {
       filteredData: null,
       dateRange: null,
-      formModalVisible: false,
+      modalVisible: false,
+      shouldFormBeMounted: false,
       rowData: null
     };
   }
@@ -34,13 +35,18 @@ class Receipts extends React.Component {
   };
 
   closeForm = () => {
-    this.setState({ formModalVisible: false });
+    this.setState({ shouldFormBeMounted: false });
+  };
+
+  closeModal = () => {
+    this.setState({ modalVisible: false });
   };
 
   onRowClick = rowInfo => {
     this.setState({
       rowData: rowInfo.original,
-      formModalVisible: true
+      modalVisible: true,
+      shouldFormBeMounted: true
     });
   };
 
@@ -55,7 +61,8 @@ class Receipts extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                modalVisible: true,
+                shouldFormBeMounted: true,
                 rowData: null
               })
             }
@@ -65,9 +72,11 @@ class Receipts extends React.Component {
         </div>
 
         <EditableReceiptTable
-          formModalVisible={this.state.formModalVisible}
+          modalVisible={this.state.modalVisible}
+          shouldFormBeMounted={this.state.shouldFormBeMounted}
           refreshTable={this.refreshTable}
           closeForm={this.closeForm}
+          closeModal={this.closeModal}
           rowData={this.state.rowData}
           providers={this.props.providers}
           fundingSources={this.props.fundingSources}

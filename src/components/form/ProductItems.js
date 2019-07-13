@@ -44,17 +44,12 @@ class ProductItems extends React.Component {
       this.props.fundsSource,
       props.fundingSources
     );
-
     this.state = {
-      items: props.items,
       autocompleteOptionsList: autocompleteOptionsList
     };
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.items !== prevProps.items) {
-      this.setState({ items: this.props.items });
-    }
     if (this.props.fundsSource !== prevProps.fundsSource) {
       const productObjs = Object.values(this.props.products);
       this.setState({
@@ -107,9 +102,9 @@ class ProductItems extends React.Component {
           <span style={styles.formItem}>Total Weight</span>
           {invisibleBtn()}
         </div>
-        {!this.state.items
+        {!this.props.items
           ? null
-          : this.state.items.map((obj, index) => {
+          : this.props.items.map((obj, index) => {
               return (
                 <div key={index} style={styles.row}>
                   <div style={styles.productItem}>
@@ -151,7 +146,7 @@ class ProductItems extends React.Component {
                     />
                   </div>
 
-                  {this.state.items.length === 1 ? (
+                  {this.props.items.length === 1 ? (
                     invisibleBtn()
                   ) : (
                     <Icon

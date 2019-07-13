@@ -18,7 +18,8 @@ class Shipments extends React.Component {
     this.state = {
       filteredData: null,
       dateRange: null,
-      formModalVisible: false,
+      modalVisible: false,
+      formShouldBeMounted: false,
       rowData: null
     };
   }
@@ -36,13 +37,18 @@ class Shipments extends React.Component {
   };
 
   closeForm = () => {
-    this.setState({ formModalVisible: false });
+    this.setState({ formShouldBeMounted: false });
+  };
+
+  closeModal = () => {
+    this.setState({ modalVisible: false });
   };
 
   onRowClick = rowInfo => {
     this.setState({
       rowData: rowInfo.original,
-      formModalVisible: true
+      modalVisible: true,
+      formShouldBeMounted: true
     });
   };
 
@@ -57,7 +63,8 @@ class Shipments extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                modalVisible: true,
+                formShouldBeMounted: true,
                 rowData: null
               })
             }
@@ -67,9 +74,11 @@ class Shipments extends React.Component {
         </div>
 
         <EditableShipmentTable
-          formModalVisible={this.state.formModalVisible}
+          modalVisible={this.state.modalVisible}
+          formShouldBeMounted={this.state.formShouldBeMounted}
           refreshTable={this.refreshTable}
           closeForm={this.closeForm}
+          closeModal={this.closeModal}
           rowData={this.state.rowData}
           customers={this.props.customers}
           fundingSources={this.props.fundingSources}

@@ -22,14 +22,17 @@ function readableCustomerCell(rowData, customers) {
 function EditableShipmentTable(props) {
   return (
     <div>
-      <ShipmentForm
-        formModalVisible={props.formModalVisible}
-        refreshTable={props.refreshTable}
-        closeForm={props.closeForm}
-        rowData={props.rowData}
-        fundingSources={props.fundingSources}
-        products={props.products}
-      />
+      {!props.formShouldBeMounted ? null : (
+        <ShipmentForm
+          refreshTable={props.refreshTable}
+          closeForm={props.closeForm}
+          closeModal={props.closeModal}
+          modalVisible={props.modalVisible}
+          rowData={props.rowData}
+          fundingSources={props.fundingSources}
+          products={props.products}
+        />
+      )}
 
       {!props.data || !props.customers || !props.fundingSources ? (
         <LoadingScreen />

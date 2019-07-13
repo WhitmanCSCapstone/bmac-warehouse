@@ -57,7 +57,7 @@ class Footer extends React.Component {
           </Button>
         ) : null}
 
-        <Button key="Cancel" onClick={this.props.closeForm}>
+        <Button key="Cancel" onClick={this.props.closeModal}>
           Cancel
         </Button>
         <Button key="submit" loading={this.state.loading} type="primary" onClick={this.onClick}>
