@@ -44,6 +44,7 @@ export const tableKeys = {
 
   products: [
     'product_id',
+    'material_number',
     //"product_code",
     'funding_source',
     'unit_weight',
@@ -102,9 +103,17 @@ export const tableKeys = {
 };
 
 export const reportKeys = {
-  'Inventory Shipments': ['product', 'ship_date', 'funds_source', 'customer_id', 'case_lots'],
+  'Inventory Shipments': [
+    'product',
+    'material_number',
+    'ship_date',
+    'funds_source',
+    'customer_id',
+    'case_lots'
+  ],
   'Inventory Receipts': [
     'product',
+    'material_number',
     'recieve_date',
     'payment_source',
     'provider_id',

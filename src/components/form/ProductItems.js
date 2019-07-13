@@ -30,7 +30,7 @@ const styles = {
 
   formItem: {
     margin: '0em 0.5em 0.5em 0em',
-    width: '20%',
+    width: '15%',
     overflow: 'hidden'
   }
 };
@@ -78,6 +78,8 @@ class ProductItems extends React.Component {
     const product = this.props.products[val];
     if (product) {
       const unitWeight = product.unit_weight;
+      const material_number = product.material_number;
+      this.props.onChange('material_number', index, material_number);
       this.changeUnitWeight(unitWeight, obj, index);
     }
   };
@@ -97,6 +99,7 @@ class ProductItems extends React.Component {
       <div style={styles.container}>
         <div style={styles.row}>
           <span style={styles.productItem}>Product</span>
+          <span style={styles.formItem}>Material #</span>
           <span style={styles.formItem}>Unit Weight</span>
           <span style={styles.formItem}>Case Lots</span>
           <span style={styles.formItem}>Total Weight</span>
@@ -116,6 +119,14 @@ class ProductItems extends React.Component {
                       onProductSelect={val => this.onProductSelect(index, obj, val)}
                       products={this.props.products}
                       fundingSources={this.props.fundingSources}
+                    />
+                  </div>
+
+                  <div style={styles.formItem}>
+                    <Input
+                      placeholder="Material #"
+                      value={obj ? obj['material_number'] : undefined}
+                      onChange={e => this.props.onChange('material_number', index, e.target.value)}
                     />
                   </div>
 

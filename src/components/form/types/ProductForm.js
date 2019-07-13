@@ -46,6 +46,7 @@ const styles = {
 class ProductForm extends React.Component {
   defaultState = {
     product_id: null,
+    material_number: null,
     funding_source: null,
     unit_weight: null,
     unit_price: null,
@@ -136,6 +137,14 @@ class ProductForm extends React.Component {
               value={this.state.product_id}
               placeholder="Product Name"
               onChange={e => this.onChange('product_id', e.target.value)}
+            />
+          </div>
+          <div style={styles.formItem}>
+            Material Number:
+            <Input
+              value={this.state.material_number}
+              placeholder="Material Number"
+              onChange={e => this.onChange('material_number', e.target.value)}
             />
           </div>
           <Divider orientation="left">Product Information</Divider>
