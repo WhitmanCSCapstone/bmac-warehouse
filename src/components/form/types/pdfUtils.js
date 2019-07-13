@@ -14,13 +14,15 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
 
   const base_x = 5;
   const prodX = base_x;
-  const unitWeightX = prodX + 95;
-  const caseLotX = unitWeightX + 30;
-  const totalWeightX = caseLotX + 30;
+  const materialNumX = prodX + 85;
+  const unitWeightX = materialNumX + 25;
+  const caseLotX = unitWeightX + 25;
+  const totalWeightX = caseLotX + 25;
 
   pdf.text(10, 90, 'Items Shipped:');
   pdf.setFontType('bold');
   pdf.text(prodX, 100, 'Product');
+  pdf.text(materialNumX, 100, 'Material #');
   pdf.text(unitWeightX, 100, 'Unit Weight');
   pdf.text(caseLotX, 100, 'Case Lots');
   pdf.text(totalWeightX, 100, 'Total Weight');
@@ -30,10 +32,14 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
 
   for (let i = 0; i < items.length; i++) {
     const product = items[i].product;
+    const material_number = items[i].material_number;
     const unit_weight = items[i].unit_weight;
     const case_lots = items[i].case_lots;
     const total_weight = items[i].total_weight;
     product ? pdf.text(prodX, y, String(product)) : pdf.text(prodX, y, '-');
+    material_number
+      ? pdf.text(materialNumX, y, String(material_number))
+      : pdf.text(materialNumX, y, '-');
     unit_weight ? pdf.text(unitWeightX, y, String(unit_weight)) : pdf.text(unitWeightX, y, '-');
     case_lots ? pdf.text(caseLotX, y, String(case_lots)) : pdf.text(caseLotX, y, '-');
     total_weight ? pdf.text(totalWeightX, y, String(total_weight)) : pdf.text(totalWeightX, y, '-');

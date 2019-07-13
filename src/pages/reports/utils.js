@@ -28,6 +28,7 @@ function createDictOfItemsSortedByProperty(
       for (var n = 0; n < items.length; n++) {
         var item = items[n];
         var property = item[property_arg];
+        item = getMaterialNumber(item, products);
         item = makeItemReadable(item, customers, providers, fundingSources, products);
         if (property in dict) {
           dict[property].push(item);
@@ -38,6 +39,15 @@ function createDictOfItemsSortedByProperty(
     }
   }
   return dict;
+}
+
+function getMaterialNumber(item, products) {
+  const newItem = JSON.parse(JSON.stringify(item));
+  const product = products[newItem.product];
+  if (product && product.material_number) {
+    newItem.material_number = product.material_number;
+  }
+  return newItem;
 }
 
 function makeItemReadable(item, customers, providers, fundingSources, products) {
