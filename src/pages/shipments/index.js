@@ -4,13 +4,11 @@
 
 import React from 'react';
 import { Button, Icon } from 'antd';
-import { DatePicker } from 'antd';
+import CustomDatePicker from '../../components/CustomDatePicker';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import EditableShipmentTable from './EditableShipmentTable';
 import { styles } from '../styles.js';
-
-const { RangePicker } = DatePicker;
 
 class Shipments extends React.Component {
   constructor(props) {
@@ -56,7 +54,7 @@ class Shipments extends React.Component {
     return (
       <div style={styles.container}>
         <div style={styles.controller}>
-          <RangePicker onChange={this.onDateChange} format={'MM/DD/YYYY'} />
+          <CustomDatePicker onDateChange={this.onDateChange} value={this.state.dateRange} />
 
           <Button
             type="primary"
