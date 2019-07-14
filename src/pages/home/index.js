@@ -25,11 +25,13 @@ class Home extends React.Component {
       dateRange: dateRange,
       shipData: props.shipments,
       filteredShipData: sortDataByDate(props.shipments, 'ship_date', dateRange),
-      shipFormModalVisible: false,
+      shipModalVisible: false,
+      shipmentShouldFormBeMounted: false,
       shipRowData: null,
       receiptsData: props.receipts,
       filteredReceiptData: sortDataByDate(props.receipts, 'recieve_date', dateRange),
-      receiptFormModalVisible: false,
+      receiptModalVisible: false,
+      receiptShouldFormBeMounted: false,
       receiptRowData: null
     };
   }
@@ -45,14 +47,16 @@ class Home extends React.Component {
   onShipmentRowClick = rowInfo => {
     this.setState({
       shipRowData: rowInfo.original,
-      shipFormModalVisible: true
+      shipmentModalVisible: true,
+      shipmentShouldFormBeMounted: true
     });
   };
 
   onReceiptRowClick = rowInfo => {
     this.setState({
       receiptRowData: rowInfo.original,
-      receiptFormModalVisible: true
+      receiptModalVisible: true,
+      receiptShouldFormBeMounted: true
     });
   };
 
@@ -82,9 +86,11 @@ class Home extends React.Component {
         <h3 style={styles.tableTitles}>Last 10 days Shipments</h3>
 
         <EditableShipmentTable
-          formModalVisible={this.state.shipFormModalVisible}
+          modalVisible={this.state.shipmentModalVisible}
+          shouldFormBeMounted={this.state.shipmentShouldFormBeMounted}
           refreshTable={this.refreshShipmentTable}
-          closeForm={() => this.setState({ shipFormModalVisible: false })}
+          closeForm={() => this.setState({ shipmentFormShouldBeMounted: false })}
+          closeModal={() => this.setState({ shipmentModalVisible: false })}
           rowData={this.state.shipRowData}
           customers={this.props.customers}
           fundingSources={this.props.fundingSources}
@@ -102,9 +108,11 @@ class Home extends React.Component {
         <h3 style={styles.tableTitles}>Last 10 days Receipts</h3>
 
         <EditableReceiptTable
-          formModalVisible={this.state.receiptFormModalVisible}
+          modalVisible={this.state.receiptModalVisible}
+          shouldFormBeMounted={this.state.receiptShouldFormBeMounted}
           refreshTable={this.refreshReceiptTable}
-          closeForm={() => this.setState({ receiptFormModalVisible: false })}
+          closeForm={() => this.setState({ receiptFormShouldBeMounted: false })}
+          closeModal={() => this.setState({ receiptModalVisible: false })}
           rowData={this.state.receiptRowData}
           providers={this.props.providers}
           fundingSources={this.props.fundingSources}

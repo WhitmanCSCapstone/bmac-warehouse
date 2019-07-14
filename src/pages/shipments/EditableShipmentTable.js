@@ -23,7 +23,7 @@ function readableCustomerCell(rowData, customers) {
 function EditableShipmentTable(props) {
   return (
     <div>
-      {!props.formShouldBeMounted ? null : (
+      {!props.shouldFormBeMounted ? null : (
         <ShipmentForm
           refreshTable={props.refreshTable}
           closeForm={props.closeForm}
