@@ -3,12 +3,12 @@
  */
 
 import React from 'react';
-import { Button, DatePicker, Icon } from 'antd';
+import { Button, Icon } from 'antd';
+import CustomDatePicker from '../../components/CustomDatePicker';
 import { sortDataByDate } from '../../utils/misc.js';
 import withAuthorization from '../../components/withAuthorization';
 import EditableReceiptTable from './EditableReceiptTable';
 import { styles } from '../styles.js';
-const { RangePicker } = DatePicker;
 
 class Receipts extends React.Component {
   constructor(props) {
@@ -54,7 +54,7 @@ class Receipts extends React.Component {
     return (
       <div style={styles.container}>
         <div style={styles.controller}>
-          <RangePicker onChange={this.onDateChange} format={'MM/DD/YYYY'} />
+          <CustomDatePicker onDateChange={this.onDateChange} value={this.state.dateRange} />
 
           <Button
             type="primary"

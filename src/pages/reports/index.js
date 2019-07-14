@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import Moment from 'moment';
-import { Spin, Button, Icon, DatePicker, Radio } from 'antd';
+import { Button, Icon, Radio } from 'antd';
 import {
   getTableColumnObjForDates,
   getTableColumnObjForIntegers,
@@ -23,9 +23,9 @@ import {
 import { getCSVdata, makeDatesReadable } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
+import CustomDatePicker from '../../components/CustomDatePicker';
 
 const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
-const { RangePicker } = DatePicker;
 
 const styles = {
   container: {
@@ -162,9 +162,8 @@ class Reports extends React.Component {
           </Radio.Group>
 
           {
-            <RangePicker
-              onChange={this.onDateChange}
-              format={'MM/DD/YYYY'}
+            <CustomDatePicker
+              onDateChange={this.onDateChange}
               value={this.state.dateRange}
               disabled={!reportType2DateRangeRelavancy[this.state.reportType]}
             />
