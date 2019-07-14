@@ -3,8 +3,8 @@ import { db } from '../firebase';
 export const tableKeys = {
   shipments: [
     'customer_id',
-    'funds_source',
     'ship_date',
+    'funds_source',
     //"ship_via",
     //"ship_rate",
     //"total_weight",
@@ -38,9 +38,9 @@ export const tableKeys = {
     'provider_id',
     'recieve_date',
     'payment_source',
-    'total_weight', // warning: not a built in key, must be computed on client
+    'total_weight' // warning: not a built in key, must be computed on client
     //'billed_amt',
-    'notes'
+    //'notes'
     //"uniq_id",
   ],
 

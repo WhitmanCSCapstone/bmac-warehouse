@@ -5,7 +5,6 @@ import {
   Route,
   Switch
 } from 'react-router-dom';
-import SignUpPage from './SignUp';
 import { firebase } from '../firebase';
 
 import Navigation from './Navigation';
@@ -42,7 +41,6 @@ class App extends React.Component {
           {this.state.authUser === null && this.state.confirmedAuth && <Navigation />}
           <Switch>
             <Route exact path={routes.LANDING} component={LandingPage} />
-            <Route exact path={routes.SIGN_UP} component={SignUpPage} />
             <Route exact path={routes.SIGN_IN} component={SignInPage} />
             <Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
             <Route
