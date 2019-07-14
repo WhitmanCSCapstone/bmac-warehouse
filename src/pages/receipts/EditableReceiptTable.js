@@ -6,6 +6,7 @@ import {
   getTableColumnObjForIntegers,
   getTableColumnObjBasic,
   getTableColumnObjForFilterableHashes,
+  getTableColumnForTotalWeight,
   readableFundingSourceCell
 } from '../../utils/misc.js';
 import ReceiptForm from '../../components/form/types/ReceiptForm';
@@ -59,6 +60,9 @@ function EditableReceiptTable(props) {
             }
             if (string === 'billed_amt') {
               return getTableColumnObjForIntegers(string);
+            }
+            if (string === 'total_weight') {
+              return getTableColumnForTotalWeight(string, 'receive_items');
             }
             if (string === 'recieve_date') {
               return getTableColumnObjForDates(string);

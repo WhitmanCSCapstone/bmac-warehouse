@@ -86,19 +86,38 @@ export function getTableColumnObjForDates(string) {
   };
 }
 
+function sortNumbers(a, b) {
+  const n1 = Number(a);
+  const n2 = Number(b);
+  if (isNaN(n1)) {
+    return -1;
+  }
+  if (isNaN(n2)) {
+    return 1;
+  }
+  return n1 > n2 ? 1 : -1;
+}
+
 export function getTableColumnObjForIntegers(string) {
   return {
     ...getTableColumnObjBasic(string),
+    sortMethod: (a, b) => sortNumbers(a, b)
+  };
+}
+
+export function getTableColumnForTotalWeight(string, itemAccessor) {
+  return {
+    ...getTableColumnObjBasic(string),
+    accessor: itemAccessor,
+    Cell: rowData => {
+      const items = rowData.original[itemAccessor];
+      let totalWeight = getCombinedWeight(items);
+      return totalWeight;
+    },
     sortMethod: (a, b) => {
-      const n1 = Number(a);
-      const n2 = Number(b);
-      if (isNaN(n1)) {
-        return -1;
-      }
-      if (isNaN(n2)) {
-        return 1;
-      }
-      return n1 > n2 ? 1 : -1;
+      const aWeight = getCombinedWeight(a);
+      const bWeight = getCombinedWeight(b);
+      return sortNumbers(aWeight, bWeight);
     }
   };
 }

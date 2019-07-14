@@ -5,6 +5,7 @@ import {
   getTableColumnObjForDates,
   getTableColumnObjBasic,
   getTableColumnObjForFilterableHashes,
+  getTableColumnForTotalWeight,
   readableFundingSourceCell
 } from '../../utils/misc.js';
 import ShipmentForm from '../../components/form/types/ShipmentForm';
@@ -55,6 +56,9 @@ function EditableShipmentTable(props) {
                 Cell: rowData =>
                   readableFundingSourceCell(rowData, props.fundingSources, 'funds_source')
               };
+            }
+            if (string === 'total_weight') {
+              return getTableColumnForTotalWeight(string, 'ship_items');
             }
             if (string === 'ship_date') {
               return getTableColumnObjForDates(string);
