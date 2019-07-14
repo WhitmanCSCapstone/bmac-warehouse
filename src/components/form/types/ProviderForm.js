@@ -88,12 +88,6 @@ class ProviderForm extends React.Component {
     });
   };
 
-  //Used to handle deleting the object being observed in the Modal.
-  handleDelete = () => {
-    db.deleteProviderObj(this.props.rowData.uniq_id);
-    this.prop.refreshTable(this.props.closeForm);
-  };
-
   render() {
     return (
       <Modal
@@ -110,7 +104,6 @@ class ProviderForm extends React.Component {
           <Footer
             key="footer"
             rowData={this.props.rowData}
-            handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
           />
