@@ -103,11 +103,6 @@ class ProductForm extends React.Component {
     });
   };
 
-  handleDelete = () => {
-    db.deleteProductObj(this.props.rowData.uniq_id);
-    this.props.refreshTable(this.props.closeForm);
-  };
-
   render() {
     return (
       <Modal
@@ -124,7 +119,6 @@ class ProductForm extends React.Component {
           <Footer
             key="footer"
             rowData={this.props.rowData}
-            handleDelete={this.handleDelete}
             closeForm={this.props.closeForm}
             handleOk={this.handleOk}
           />
