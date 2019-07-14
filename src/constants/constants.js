@@ -4,10 +4,11 @@ export const tableKeys = {
   shipments: [
     'customer_id',
     'funds_source',
-    'ship_date'
+    'ship_date',
     //"ship_via",
     //"ship_rate",
     //"total_weight",
+    'total_weight' // warning: key is built-in but not reliably correct, must be computed on client
     //"total_price",
     //"invoice_date",
     //"invoice_no",
@@ -37,7 +38,8 @@ export const tableKeys = {
     'provider_id',
     'recieve_date',
     'payment_source',
-    'billed_amt',
+    'total_weight', // warning: not a built in key, must be computed on client
+    //'billed_amt',
     'notes'
     //"uniq_id",
   ],
