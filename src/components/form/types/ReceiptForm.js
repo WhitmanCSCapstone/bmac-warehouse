@@ -216,6 +216,7 @@ class ReceiptForm extends React.Component {
 
           <div style={styles.bottomThird}>
             <div style={styles.formItem}>
+              Billed Amount:
               <Input
                 placeholder="Billed Amount"
                 value={this.state.billed_amt}
