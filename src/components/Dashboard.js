@@ -268,4 +268,6 @@ class Dashboard extends React.Component {
 
 const authCondition = authUser => !!authUser;
 
-export default withAuthorization(authCondition)(Dashboard);
+const adminOnly = false;
+
+export default withAuthorization(authCondition, adminOnly)(Dashboard);
