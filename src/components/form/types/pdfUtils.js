@@ -198,7 +198,7 @@ export function handleLabelClick(state) {
 
 export function deleteEmptyProductItems(items) {
   let filteredItems = items.filter(obj => {
-    return obj !== undefined && obj['product'] !== undefined;
+    return obj !== undefined && obj['product'] !== undefined && !obj['product'].includes('INVALID');
   });
   return filteredItems;
 }
