@@ -43,6 +43,7 @@ class Shipments extends React.Component {
   };
 
   onRowClick = rowInfo => {
+    console.log('hello');
     this.setState({
       rowData: rowInfo.original,
       modalVisible: true,
@@ -62,7 +63,7 @@ class Shipments extends React.Component {
             onClick={() =>
               this.setState({
                 modalVisible: true,
-                formShouldBeMounted: true,
+                shouldFormBeMounted: true,
                 rowData: null
               })
             }
