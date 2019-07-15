@@ -43,7 +43,6 @@ class Shipments extends React.Component {
   };
 
   onRowClick = rowInfo => {
-    console.log('hello');
     this.setState({
       rowData: rowInfo.original,
       modalVisible: true,
