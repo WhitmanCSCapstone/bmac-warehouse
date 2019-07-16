@@ -148,6 +148,13 @@ export function getTableColumnObjForFilterableHashes(
 ) {
   return {
     ...getTableColumnObjForFilterableStrings(string),
+    sortMethod: (a, b) => {
+      const aObj = dictionary[a];
+      const bObj = dictionary[b];
+      const aName = aObj ? aObj[string] : 'invalid';
+      const bName = bObj ? bObj[string] : 'invalid';
+      return aName.toLowerCase() > bName.toLowerCase() ? 1 : -1;
+    },
     filterMethod: (filter, rows) =>
       matchSorter(rows, filter.value, {
         threshold: matchSorter.rankings[exactMatch ? 'WORD_STARTS_WITH' : 'MATCH'],
