@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import Moment from 'moment';
-import { Button, Icon, Radio } from 'antd';
+import { Button, Radio } from 'antd';
 import {
   getTableColumnObjForDates,
   getTableColumnObjForIntegers,
@@ -24,8 +24,6 @@ import { getCSVdata, makeDatesReadable } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 import CustomDatePicker from '../../components/CustomDatePicker';
-
-const antIcon = <Icon type="loading" style={{ fontSize: '1rem', color: 'white' }} spin />;
 
 const styles = {
   container: {
