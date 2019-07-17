@@ -1,7 +1,6 @@
 import React from 'react';
 import withAuthorization from './withAuthorization';
 import LoadingScreen from './LoadingScreen';
-import SignOutButton from './SignOut';
 import { db } from '../firebase';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { getTablePromise } from '../utils/misc';
@@ -20,6 +19,7 @@ import Customers from '../pages/customers';
 import Reports from '../pages/reports';
 import Help from '../pages/help';
 import FundingSources from '../pages/fundingSources';
+import AppHeader from './AppHeader';
 
 import './Dashboard.css';
 import { Layout, Menu } from 'antd';
@@ -32,19 +32,14 @@ const styles = {
     minHeight: '100vh'
   },
 
+  header: {
+    width: '100%',
+    padding: '0px'
+  },
   slider: {
     color: 'white',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-
-  header: {
-    display: 'flex',
-    backgroundColor: 'white',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottom: '1px solid #EBEDF0'
   },
 
   footer: {
@@ -71,11 +66,6 @@ const styles = {
     marginTop: '1%'
   },
 
-  title: {
-    fontSize: '2em',
-    fontWeight: 'bold'
-  },
-
   sliderTitle: {
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -83,20 +73,13 @@ const styles = {
     fontSize: '2.0em',
     fontWeight: 'bold'
     //fontStyle: 'italic',
-  },
-
-  signOutButton: {
-    paddingTop: '.4%'
   }
 };
 
-const pages = {
+const standardPages = {
   home: Home,
   shipments: Shipments,
   receipts: Receipts,
-  products: Products,
-  fundingSources: FundingSources,
-  staff: Staff,
   providers: Providers,
   customers: Customers,
   reports: Reports,
@@ -104,9 +87,18 @@ const pages = {
   help: Help
 };
 
-const adminOnlyPages = {
+const adminPages = {
+  home: Home,
+  shipments: Shipments,
+  receipts: Receipts,
   products: Products,
-  staff: Staff
+  providers: Providers,
+  customers: Customers,
+  fundingSources: FundingSources,
+  staff: Staff,
+  reports: Reports,
+  about: About,
+  help: Help
 };
 
 function cleanPathname(pathname) {
@@ -120,7 +112,8 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       current: cleanPathname(props.location.pathname),
-      pages: { ...pages },
+      currentUserUid: this.props.authUser.uid,
+      pages: { ...standardPages },
       shipments: null,
       receipts: null,
       products: null,
@@ -152,7 +145,7 @@ class Dashboard extends React.Component {
     db.onceGetSpecifcUser(this.props.authUser.uid).then(snapshot => {
       const userData = snapshot.val();
       if (userData.role === roles.ADMIN) {
-        this.setState({ pages: Object.assign(pages, adminOnlyPages) });
+        this.setState({ pages: adminPages });
       }
     });
   }
@@ -161,6 +154,10 @@ class Dashboard extends React.Component {
     const currPathname = this.props.location.pathname;
     if (prevProps.location.pathname !== currPathname) {
       this.setState({ current: cleanPathname(currPathname) });
+    }
+    if (this.props.authUser.uid !== prevProps.authUser.uid) {
+      console.log('yo');
+      this.setState({ currentUserUid: this.props.authUser.uid });
     }
   }
 
@@ -204,7 +201,9 @@ class Dashboard extends React.Component {
                   return (
                     <Menu.Item key={name}>
                       <Link to={`${match.url}/${name}`}>
-                        {name.charAt(0).toUpperCase() + name.slice(1)}
+                        {name === 'fundingSources'
+                          ? 'Funding Sources'
+                          : name.charAt(0).toUpperCase() + name.slice(1)}
                       </Link>
                     </Menu.Item>
                   );
@@ -214,23 +213,22 @@ class Dashboard extends React.Component {
 
             <Layout style={styles.layout}>
               <Header style={styles.header}>
-                <span key="plsUpdate" style={styles.title}>
-                  {this.state.current}
-                </span>
-                <div style={styles.signOutButton}>
-                  <SignOutButton type="danger" />
-                </div>
+                <AppHeader
+                  current={this.state.current}
+                  users={this.state.users}
+                  userUid={this.state.currentUserUid}
+                />
               </Header>
 
               <Content style={styles.content}>
                 <Switch>
-                  {Object.keys(pages).map(name => {
+                  {Object.keys(this.state.pages).map(name => {
                     return (
                       <Route
                         exact
                         path={`${match.path}/${name}`}
                         render={props => {
-                          const Component = pages[name];
+                          const Component = this.state.pages[name];
                           return (
                             <Component
                               {...props}
