@@ -228,3 +228,7 @@ export function getAutocompleteOptionsList(productObjs, fundsSrcHashToFilterBy, 
   }
   return autocompleteOptionsList;
 }
+
+export function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}

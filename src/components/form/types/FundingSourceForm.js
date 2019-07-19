@@ -1,6 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Modal } from 'antd';
+import { hasErrors } from '../../../utils/misc.js';
+import { Input, Form, Modal } from 'antd';
 import Footer from '../Footer';
 
 class FundingSourceForm extends React.Component {
@@ -48,17 +49,25 @@ class FundingSourceForm extends React.Component {
   };
 
   render() {
+    const {
+      getFieldDecorator,
+      getFieldsError,
+      getFieldError,
+      isFieldTouched,
+      isFieldsTouched
+    } = this.props.form;
+    const idError = isFieldTouched('id') && getFieldError('id');
+
     return (
       <div>
         <Modal
-          title="Add New Funding Source"
+          title="Funding Source"
           style={{
             top: 20
           }}
-          width={'20vw'}
+          width={'25vw'}
           destroyOnClose={true}
           visible={this.props.modalVisible}
-          okText="Submit"
           onCancel={this.props.closeModal}
           afterClose={this.props.closeForm}
           footer={[
@@ -67,19 +76,39 @@ class FundingSourceForm extends React.Component {
               rowData={this.props.rowData}
               closeModal={this.props.closeModal}
               handleOk={this.handleOk}
+              saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
             />
           ]}
         >
-          Funding Source:
-          <Input
-            value={this.state.id}
-            placeholder="Funding Source"
-            onChange={e => this.onChange('id', e.target.value)}
-          />
+          <Form layout="vertical" onSubmit={this.handleSubmit}>
+            <Form.Item
+              label={'Funding Source'}
+              validateStatus={idError ? 'error' : ''}
+              help={idError || ''}
+            >
+              {getFieldDecorator('id', {
+                initialValue: this.state.id,
+                rules: [
+                  {
+                    whitespace: true,
+                    required: true,
+                    message: 'Please Enter A Valid Funding Source'
+                  }
+                ]
+              })(
+                <Input
+                  placeholder={`Funding Source`}
+                  onChange={e => this.onChange('id', e.target.value)}
+                />
+              )}
+            </Form.Item>
+          </Form>
         </Modal>
       </div>
     );
   }
 }
 
-export default FundingSourceForm;
+const WrappedFundingSourceForm = Form.create({ name: 'FundingSourceForm' })(FundingSourceForm);
+
+export default WrappedFundingSourceForm;
