@@ -19,7 +19,8 @@ class Providers extends React.Component {
     super(props);
     this.state = {
       filteredData: null,
-      formModalVisible: false,
+      modalVisible: false,
+      shouldFormBeMounted: false,
       rowData: null
     };
   }
@@ -37,7 +38,8 @@ class Providers extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                modalVisible: true,
+                shouldFormBeMounted: true,
                 rowData: null
               })
             }
@@ -46,12 +48,18 @@ class Providers extends React.Component {
           </Button>
         </div>
 
-        <ProviderForm
-          formModalVisible={this.state.formModalVisible}
-          refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
-          rowData={this.state.rowData}
-        />
+        {!this.state.shouldFormBeMounted ? null : (
+          <ProviderForm
+            closeModal={() => {
+              this.setState({ modalVisible: false });
+            }}
+            modalVisible={this.state.modalVisible}
+            refreshTable={this.refreshTable}
+            closeForm={() => this.setState({ shouldFormBeMounted: false })}
+            rowData={this.state.rowData}
+          />
+        )}
+
         {!this.props.providers ? (
           <LoadingScreen />
         ) : (
@@ -60,7 +68,8 @@ class Providers extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true
+                  shouldFormBeMounted: true,
+                  modalVisible: true
                 })
             })}
             data={this.props.providers ? Object.values(this.props.providers) : []}

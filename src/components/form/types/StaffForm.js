@@ -98,13 +98,14 @@ class StaffForm extends React.Component {
         }}
         width={'50vw'}
         destroyOnClose={true}
-        visible={this.props.formModalVisible}
+        visible={this.props.modalVisible}
         okText="Submit"
         onOk={this.handleOk}
         okButtonProps={{
           disabled: isInvalid
         }}
-        onCancel={this.props.closeForm}
+        onCancel={this.props.closeModal}
+        afterClose={this.props.closeForm}
       >
         <div style={styles.form}>
           <div style={styles.formItem}>

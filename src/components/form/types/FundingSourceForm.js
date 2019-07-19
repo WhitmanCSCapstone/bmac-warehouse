@@ -43,8 +43,7 @@ class FundingSourceForm extends React.Component {
     // this only works if the push doesn't take too long, kinda sketch, should be
     // made asynchronous
     this.props.refreshTable(() => {
-      this.props.closeForm();
-      this.setState({ ...this.defaultState });
+      this.props.closeModal();
     });
   };
 
@@ -58,14 +57,15 @@ class FundingSourceForm extends React.Component {
           }}
           width={'20vw'}
           destroyOnClose={true}
-          visible={this.props.formModalVisible}
+          visible={this.props.modalVisible}
           okText="Submit"
-          onCancel={this.props.closeForm}
+          onCancel={this.props.closeModal}
+          afterClose={this.props.closeForm}
           footer={[
             <Footer
               key="footer"
               rowData={this.props.rowData}
-              closeForm={this.props.closeForm}
+              closeModal={this.props.closeModal}
               handleOk={this.handleOk}
             />
           ]}
