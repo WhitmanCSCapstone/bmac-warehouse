@@ -26,7 +26,8 @@ class Products extends React.Component {
     super(props);
     this.state = {
       rowData: null,
-      formModalVisible: false
+      shouldFormBeMounted: false,
+      modalVisible: false
     };
   }
 
@@ -43,7 +44,8 @@ class Products extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                shouldFormBeMounted: true,
+                modalVisible: true,
                 rowData: null
               })
             }
@@ -52,13 +54,18 @@ class Products extends React.Component {
           </Button>
         </div>
 
-        <ProductForm
-          formModalVisible={this.state.formModalVisible}
-          refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
-          rowData={this.state.rowData}
-          fundingSources={this.props.fundingSources}
-        />
+        {!this.state.shouldFormBeMounted ? null : (
+          <ProductForm
+            closeModal={() => {
+              this.setState({ modalVisible: false });
+            }}
+            refreshTable={this.refreshTable}
+            modalVisible={this.state.modalVisible}
+            closeForm={() => this.setState({ shouldFormBeMounted: false })}
+            rowData={this.state.rowData}
+            fundingSources={this.props.fundingSources}
+          />
+        )}
 
         {!this.props.products ? (
           <LoadingScreen />
@@ -68,7 +75,8 @@ class Products extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true
+                  shouldFormBeMounted: true,
+                  modalVisible: true
                 })
             })}
             data={this.props.products ? Object.values(this.props.products) : []}

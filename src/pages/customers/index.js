@@ -18,7 +18,8 @@ class Customers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formModalVisible: false,
+      shouldFormBeMounted: false,
+      modalVisible: false,
       rowData: null
     };
   }
@@ -36,7 +37,8 @@ class Customers extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                shouldFormBeMounted: true,
+                modalVisible: true,
                 rowData: null
               })
             }
@@ -44,12 +46,19 @@ class Customers extends React.Component {
             <Icon type="plus" />
           </Button>
         </div>
-        <CustomerForm
-          formModalVisible={this.state.formModalVisible}
-          refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
-          rowData={this.state.rowData}
-        />
+
+        {!this.state.shouldFormBeMounted ? null : (
+          <CustomerForm
+            closeModal={() => {
+              this.setState({ modalVisible: false });
+            }}
+            refreshTable={this.refreshTable}
+            modalVisible={this.state.modalVisible}
+            closeForm={() => this.setState({ shouldFormBeMounted: false })}
+            rowData={this.state.rowData}
+          />
+        )}
+
         {!this.props.customers ? (
           <LoadingScreen />
         ) : (
@@ -58,7 +67,8 @@ class Customers extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true
+                  shouldFormBeMounted: true,
+                  modalVisible: true
                 })
             })}
             data={this.props.customers ? Object.values(this.props.customers) : []}

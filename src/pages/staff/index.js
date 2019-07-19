@@ -13,7 +13,8 @@ class Staff extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formModalVisible: false
+      shouldFormBeMounted: false,
+      modalVisible: false
     };
   }
 
@@ -30,18 +31,26 @@ class Staff extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true
+                shouldFormBeMounted: true,
+                modalVisible: true
               })
             }
           >
             <Icon type="plus" />
           </Button>
         </div>
-        <StaffForm
-          formModalVisible={this.state.formModalVisible}
-          refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
-        />{' '}
+
+        {!this.state.shouldFormBeMounted ? null : (
+          <StaffForm
+            closeModal={() => {
+              this.setState({ modalVisible: false });
+            }}
+            modalVisible={this.state.modalVisible}
+            refreshTable={this.refreshTable}
+            closeForm={() => this.setState({ shouldFormBeMounted: false })}
+          />
+        )}
+
         {!this.props.users ? (
           <LoadingScreen />
         ) : (

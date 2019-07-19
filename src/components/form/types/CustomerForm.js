@@ -90,8 +90,7 @@ class CustomerForm extends React.Component {
     // made asynchronous
 
     this.props.refreshTable(() => {
-      this.props.closeForm();
-      this.setState({ ...this.defaultState });
+      this.props.closeModal();
     });
   };
 
@@ -102,14 +101,15 @@ class CustomerForm extends React.Component {
         style={{ top: 20 }}
         width={'50vw'}
         destroyOnClose={true}
-        visible={this.props.formModalVisible}
-        onCancel={this.props.closeForm}
+        visible={this.props.modalVisible}
+        onCancel={this.props.closeModal}
+        afterClose={this.props.closeForm}
         footer={[
           <Footer
             key="footer"
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
-            closeForm={this.props.closeForm}
+            closeModal={this.props.closeModal}
             handleOk={this.handleOk}
           />
         ]}

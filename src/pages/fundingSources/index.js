@@ -19,7 +19,8 @@ class FundingSources extends React.Component {
     super(props);
     this.state = {
       rowData: null,
-      formModalVisible: false
+      shouldFormBeMounted: false,
+      modalVisible: false
     };
   }
 
@@ -36,7 +37,8 @@ class FundingSources extends React.Component {
             style={styles.addNew}
             onClick={() =>
               this.setState({
-                formModalVisible: true,
+                shouldFormBeMounted: true,
+                modalVisible: true,
                 rowData: null
               })
             }
@@ -45,12 +47,17 @@ class FundingSources extends React.Component {
           </Button>
         </div>
 
-        <FundingSourceForm
-          formModalVisible={this.state.formModalVisible}
-          refreshTable={this.refreshTable}
-          closeForm={() => this.setState({ formModalVisible: false })}
-          rowData={this.state.rowData}
-        />
+        {!this.state.shouldFormBeMounted ? null : (
+          <FundingSourceForm
+            closeModal={() => {
+              this.setState({ modalVisible: false });
+            }}
+            refreshTable={this.refreshTable}
+            modalVisible={this.state.modalVisible}
+            closeForm={() => this.setState({ shouldFormBeMounted: false })}
+            rowData={this.state.rowData}
+          />
+        )}
 
         {!this.props.fundingSources ? (
           <LoadingScreen />
@@ -60,7 +67,8 @@ class FundingSources extends React.Component {
               onClick: () =>
                 this.setState({
                   rowData: rowInfo.original,
-                  formModalVisible: true
+                  shouldFormBeMounted: true,
+                  modalVisible: true
                 })
             })}
             data={this.props.fundingSources ? Object.values(this.props.fundingSources) : []}
