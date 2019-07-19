@@ -79,24 +79,6 @@ export const tableKeys = {
     //"uniq_id",
   ],
 
-  staff: [
-    //"unique_id",
-    //"username",
-    'last_name',
-    'first_name',
-    //"address",
-    //"city",
-    //"zip",
-    'phone1',
-    // "phone2",
-    'email'
-    //"type",
-    //"status",
-    //"notes",
-    //"password",
-    //"uniq_id",
-  ],
-
   fundingSources: [
     //"code",
     'id'
