@@ -5,7 +5,7 @@ import { getCombinedWeight } from '../../../utils/misc.js';
 import { handleReceiptClick, deleteEmptyProductItems } from './pdfUtils';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
-import FundsSourceAutoComplete from '../FundsSourceAutoComplete';
+import FundsSourceDropdown from '../FundsSourceDropdown.js';
 import ProviderAutoComplete from '../ProviderAutoComplete';
 import Moment from 'moment';
 
@@ -181,10 +181,9 @@ class ReceiptForm extends React.Component {
 
             <div style={styles.formItem}>
               Payment Source:
-              <FundsSourceAutoComplete
-                onFundsSourceChange={val => this.onChange('payment_source', val)}
-                accessor={'payment_source'}
-                rowData={this.props.rowData}
+              <FundsSourceDropdown
+                value={this.state.payment_source}
+                onChange={val => this.onChange('payment_source', val)}
                 fundingSources={this.props.fundingSources}
               />
             </div>

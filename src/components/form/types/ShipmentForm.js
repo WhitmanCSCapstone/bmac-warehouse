@@ -5,7 +5,7 @@ import { handleLabelClick, handleInvoiceClick, deleteEmptyProductItems } from '.
 import { getCombinedWeight } from '../../../utils/misc.js';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
-import FundsSourceAutoComplete from '../FundsSourceAutoComplete';
+import FundsSourceDropdown from '../FundsSourceDropdown.js';
 import CustomerAutoComplete from '../CustomerAutoComplete';
 import Moment from 'moment';
 
@@ -193,10 +193,9 @@ class ShipmentForm extends React.Component {
 
             <div style={styles.formItem} key={'hellotheremrwhitehowareyoudoingtoday'}>
               Funding Source:
-              <FundsSourceAutoComplete
-                onFundsSourceChange={val => this.onChange('funds_source', val)}
-                accessor={'funds_source'}
-                rowData={this.props.rowData}
+              <FundsSourceDropdown
+                value={this.state.funds_source}
+                onChange={val => this.onChange('funds_source', val)}
                 fundingSources={this.props.fundingSources}
               />
             </div>
