@@ -1,9 +1,9 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, Select, Divider, Modal, DatePicker } from 'antd';
-import FundsSourceAutoComplete from '../FundsSourceAutoComplete';
 import Moment from 'moment';
 import Footer from '../Footer';
+import FundsSourceDropdown from '../FundsSourceDropdown.js';
 
 //This is for the notes section.
 const { TextArea } = Input;
@@ -145,10 +145,9 @@ class ProductForm extends React.Component {
           <div style={styles.topThird}>
             <div style={styles.formItem}>
               Funding Source:
-              <FundsSourceAutoComplete
-                onFundsSourceChange={val => this.onChange('funds_source', val)}
-                accessor={'funding_source'}
-                rowData={this.props.rowData}
+              <FundsSourceDropdown
+                value={this.state.funding_source}
+                onChange={val => this.onChange('funding_source', val)}
                 fundingSources={this.props.fundingSources}
               />
             </div>
