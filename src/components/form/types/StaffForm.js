@@ -43,7 +43,8 @@ class StaffForm extends React.Component {
   }
 
   //Used to send the data to the databsae and reset the state.
-  handleOk = () => {
+  handleOk = showLoadingAnimation => {
+    showLoadingAnimation();
     const { username, email, passwordOne, passwordTwo, role } = this.state;
     const roles = [];
     const isInvalid =

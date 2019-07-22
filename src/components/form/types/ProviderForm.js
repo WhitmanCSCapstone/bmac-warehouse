@@ -72,7 +72,8 @@ class ProviderForm extends React.Component {
   };
 
   //Used to send the data to the databsae and reset the state.
-  handleOk = () => {
+  handleOk = showLoadingAnimation => {
+    showLoadingAnimation();
     var newData = JSON.parse(JSON.stringify(this.state));
     var row = this.props.rowData;
     if (row && row.uniq_id) {
