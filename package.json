@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^3.9.3",
+    "antd": "^3.20.5",
     "firebase": "^5.5.0",
     "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.5.3",
