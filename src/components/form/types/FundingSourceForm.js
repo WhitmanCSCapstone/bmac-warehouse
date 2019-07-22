@@ -30,34 +30,31 @@ class FundingSourceForm extends React.Component {
 
   //Used to send the data to the databsae and reset the state.
   handleOk = showLoadingAnimation => {
-    showLoadingAnimation();
-    var newData = JSON.parse(JSON.stringify(this.state));
-    var row = this.props.rowData;
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        showLoadingAnimation();
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData;
 
-    if (row && row.uniq_id) {
-      // if we are editing a fundingSource, set in place
-      db.setFundingSourceObj(row.uniq_id, newData);
-    } else {
-      // else we are creating a new entry
-      db.pushFundingSourceObj(newData);
-    }
+        if (row && row.uniq_id) {
+          // if we are editing a fundingSource, set in place
+          db.setFundingSourceObj(row.uniq_id, newData);
+        } else {
+          // else we are creating a new entry
+          db.pushFundingSourceObj(newData);
+        }
 
-    // this only works if the push doesn't take too long, kinda sketch, should be
-    // made asynchronous
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+        // this only works if the push doesn't take too long, kinda sketch, should be
+        // made asynchronous
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
   render() {
-    const {
-      getFieldDecorator,
-      getFieldsError,
-      getFieldError,
-      isFieldTouched,
-      isFieldsTouched
-    } = this.props.form;
-    const idError = isFieldTouched('id') && getFieldError('id');
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
 
     return (
       <div>
@@ -82,11 +79,7 @@ class FundingSourceForm extends React.Component {
           ]}
         >
           <Form layout="vertical" onSubmit={this.handleSubmit}>
-            <Form.Item
-              label={'Funding Source'}
-              validateStatus={idError ? 'error' : ''}
-              help={idError || ''}
-            >
+            <Form.Item label={'Funding Source'}>
               {getFieldDecorator('id', {
                 initialValue: this.state.id,
                 rules: [
