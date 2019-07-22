@@ -2,7 +2,7 @@ import React from 'react';
 import Moment from 'moment';
 import matchSorter from 'match-sorter';
 import { table2Promise } from '../constants/constants';
-import { Form, InputNumber } from 'antd';
+import { Form, InputNumber, Input } from 'antd';
 
 export function makeProductItemsReadable(items, products) {
   if (items) {
@@ -234,7 +234,7 @@ export function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-export function generateNumberFormItem(accessor, initialValue, onChange, getFieldDecorator) {
+export function generateGenericFormItem(accessor, initialValue, onChange, getFieldDecorator, type) {
   const label = accessor
     .split('_')
     .map(word => word[0].toUpperCase() + word.slice(1))
@@ -247,13 +247,21 @@ export function generateNumberFormItem(accessor, initialValue, onChange, getFiel
     >
       {getFieldDecorator(accessor, {
         initialValue: initialValue,
-        rules: [{ type: 'number', message: `Please Enter A Valid ${label}` }]
+        rules: [{ type: type, whitespace: true, message: `Please Enter A Valid ${label}` }]
       })(
-        <InputNumber
-          style={{ minWidth: '10em', width: '100%' }}
-          placeholder={label}
-          onChange={onChange}
-        />
+        type === 'number' ? (
+          <InputNumber
+            style={{ minWidth: '10em', width: '100%' }}
+            placeholder={label}
+            onChange={onChange}
+          />
+        ) : (
+          <Input
+            style={{ minWidth: '10em', width: '100%' }}
+            placeholder={label}
+            onChange={onChange}
+          />
+        )
       )}
     </Form.Item>
   );
