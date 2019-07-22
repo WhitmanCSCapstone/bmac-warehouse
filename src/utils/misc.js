@@ -2,6 +2,7 @@ import React from 'react';
 import Moment from 'moment';
 import matchSorter from 'match-sorter';
 import { table2Promise } from '../constants/constants';
+import { Form, InputNumber } from 'antd';
 
 export function makeProductItemsReadable(items, products) {
   if (items) {
@@ -231,4 +232,29 @@ export function getAutocompleteOptionsList(productObjs, fundsSrcHashToFilterBy, 
 
 export function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
+export function generateNumberFormItem(accessor, initialValue, onChange, getFieldDecorator) {
+  const label = accessor
+    .split('_')
+    .map(word => word[0].toUpperCase() + word.slice(1))
+    .join(' ');
+  return (
+    <Form.Item
+      style={{ width: '25%', flexGrow: 1, margin: '0px 1em 0em 1em' }}
+      key={`form${accessor}`}
+      label={label + ':'}
+    >
+      {getFieldDecorator(accessor, {
+        initialValue: initialValue,
+        rules: [{ type: 'number', message: `Please Enter A Valid ${label}` }]
+      })(
+        <InputNumber
+          style={{ minWidth: '10em', width: '100%' }}
+          placeholder={label}
+          onChange={onChange}
+        />
+      )}
+    </Form.Item>
+  );
 }
