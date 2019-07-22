@@ -1,20 +1,18 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Select, Divider, Modal } from 'antd';
+import { Input, Select, Divider, Modal, Form } from 'antd';
+import { hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import Footer from '../Footer';
 
-//This is for the notes section.
 const { TextArea } = Input;
-//This is for the status dropdown.
 const Option = Select.Option;
 
 //Styles
 const styles = {
   form: {
     display: 'flex',
-    flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
 
   formItem: {
@@ -22,18 +20,8 @@ const styles = {
     margin: '0px 1em 1em 1em'
   },
 
-  topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center'
-  },
-
-  bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignContent: 'center'
+  notes: {
+    width: '100%'
   }
 };
 
@@ -76,26 +64,42 @@ class CustomerForm extends React.Component {
 
   //Ok Click
   handleOk = showLoadingAnimation => {
-    showLoadingAnimation();
-    var newData = JSON.parse(JSON.stringify(this.state));
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        showLoadingAnimation();
+        var newData = JSON.parse(JSON.stringify(this.state));
 
-    var row = this.props.rowData;
+        var row = this.props.rowData;
 
-    if (row && row.uniq_id) {
-      db.setCustomerObj(row.uniq_id, newData);
-    } else {
-      db.pushCustomerObj(this.state);
-    }
+        if (row && row.uniq_id) {
+          db.setCustomerObj(row.uniq_id, newData);
+        } else {
+          db.pushCustomerObj(this.state);
+        }
 
-    // this only works if the push doesn't take too long, kinda sketch, should be
-    // made asynchronous
+        // this only works if the push doesn't take too long, kinda sketch, should be
+        // made asynchronous
 
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
+
+    const accessorsForStringFields = [
+      'address',
+      'city',
+      'state',
+      'zip',
+      'contact',
+      'phone',
+      'email'
+    ];
+
     return (
       <Modal
         title="Customer Form"
@@ -112,104 +116,68 @@ class CustomerForm extends React.Component {
             handleDelete={this.handleDelete}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
           />
         ]}
       >
-        <div style={styles.form}>
-          <div style={styles.topThird}>
-            <div style={styles.formItem}>
-              Customer Name:
+        <Form layout="vertical" style={styles.form}>
+          <Form.Item style={styles.formItem} label={'Customer Name:'}>
+            {getFieldDecorator('customer_id', {
+              initialValue: this.state.customer_id,
+              rules: [
+                { whitespace: true, required: true, message: 'Please Enter A Valid Customer Name' }
+              ]
+            })(
               <Input
-                placeholder="Customer Name"
+                placeholder={'Customer Name'}
                 onChange={e => this.onChange('customer_id', e.target.value)}
-                value={this.state.customer_id}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <Divider orientation="left">Customer Information</Divider>
+          <Form.Item style={styles.formItem} label={'Status:'}>
+            {getFieldDecorator('status', {
+              initialValue: this.state.status,
+              rules: [{ required: true }]
+            })(
+              <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>
+                <Option value={'active'}>Active</Option>
+                <Option value={'inactive'}>Inactive</Option>
+              </Select>
+            )}
+          </Form.Item>
 
-            <div style={styles.formItem}>
-              Address:
-              <Input
-                placeholder="Address"
-                onChange={e => this.onChange('address', e.target.value)}
-                value={this.state.address}
-              />
-            </div>
+          <Divider orientation={'left'}>Customer Information</Divider>
 
-            <div style={styles.formItem}>
-              City:
-              <Input
-                placeholder="City"
-                onChange={e => this.onChange('city', e.target.value)}
-                value={this.state.city}
-              />
-            </div>
-            <div style={styles.formItem}>
-              State:
-              <Input
-                placeholder="State"
-                onChange={e => this.onChange('state', e.target.value)}
-                value={this.state.state}
-              />
-            </div>
-            <div style={styles.formItem}>
-              ZIP:
-              <Input
-                placeholder="ZIP"
-                onChange={e => this.onChange('zip', e.target.value)}
-                value={this.state.zip}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Phone:
-              <Input
-                placeholder="Contact Phone"
-                onChange={e => this.onChange('phone', e.target.value)}
-                value={this.state.phone}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Person:
-              <Input
-                placeholder="Contact Person"
-                onChange={e => this.onChange('contact', e.target.value)}
-                value={this.state.contact}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Email:
-              <Input
-                placeholder="Contact Email"
-                onChange={e => this.onChange('email', e.target.value)}
-                value={this.state.email}
-              />
-            </div>
-          </div>
+          {accessorsForStringFields.map(accessor => {
+            return generateGenericFormItem(
+              accessor,
+              this.state[accessor],
+              val => this.onChange(accessor, val),
+              getFieldDecorator,
+              'string'
+            );
+          })}
+
           <Divider />
-          Status:
-          <Select
-            placeholder="Status"
-            style={{ width: 120 }}
-            onChange={this.onStatusChange}
-            value={this.state.status}
-          >
-            <Option value="Active">Active</Option>
-            <Option value="Inactive">Inactive</Option>
-          </Select>
-          <div style={styles.bottomThird}>
-            <div style={styles.formItem} />
-          </div>
-          <TextArea
-            rows={4}
-            placeholder="Notes"
-            onChange={e => this.onChange('notes', e.target.value)}
-            value={this.state.notes}
-          />
-        </div>
+
+          <Form.Item style={{ ...styles.formItem, ...styles.notes }} label={'Notes:'}>
+            {getFieldDecorator('notes', {
+              initialValue: this.state.notes
+            })(
+              <TextArea
+                rows={4}
+                placeholder={'Notes'}
+                onChange={e => this.onChange('notes', e.target.value)}
+              />
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
 }
 
-export default CustomerForm;
+const WrappedCustomerForm = Form.create({ name: 'CustomerForm' })(CustomerForm);
+
+export default WrappedCustomerForm;

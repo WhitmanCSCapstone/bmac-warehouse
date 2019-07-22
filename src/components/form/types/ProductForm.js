@@ -1,7 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, Select, Divider, Modal, DatePicker, Form } from 'antd';
-import { hasErrors, generateNumberFormItem } from '../../../utils/misc.js';
+import { hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import Moment from 'moment';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
@@ -155,11 +155,12 @@ class ProductForm extends React.Component {
           <Divider />
 
           {accessorsForIntFields.map(accessor => {
-            return generateNumberFormItem(
+            return generateGenericFormItem(
               accessor,
               this.state[accessor],
               val => this.onChange(accessor, val),
-              getFieldDecorator
+              getFieldDecorator,
+              'number'
             );
           })}
 
@@ -200,7 +201,7 @@ class ProductForm extends React.Component {
             })(
               <TextArea
                 rows={4}
-                placeholder="Notes"
+                placeholder={'Notes'}
                 onChange={e => this.onChange('notes', e.target.value)}
               />
             )}
