@@ -91,7 +91,8 @@ class ReceiptForm extends React.Component {
     this.setState({ total_weight: totalWeight.toString() });
   };
 
-  handleOk = () => {
+  handleOk = showLoadingAnimation => {
+    showLoadingAnimation();
     var emptiedShipItems = deleteEmptyProductItems(this.state.receive_items);
     var newData = JSON.parse(JSON.stringify(this.state));
 

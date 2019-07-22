@@ -75,7 +75,8 @@ class CustomerForm extends React.Component {
   };
 
   //Ok Click
-  handleOk = () => {
+  handleOk = showLoadingAnimation => {
+    showLoadingAnimation();
     var newData = JSON.parse(JSON.stringify(this.state));
 
     var row = this.props.rowData;

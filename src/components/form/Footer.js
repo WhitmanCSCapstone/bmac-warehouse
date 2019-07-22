@@ -20,8 +20,8 @@ class Footer extends React.Component {
   }
 
   onClick = () => {
-    this.setState({ loading: true });
-    this.props.handleOk();
+    const showLoadingAnimation = () => this.setState({ loading: true });
+    this.props.handleOk(showLoadingAnimation);
   };
 
   render() {
