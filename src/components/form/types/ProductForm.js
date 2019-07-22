@@ -1,44 +1,33 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Select, Divider, Modal, DatePicker } from 'antd';
+import { Input, Select, Divider, Modal, DatePicker, Form } from 'antd';
+import { hasErrors, generateNumberFormItem } from '../../../utils/misc.js';
 import Moment from 'moment';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
 
-//This is for the notes section.
 const { TextArea } = Input;
-//This is for the status dropdown.
 const Option = Select.Option;
 
-//Styles
 const styles = {
   form: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em'
+    margin: '0px 1em 0em 1em'
   },
 
   datePicker: {
     width: '100%'
   },
 
-  topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center'
-  },
-
-  bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start'
+  notes: {
+    width: '100%'
   }
 };
 
@@ -83,26 +72,41 @@ class ProductForm extends React.Component {
   };
 
   //Used to send the data to the databsae and reset the state.
-  handleOk = () => {
-    var newData = JSON.parse(JSON.stringify(this.state));
-    var row = this.props.rowData;
+  handleOk = showLoadingAnimation => {
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        showLoadingAnimation();
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData;
 
-    if (row && row.uniq_id) {
-      // if we are editing a shipment, set in place
-      db.setProductObj(row.uniq_id, newData);
-    } else {
-      // else we are creating a new entry
-      db.pushProductObj(newData);
-    }
+        if (row && row.uniq_id) {
+          //if we are editing a shipment, set in place
+          db.setProductObj(row.uniq_id, newData);
+        } else {
+          //else we are creating a new entry
+          db.pushProductObj(newData);
+        }
 
-    // this only works if the push doesn't take too long, kinda sketch, should be
-    // made asynchronous
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+        // this only works if the push doesn't take too long, kinda sketch, should be
+        // made asynchronous
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
+
+    const accessorsForIntFields = [
+      'material_number',
+      'unit_weight',
+      'unit_price',
+      'initial_stock',
+      'minimum_stock'
+    ];
+
     return (
       <Modal
         title="Product Form"
@@ -121,110 +125,92 @@ class ProductForm extends React.Component {
             rowData={this.props.rowData}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
           />
         ]}
       >
-        <div style={styles.form}>
-          <div style={styles.formItem}>
-            Product Name:
-            <Input
-              value={this.state.product_id}
-              placeholder="Product Name"
-              onChange={e => this.onChange('product_id', e.target.value)}
-            />
-          </div>
-          <div style={styles.formItem}>
-            Material Number:
-            <Input
-              value={this.state.material_number}
-              placeholder="Material Number"
-              onChange={e => this.onChange('material_number', e.target.value)}
-            />
-          </div>
-          <Divider orientation="left">Product Information</Divider>
-          <div style={styles.topThird}>
-            <div style={styles.formItem}>
-              Funding Source:
-              <FundsSourceDropdown
-                value={this.state.funding_source}
-                onChange={val => this.onChange('funding_source', val)}
-                fundingSources={this.props.fundingSources}
+        <Form layout="vertical" style={styles.form}>
+          <Form.Item style={styles.formItem} label={'Product Name:'}>
+            {getFieldDecorator('product_id', {
+              initialValue: this.state.product_id,
+              rules: [
+                { whitespace: true, required: true, message: 'Please Enter A Valid Product Name' }
+              ]
+            })(
+              <Input
+                placeholder={'Product Name'}
+                onChange={e => this.onChange('product_id', e.target.value)}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <div style={styles.formItem}>
-              Unit Weight:
-              <Input
-                value={this.state.unit_weight}
-                placeholder="Unit Weight"
-                onChange={e => this.onChange('unit_weight', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Unit Price:
-              <Input
-                value={this.state.unit_price}
-                placeholder="Unit Price"
-                onChange={e => this.onChange('unit_price', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Initial Stock:
-              <Input
-                value={this.state.initial_stock}
-                placeholder="Initial Stock"
-                onChange={e => this.onChange('initial_stock', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Initial Date:
+          <Form.Item style={styles.formItem} label={'Funding Source:'}>
+            <FundsSourceDropdown
+              value={this.state.funding_source}
+              onChange={val => this.onChange('funding_source', val)}
+              fundingSources={this.props.fundingSources}
+            />
+          </Form.Item>
+
+          <Divider />
+
+          {accessorsForIntFields.map(accessor => {
+            return generateNumberFormItem(
+              accessor,
+              this.state[accessor],
+              val => this.onChange(accessor, val),
+              getFieldDecorator
+            );
+          })}
+
+          <Divider />
+
+          <Form.Item style={styles.formItem} label={'Initial Date:'}>
+            {getFieldDecorator('initial_date', {
+              initialValue: this.state.initial_date
+                ? Moment.unix(this.state.initial_date)
+                : undefined,
+              rules: [{ type: 'object', required: false }]
+            })(
               <DatePicker
                 style={styles.datePicker}
                 onChange={date => this.onChange('initial_date', Number(date.format('X')))}
                 placeholder="Initial Date"
                 format={'MM/DD/YYYY'}
                 allowClear={false}
-                key={`initialdate:${this.state.initial_date}`}
-                defaultValue={
-                  this.state.initial_date ? Moment.unix(this.state.initial_date) : undefined
-                }
               />
-            </div>
-            <div style={styles.formItem}>
-              Minimum Stock:
-              <Input
-                value={this.state.minimum_stock}
-                placeholder="Initial Stock"
-                onChange={e => this.onChange('minimum_stock', e.target.value)}
+            )}
+          </Form.Item>
+
+          <Form.Item style={styles.formItem} label={'Status:'}>
+            {getFieldDecorator('status', {
+              initialValue: this.state.status,
+              rules: [{ required: true }]
+            })(
+              <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>
+                <Option value={'active'}>Active</Option>
+                <Option value={'discontinued'}>Discontinued</Option>
+              </Select>
+            )}
+          </Form.Item>
+
+          <Form.Item style={{ ...styles.formItem, ...styles.notes }} label={'Notes:'}>
+            {getFieldDecorator('notes', {
+              initialValue: this.state.notes
+            })(
+              <TextArea
+                rows={4}
+                placeholder="Notes"
+                onChange={e => this.onChange('notes', e.target.value)}
               />
-            </div>
-          </div>
-          <Divider />
-          Status:
-          <Select
-            placeholder="Status"
-            style={{
-              width: 120
-            }}
-            onChange={value => this.onChange('status', value)}
-            value={this.state.status}
-          >
-            <Option value="active">Active</Option>
-            <Option value="discontinued">Discontinued</Option>
-          </Select>
-          <div style={styles.bottomThird}>
-            <div style={styles.formItem} />
-          </div>
-          <TextArea
-            value={this.state.notes}
-            rows={4}
-            placeholder="Notes"
-            onChange={e => this.onChange('notes', e.target.value)}
-          />
-        </div>
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
 }
 
-export default ProductForm;
+const WrappedProductForm = Form.create({ name: 'ProductForm' })(ProductForm);
+
+export default WrappedProductForm;
