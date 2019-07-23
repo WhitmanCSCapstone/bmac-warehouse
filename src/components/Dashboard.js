@@ -156,8 +156,16 @@ class Dashboard extends React.Component {
       this.setState({ current: cleanPathname(currPathname) });
     }
     if (this.props.authUser.uid !== prevProps.authUser.uid) {
-      console.log('yo');
       this.setState({ currentUserUid: this.props.authUser.uid });
+
+      db.onceGetSpecifcUser(this.props.authUser.uid).then(snapshot => {
+        const userData = snapshot.val();
+        if (userData.role === roles.ADMIN) {
+          this.setState({ pages: adminPages });
+        } else {
+          this.setState({ pages: standardPages });
+        }
+      });
     }
   }
 
