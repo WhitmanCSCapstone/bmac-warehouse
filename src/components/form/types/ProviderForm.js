@@ -1,6 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, Select, Divider, Modal } from 'antd';
+import { Input, Select, Divider, Modal, Form } from 'antd';
+import { hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import Footer from '../Footer';
 
 //This is for the notes section.
@@ -12,7 +13,6 @@ const Option = Select.Option;
 const styles = {
   form: {
     display: 'flex',
-    flexDirection: 'column',
     flexWrap: 'wrap',
     justifyContent: 'flex-start'
   },
@@ -22,17 +22,8 @@ const styles = {
     margin: '0px 1em 1em 1em'
   },
 
-  topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center'
-  },
-
-  bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start'
+  notes: {
+    width: '100%'
   }
 };
 
@@ -73,148 +64,119 @@ class ProviderForm extends React.Component {
 
   //Used to send the data to the databsae and reset the state.
   handleOk = showLoadingAnimation => {
-    showLoadingAnimation();
-    var newData = JSON.parse(JSON.stringify(this.state));
-    var row = this.props.rowData;
-    if (row && row.uniq_id) {
-      db.setProviderObj(row.uniq_id, newData);
-    } else {
-      db.pushProviderObj(this.state);
-    }
-    // this only works if the push doesn't take too long, kinda sketch, should be
-    // made asynchronous
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        showLoadingAnimation();
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData;
+        if (row && row.uniq_id) {
+          db.setProviderObj(row.uniq_id, newData);
+        } else {
+          db.pushProviderObj(this.state);
+        }
+        // this only works if the push doesn't take too long, kinda sketch, should be
+        // made asynchronous
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
+
+    const accessorsForStringFields = [
+      'address',
+      'city',
+      'state',
+      'zip',
+      'county',
+      'contact',
+      'phone',
+      'email'
+    ];
+
     return (
       <Modal
-        title="Provider Form"
+        title={'Provider Form'}
         style={{
           top: 20
         }}
         width={'50vw'}
         destroyOnClose={true}
         visible={this.props.modalVisible}
-        okText="Submit"
+        okText={'Submit'}
         onCancel={this.props.closeModal}
         afterClose={this.props.closeForm}
         footer={[
           <Footer
-            key="footer"
+            key={'footer'}
             rowData={this.props.rowData}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
           />
         ]}
       >
-        <div style={styles.form}>
-          <div style={styles.formItem}>
-            Provider Name:
-            <Input
-              value={this.state.provider_id}
-              placeholder="Provider Name"
-              onChange={e => this.onChange('provider_id', e.target.value)}
-            />
-          </div>
+        <Form layout={'vertical'} style={styles.form}>
+          <Form.Item style={styles.formItem} label={'Provider Name:'}>
+            {getFieldDecorator('provider_id', {
+              initialValue: this.state.provider_id,
+              rules: [
+                { whitespace: true, required: true, message: 'Please Enter A Valid Provider Name' }
+              ]
+            })(
+              <Input
+                placeholder={'Provider Name'}
+                onChange={e => this.onChange('provider_id', e.target.value)}
+              />
+            )}
+          </Form.Item>
 
-          <Divider orientation="left">Contact Information</Divider>
-          <div style={styles.topThird}>
-            <div style={styles.formItem}>
-              Address:
-              <Input
-                value={this.state.address}
-                placeholder="Address"
-                onChange={e => this.onChange('address', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              City:
-              <Input
-                value={this.state.city}
-                placeholder="City"
-                onChange={e => this.onChange('city', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              State:
-              <Input
-                value={this.state.state}
-                placeholder="State"
-                onChange={e => this.onChange('state', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              ZIP:
-              <Input
-                value={this.state.zip}
-                placeholder="ZIP"
-                onChange={e => this.onChange('zip', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              County:
-              <Input
-                value={this.state.county}
-                placeholder="County"
-                onChange={e => this.onChange('county', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Name:
-              <Input
-                value={this.state.contact}
-                placeholder="Contact Name"
-                onChange={e => this.onChange('contact', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Phone:
-              <Input
-                value={this.state.phone}
-                placeholder="Contact Phone"
-                onChange={e => this.onChange('phone', e.target.value)}
-              />
-            </div>
-            <div style={styles.formItem}>
-              Contact Email:
-              <Input
-                value={this.state.email}
-                placeholder="Contact Email"
-                onChange={e => this.onChange('email', e.target.value)}
-              />
-            </div>
-          </div>
+          <Form.Item style={styles.formItem} label={'Status:'}>
+            {getFieldDecorator('status', {
+              initialValue: this.state.status,
+              rules: [{ required: true }]
+            })(
+              <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>
+                <Option value={'active'}>Active</Option>
+                <Option value={'inactive'}>Inactive</Option>
+              </Select>
+            )}
+          </Form.Item>
+
+          <Divider orientation={'left'}>Contact Information</Divider>
+
+          {accessorsForStringFields.map(accessor => {
+            return generateGenericFormItem(
+              accessor,
+              this.state[accessor],
+              val => this.onChange(accessor, val),
+              getFieldDecorator,
+              'string'
+            );
+          })}
+
           <Divider />
-          <div style={styles.formItem}>
-            Status:
-            <br />
-            <Select
-              placeholder="Status"
-              style={{
-                width: 120
-              }}
-              onChange={value => this.onChange('status', value)}
-              value={this.state.status}
-            >
-              <Option value="Active">Active</Option>
-              <Option value="Inactive">Inactive</Option>
-            </Select>
-          </div>
-          <div style={styles.formItem}>
-            <TextArea
-              value={this.state.notes}
-              rows={4}
-              placeholder="Notes"
-              onChange={e => this.onChange('notes', e.target.value)}
-            />
-          </div>
-        </div>
+
+          <Form.Item style={{ ...styles.formItem, ...styles.notes }} label={'Notes:'}>
+            {getFieldDecorator('notes', {
+              initialValue: this.state.notes
+            })(
+              <TextArea
+                rows={4}
+                placeholder={'Notes'}
+                onChange={e => this.onChange('notes', e.target.value)}
+              />
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
 }
 
-export default ProviderForm;
+const WrappedProviderForm = Form.create({ name: 'ProviderForm' })(ProviderForm);
+
+export default WrappedProviderForm;
