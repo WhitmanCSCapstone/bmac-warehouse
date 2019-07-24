@@ -20,14 +20,7 @@ const styles = {
     width: '100%'
   },
 
-  icon: {
-    //alignSelf: 'center'
-    //marginBottom: '0.20em'
-  },
-
   firstIcon: {
-    //alignSelf: 'flex-end',
-    //marginBottom: '9px'
     marginTop: '29px',
     alignSelf: 'center'
   },
@@ -121,7 +114,11 @@ class ProductItems extends React.Component {
     console.log('Product Items rendered!');
     function invisibleBtn() {
       return (
-        <Icon className="dynamic-delete-button" style={styles.iconDisabled} type="minus-circle-o" />
+        <Icon
+          className={'dynamic-delete-button'}
+          style={styles.iconDisabled}
+          type={'minus-circle-o'}
+        />
       );
     }
 
@@ -215,9 +212,9 @@ class ProductItems extends React.Component {
                     invisibleBtn()
                   ) : (
                     <Icon
-                      className="dynamic-delete-button"
-                      style={index === 0 ? styles.firstIcon : styles.icon}
-                      type="minus-circle-o"
+                      className={'dynamic-delete-button'}
+                      style={index === 0 ? styles.firstIcon : {}}
+                      type={'minus-circle-o'}
                       onClick={() => this.props.removeProductItem(index)}
                     />
                   )}
@@ -226,8 +223,8 @@ class ProductItems extends React.Component {
             })}
 
         <div style={styles.formItem}>
-          <Button type="dashed" onClick={this.props.addProductItem}>
-            <Icon type="plus" /> Add fields
+          <Button type={'dashed'} onClick={this.props.addProductItem}>
+            <Icon type={'plus'} /> Add fields
           </Button>
         </div>
       </div>
