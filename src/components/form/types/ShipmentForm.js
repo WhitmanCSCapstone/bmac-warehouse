@@ -1,8 +1,13 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, DatePicker, Select, Divider, Modal, Form } from 'antd';
-import { handleLabelClick, handleInvoiceClick, deleteEmptyProductItems } from './pdfUtils';
-import { getCombinedWeight, hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
+import { handleLabelClick, handleInvoiceClick } from './pdfUtils';
+import {
+  getCombinedWeight,
+  hasErrors,
+  generateGenericFormItem,
+  deleteEmptyProductItems
+} from '../../../utils/misc.js';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';

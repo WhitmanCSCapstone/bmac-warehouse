@@ -1,8 +1,13 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { Input, DatePicker, Divider, Modal, Form } from 'antd';
-import { getCombinedWeight, hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
-import { handleReceiptClick, deleteEmptyProductItems } from './pdfUtils';
+import {
+  getCombinedWeight,
+  hasErrors,
+  generateGenericFormItem,
+  deleteEmptyProductItems
+} from '../../../utils/misc.js';
+import { handleReceiptClick } from './pdfUtils';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
@@ -57,6 +62,7 @@ class ReceiptForm extends React.Component {
   handleOk = showLoadingAnimation => {
     this.props.form.validateFieldsAndScroll(err => {
       if (!err) {
+        showLoadingAnimation();
         var emptiedShipItems = deleteEmptyProductItems(this.state.receive_items);
         var newData = JSON.parse(JSON.stringify(this.state));
 

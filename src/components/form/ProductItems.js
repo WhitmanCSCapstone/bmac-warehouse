@@ -3,18 +3,6 @@ import { Icon, InputNumber, Button, Form } from 'antd';
 import { getAutocompleteOptionsList } from '../../utils/misc.js';
 import ProductAutoComplete from './ProductAutoComplete';
 
-function isDataInRow(rowObj) {
-  let entries = Object.entries(rowObj);
-  for (let entry of entries) {
-    let key = entry[0];
-    let val = entry[1];
-    if (val !== undefined) {
-      return true;
-    }
-  }
-  return false;
-}
-
 const styles = {
   container: {
     width: '100%'
@@ -76,7 +64,7 @@ class ProductItems extends React.Component {
       this.props.fundsSource !== nextProps.fundsSource ||
       this.props.items !== nextProps.items ||
       this.props.products !== nextProps.products ||
-      this.props.fundingSources !== this.props.fundingSources
+      this.props.fundingSources !== nextProps.fundingSources
     ) {
       return true;
     }
@@ -173,7 +161,7 @@ class ProductItems extends React.Component {
                         {
                           type: 'enum',
                           enum: Object.keys(this.props.products),
-                          required: index === 0 || isDataInRow(obj),
+                          required: index === 0,
                           message: 'Please Enter A Valid Product'
                         }
                       ]
