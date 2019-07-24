@@ -32,6 +32,7 @@ function EditableShipmentTable(props) {
           rowData={props.rowData}
           fundingSources={props.fundingSources}
           products={props.products}
+          customers={props.customers}
         />
       )}
 

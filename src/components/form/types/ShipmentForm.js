@@ -1,8 +1,8 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Select, Divider, Modal } from 'antd';
+import { Input, DatePicker, Select, Divider, Modal, Form } from 'antd';
 import { handleLabelClick, handleInvoiceClick, deleteEmptyProductItems } from './pdfUtils';
-import { getCombinedWeight } from '../../../utils/misc.js';
+import { getCombinedWeight, hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
@@ -16,38 +16,21 @@ const Option = Select.Option;
 const styles = {
   form: {
     display: 'flex',
-    flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em'
+    margin: '0px 1em 0em 1em'
   },
 
   datePicker: {
     width: '100%'
   },
 
-  topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center'
-  },
-
-  bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start'
-  },
-
-  shipViaContainer: {
-    width: '45%',
-    margin: '0px 1em 1em 1em',
-    display: 'flex',
-    flexDirection: 'column'
+  notes: {
+    width: '100%'
   }
 };
 
@@ -98,25 +81,29 @@ class ShipmentForm extends React.Component {
   };
 
   handleOk = showLoadingAnimation => {
-    showLoadingAnimation();
-    var emptiedShipItems = deleteEmptyProductItems(this.state.ship_items);
-    var newData = JSON.parse(JSON.stringify(this.state));
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        showLoadingAnimation();
+        var emptiedShipItems = deleteEmptyProductItems(this.state.ship_items);
+        var newData = JSON.parse(JSON.stringify(this.state));
 
-    newData['ship_items'] = emptiedShipItems;
+        newData['ship_items'] = emptiedShipItems;
 
-    var row = this.props.rowData;
+        var row = this.props.rowData;
 
-    if (row && row.uniq_id) {
-      // if we are editing a shipment, set in place
-      db.setShipmentObj(row.uniq_id, newData);
-    } else {
-      // else we are creating a new entry
-      db.pushShipmentObj(newData);
-    }
+        if (row && row.uniq_id) {
+          // if we are editing a shipment, set in place
+          db.setShipmentObj(row.uniq_id, newData);
+        } else {
+          // else we are creating a new entry
+          db.pushShipmentObj(newData);
+        }
 
-    // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+        // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
@@ -147,9 +134,10 @@ class ShipmentForm extends React.Component {
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
     return (
       <Modal
-        title="Shipment Form"
+        title={'Shipment Form'}
         style={{ top: 20 }}
         width={'60vw'}
         destroyOnClose={true}
@@ -158,54 +146,72 @@ class ShipmentForm extends React.Component {
         afterClose={this.props.closeForm}
         footer={[
           <Footer
-            key="footer"
+            key={'footer'}
             handleLabelClick={() => handleLabelClick(this.state)}
             handleInvoiceClick={() => handleInvoiceClick(this.state)}
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
           />
         ]}
       >
-        <div id="divtoprint" style={styles.form}>
-          <div style={styles.topThird}>
-            <div style={styles.formItem}>
-              Date:
+        <Form layout={'vertical'} style={styles.form}>
+          <Form.Item style={styles.formItem} label={'Ship Date:'}>
+            {getFieldDecorator('ship_date', {
+              initialValue: this.state.ship_date ? Moment.unix(this.state.ship_date) : undefined,
+              rules: [{ type: 'object', required: true, message: 'Please Enter A Ship Date' }]
+            })(
               <DatePicker
                 style={styles.datePicker}
                 onChange={date => this.onChange('ship_date', Number(date.format('X')))}
+                placeholder={'Ship Date'}
                 format={'MM/DD/YYYY'}
-                key={`shipdate:${this.state.ship_date}`}
-                defaultValue={
-                  this.state.ship_date ? Moment.unix(this.state.ship_date) : this.state.ship_date
-                }
-                placeholder="Ship Date"
+                allowClear={false}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <div style={styles.formItem}>
-              Customer:
+          <Form.Item style={styles.formItem} label={'Customer Name:'}>
+            {getFieldDecorator('customer_id', {
+              initialValue: this.state.customer_id,
+              rules: [
+                {
+                  whitespace: true,
+                  type: 'enum',
+                  enum: Object.keys(this.props.customers),
+                  required: true,
+                  message: 'Please Enter A Valid Customer'
+                }
+              ]
+            })(
               <CustomerAutoComplete
-                onCustomerChange={val => this.onChange('customer_id', val)}
+                onChange={val => this.onChange('customer_id', val)}
                 rowData={this.props.rowData}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <div style={styles.formItem} key={'hellotheremrwhitehowareyoudoingtoday'}>
-              Funding Source:
+          <Form.Item style={styles.formItem} label={'Funding Source:'}>
+            {getFieldDecorator('status', {
+              initialValue: this.state.funds_source,
+              rules: [{ required: true, message: 'Please Enter A Funding Source' }]
+            })(
               <FundsSourceDropdown
-                value={this.state.funds_source}
                 onChange={val => this.onChange('funds_source', val)}
                 fundingSources={this.props.fundingSources}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <div style={styles.shipViaContainer}>
-              Ship Via:
+          <Form.Item style={styles.formItem} label={'Ship Via:'}>
+            {getFieldDecorator('ship_via', {
+              initialValue: this.state.ship_via ? this.state.ship_via : undefined,
+              rules: [{ required: true, message: 'Please Select A Ship Via' }]
+            })(
               <Select
-                placeholder="Ship Via"
-                value={this.state.ship_via ? this.state.ship_via : undefined}
+                placeholder={'Ship Via'}
                 onChange={val => {
                   this.onChange('ship_via', val);
                 }}
@@ -214,8 +220,8 @@ class ShipmentForm extends React.Component {
                 <Option value="Customer">Customer</Option>
                 <Option value="Other">Other</Option>
               </Select>
-            </div>
-          </div>
+            )}
+          </Form.Item>
 
           <Divider orientation="left">Ship Items</Divider>
 
@@ -233,38 +239,38 @@ class ShipmentForm extends React.Component {
             }
             addProductItem={this.addShipmentItem}
             removeProductItem={this.removeShipmentItem}
+            getFieldDecorator={getFieldDecorator}
           />
 
           <Divider />
 
-          <div style={styles.bottomThird}>
-            <div style={styles.formItem}>
-              <Input
-                placeholder="Rate"
-                value={this.state.ship_rate}
-                onChange={e => this.onChange('ship_rate', e.target.value)}
-              />
-            </div>
+          {['ship_rate', 'total_price'].map(accessor => {
+            return generateGenericFormItem(
+              accessor,
+              this.state[accessor],
+              val => this.onChange(accessor, val),
+              getFieldDecorator,
+              'number'
+            );
+          })}
 
-            <div style={styles.formItem}>
-              <Input
-                placeholder="Billed Amount"
-                value={this.state.total_price}
-                onChange={e => this.onChange('total_price', e.target.value)}
+          <Form.Item style={{ ...styles.formItem, ...styles.notes }} label={'Notes:'}>
+            {getFieldDecorator('notes', {
+              initialValue: this.state.notes
+            })(
+              <TextArea
+                rows={4}
+                placeholder={'Notes'}
+                onChange={e => this.onChange('notes', e.target.value)}
               />
-            </div>
-          </div>
-
-          <TextArea
-            rows={4}
-            value={this.state.notes}
-            placeholder="Notes"
-            onChange={e => this.onChange('notes', e.target.value)}
-          />
-        </div>
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
 }
 
-export default ShipmentForm;
+const WrappedShipmentForm = Form.create({ name: 'ShipmentForm' })(ShipmentForm);
+
+export default WrappedShipmentForm;
