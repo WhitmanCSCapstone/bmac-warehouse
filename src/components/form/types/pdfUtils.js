@@ -1,7 +1,11 @@
 import * as jspdf from 'jspdf';
 import Moment from 'moment';
 import { db } from '../../../firebase';
-import { makeProductItemsReadable, getCombinedWeight } from '../../../utils/misc.js';
+import {
+  makeProductItemsReadable,
+  getCombinedWeight,
+  deleteEmptyProductItems
+} from '../../../utils/misc.js';
 
 function writeBmacAddressToPdf(pdf) {
   pdf.setFontType('italic');
@@ -194,16 +198,4 @@ export function handleLabelClick(state) {
       pdf.save('Label');
     });
   });
-}
-
-export function deleteEmptyProductItems(items) {
-  let filteredItems = items.filter(obj => {
-    return (
-      obj !== undefined &&
-      obj['product'] !== undefined &&
-      obj['product'] &&
-      !obj['product'].includes('INVALID')
-    );
-  });
-  return filteredItems;
 }

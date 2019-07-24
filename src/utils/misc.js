@@ -277,3 +277,15 @@ export function generateGenericFormItem(accessor, initialValue, onChange, getFie
     </Form.Item>
   );
 }
+
+export function deleteEmptyProductItems(items) {
+  let filteredItems = items.filter(obj => {
+    return (
+      obj !== undefined &&
+      obj['product'] !== undefined &&
+      obj['product'] &&
+      !obj['product'].includes('INVALID')
+    );
+  });
+  return filteredItems;
+}
