@@ -5,27 +5,9 @@ import { Input, Select } from 'antd';
 import * as ROLES from '../../../constants/roles';
 import { hasErrors } from '../../../utils/misc.js';
 import Footer from '../Footer';
+import { styles } from './styles';
 
 const Option = Select.Option;
-
-//Styles
-const styles = {
-  form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start'
-  },
-
-  formItem: {
-    width: '100%',
-    margin: '0px 1em 0em 1em'
-  },
-
-  errorMessage: {
-    display: 'flex',
-    width: '100%'
-  }
-};
 
 const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
 
@@ -119,7 +101,7 @@ class StaffForm extends React.Component {
         ]}
       >
         <Form layout={'vertical'} style={styles.form}>
-          <Form.Item style={styles.formItem} label={'Username:'}>
+          <Form.Item style={styles.staffFormItem} label={'Username:'}>
             {getFieldDecorator('username', {
               initialValue: this.state.username,
               rules: [{ whitespace: true, required: true, message: 'Please Enter A Username' }]
@@ -131,7 +113,7 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item style={styles.formItem} label={'Email:'}>
+          <Form.Item style={styles.staffFormItem} label={'Email:'}>
             {getFieldDecorator('email', {
               initialValue: this.state.email,
               rules: [{ whitespace: true, required: true, message: 'Please Enter A Email' }]
@@ -143,7 +125,7 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item style={styles.formItem} label={'Role:'}>
+          <Form.Item style={styles.staffFormItem} label={'Role:'}>
             {getFieldDecorator('role', {
               initialValue: this.state.role,
               rules: [{ required: true, message: 'Please Select A Role' }]
@@ -157,7 +139,7 @@ class StaffForm extends React.Component {
 
           <Divider orientation={'left'}>Password</Divider>
 
-          <Form.Item style={styles.formItem} label={'Password:'}>
+          <Form.Item style={styles.staffFormItem} label={'Password:'}>
             {getFieldDecorator('passwordOne', {
               initialValue: this.state.passwordOne,
 
@@ -171,7 +153,7 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item style={styles.formItem} label={'Password:'}>
+          <Form.Item style={styles.staffFormItem} label={'Password:'}>
             {getFieldDecorator('passwordTwo', {
               initialValue: this.state.passwordTwo,
               rules: [{ whitespace: true, required: true, message: 'Please Enter A Password' }]
@@ -184,7 +166,7 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item style={styles.formItem}>
+          <Form.Item style={styles.staffFormItem}>
             <div style={styles.errorMessage}>
               {isInvalid &&
                 this.state.username !== null &&
