@@ -71,6 +71,18 @@ class ProductItems extends React.Component {
     };
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (
+      this.props.fundsSource !== nextProps.fundsSource ||
+      this.props.items !== nextProps.items ||
+      this.props.products !== nextProps.products ||
+      this.props.fundingSources !== this.props.fundingSources
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.fundsSource !== prevProps.fundsSource) {
       const productObjs = Object.values(this.props.products);
@@ -111,7 +123,6 @@ class ProductItems extends React.Component {
   };
 
   render() {
-    console.log('Product Items rendered!');
     function invisibleBtn() {
       return (
         <Icon

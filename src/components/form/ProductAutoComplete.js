@@ -16,6 +16,16 @@ class ProductAutoComplete extends React.Component {
     };
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (
+      this.props.autocompleteOptionsList !== nextProps.autocompleteOptionsList ||
+      this.props.products !== nextProps.products
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.value !== prevProps.value) {
       const prodObj = this.props.products[this.props.value];
