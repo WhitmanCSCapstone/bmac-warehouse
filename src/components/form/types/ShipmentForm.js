@@ -8,31 +8,11 @@ import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
 import CustomerAutoComplete from '../CustomerAutoComplete';
 import Moment from 'moment';
+import { styles } from './styles';
 
 const { TextArea } = Input;
 
 const Option = Select.Option;
-
-const styles = {
-  form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start'
-  },
-
-  formItem: {
-    width: '45%',
-    margin: '0px 1em 0em 1em'
-  },
-
-  datePicker: {
-    width: '100%'
-  },
-
-  notes: {
-    width: '100%'
-  }
-};
 
 class ShipmentForm extends React.Component {
   defaultState = {

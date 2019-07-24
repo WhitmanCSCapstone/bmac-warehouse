@@ -5,31 +5,10 @@ import { hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import Moment from 'moment';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
+import { styles } from './styles';
 
 const { TextArea } = Input;
 const Option = Select.Option;
-
-const styles = {
-  form: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start'
-  },
-
-  formItem: {
-    width: '45%',
-    margin: '0px 1em 0em 1em'
-  },
-
-  datePicker: {
-    width: '100%'
-  },
-
-  notes: {
-    width: '100%'
-  }
-};
 
 //Provider Form Component
 class ProductForm extends React.Component {

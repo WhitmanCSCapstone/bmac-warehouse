@@ -3,29 +3,12 @@ import { db } from '../../../firebase';
 import { Input, Select, Divider, Modal, Form } from 'antd';
 import { hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import Footer from '../Footer';
+import { styles } from './styles';
 
 //This is for the notes section.
 const { TextArea } = Input;
 //This is for the status dropdown.
 const Option = Select.Option;
-
-//Styles
-const styles = {
-  form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start'
-  },
-
-  formItem: {
-    width: '45%',
-    margin: '0px 1em 1em 1em'
-  },
-
-  notes: {
-    width: '100%'
-  }
-};
 
 //Provider Form Component
 class ProviderForm extends React.Component {

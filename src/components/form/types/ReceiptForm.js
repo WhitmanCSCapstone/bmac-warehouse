@@ -8,29 +8,9 @@ import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
 import ProviderAutoComplete from '../ProviderAutoComplete';
 import Moment from 'moment';
+import { styles } from './styles';
 
 const { TextArea } = Input;
-
-const styles = {
-  form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start'
-  },
-
-  formItem: {
-    width: '45%',
-    margin: '0px 1em 0em 1em'
-  },
-
-  datePicker: {
-    width: '100%'
-  },
-
-  notes: {
-    width: '100%'
-  }
-};
 
 class ReceiptForm extends React.Component {
   defaultState = {
