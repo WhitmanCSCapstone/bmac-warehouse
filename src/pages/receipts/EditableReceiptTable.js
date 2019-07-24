@@ -33,6 +33,7 @@ function EditableReceiptTable(props) {
           rowData={props.rowData}
           fundingSources={props.fundingSources}
           products={props.products}
+          providers={props.providers}
         />
       )}
 
