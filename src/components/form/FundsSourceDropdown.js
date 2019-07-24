@@ -5,7 +5,8 @@ const Option = Select.Option;
 
 const styles = {
   select: {
-    minWidth: '100%'
+    minWidth: '8em',
+    width: '100%'
   }
 };
 

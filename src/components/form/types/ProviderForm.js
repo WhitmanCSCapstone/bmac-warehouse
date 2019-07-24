@@ -137,7 +137,7 @@ class ProviderForm extends React.Component {
           <Form.Item style={styles.formItem} label={'Status:'}>
             {getFieldDecorator('status', {
               initialValue: this.state.status,
-              rules: [{ required: true }]
+              rules: [{ required: true, message: 'Please Select A Status' }]
             })(
               <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>
                 <Option value={'active'}>Active</Option>

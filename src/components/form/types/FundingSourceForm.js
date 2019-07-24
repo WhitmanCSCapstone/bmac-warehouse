@@ -59,7 +59,7 @@ class FundingSourceForm extends React.Component {
     return (
       <div>
         <Modal
-          title="Funding Source"
+          title={'Funding Source'}
           style={{
             top: 20
           }}
@@ -70,7 +70,7 @@ class FundingSourceForm extends React.Component {
           afterClose={this.props.closeForm}
           footer={[
             <Footer
-              key="footer"
+              key={'footer'}
               rowData={this.props.rowData}
               closeModal={this.props.closeModal}
               handleOk={this.handleOk}
@@ -78,7 +78,7 @@ class FundingSourceForm extends React.Component {
             />
           ]}
         >
-          <Form layout="vertical" onSubmit={this.handleSubmit}>
+          <Form layout={'vertical'} onSubmit={this.handleSubmit}>
             <Form.Item label={'Funding Source'}>
               {getFieldDecorator('id', {
                 initialValue: this.state.id,
