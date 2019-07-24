@@ -10,24 +10,24 @@ const styles = {
 class ProductAutoComplete extends React.Component {
   constructor(props) {
     super(props);
-    const productObj = props.products[props.obj.product];
+    const productObj = props.products[props.value.product];
     this.state = {
       defaultValue: productObj ? productObj['product_id'] : undefined
     };
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.obj.product !== prevProps.obj.product) {
-      const prodObj = this.props.products[this.props.obj.product];
+    if (this.props.value.product !== prevProps.value.product) {
+      const prodObj = this.props.products[this.props.value.product];
       const givenProdName = prodObj ? prodObj['product_id'] : undefined;
       this.setState({
-        defaultValue: givenProdName ? givenProdName : this.props.obj.product
+        defaultValue: givenProdName ? givenProdName : this.props.value.product
       });
     }
   }
 
   onChange = val => {
-    this.props.onProductChange(val);
+    this.props.onChange(val);
   };
 
   render() {

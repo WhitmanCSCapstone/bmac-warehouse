@@ -39,7 +39,7 @@ class CustomerAutoComplete extends React.Component {
   }
 
   onChange = val => {
-    this.props.onCustomerChange(val);
+    this.props.onChange(val);
   };
 
   render() {

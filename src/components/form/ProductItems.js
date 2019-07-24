@@ -1,37 +1,66 @@
 import React from 'react';
-import { Icon, Input, Button } from 'antd';
+import { Icon, InputNumber, Button, Form } from 'antd';
 import { getAutocompleteOptionsList } from '../../utils/misc.js';
 import ProductAutoComplete from './ProductAutoComplete';
 
+function isDataInRow(rowObj) {
+  let entries = Object.entries(rowObj);
+  for (let entry of entries) {
+    let key = entry[0];
+    let val = entry[1];
+    if (val !== undefined) {
+      return true;
+    }
+  }
+  return false;
+}
+
 const styles = {
-  container: {},
+  container: {
+    width: '100%'
+  },
 
   icon: {
-    alignSelf: 'center',
-    marginBottom: '0.20em'
+    //alignSelf: 'center'
+    //marginBottom: '0.20em'
+  },
+
+  firstIcon: {
+    //alignSelf: 'flex-end',
+    //marginBottom: '9px'
+    marginTop: '29px',
+    alignSelf: 'center'
   },
 
   iconDisabled: {
     alignSelf: 'center',
-    marginBottom: '0.5em',
     opacity: 0
   },
 
   row: {
     display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    justifyContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: '0.5em'
   },
 
   productItem: {
-    width: '40%',
-    margin: '0em 0.5em 0.5em 0em'
+    width: '50%',
+    margin: '0em 0.5em 0em 0em',
+    padding: 0
   },
 
   formItem: {
-    margin: '0em 0.5em 0.5em 0em',
-    width: '15%',
-    overflow: 'hidden'
+    margin: '0em 0.5em 0em 0.5em',
+    padding: 0,
+    flexGrow: 1
+  },
+
+  input: {
+    margin: 0,
+    padding: 0,
+    width: '100%'
   }
 };
 
@@ -65,7 +94,7 @@ class ProductItems extends React.Component {
   updateTotalWeight = (obj, index) => {
     const calculatedTotalWeight = obj['case_lots'] * obj['unit_weight'];
     if (calculatedTotalWeight) {
-      this.props.onChange('total_weight', index, calculatedTotalWeight.toString());
+      this.props.onChange('total_weight', index, calculatedTotalWeight);
     }
   };
 
@@ -95,74 +124,104 @@ class ProductItems extends React.Component {
       );
     }
 
+    const accessorAndOnChangeList = [
+      {
+        accessor: 'material_number',
+        onChange: (val, obj, index) => this.props.onChange('material_number', index, val)
+      },
+      {
+        accessor: 'unit_weight',
+        onChange: (val, obj, index) => this.changeUnitWeight(val, obj, index)
+      },
+      {
+        accessor: 'case_lots',
+        onChange: (val, obj, index) => {
+          this.props.onChange('case_lots', index, val);
+          this.updateTotalWeight(obj, index);
+        }
+      },
+      {
+        accessor: 'total_weight',
+        onChange: (val, obj, index) => this.props.onChange('total_weight', index, val)
+      }
+    ];
+
     return (
       <div style={styles.container}>
-        <div style={styles.row}>
-          <span style={styles.productItem}>Product</span>
-          <span style={styles.formItem}>Material #</span>
-          <span style={styles.formItem}>Unit Weight</span>
-          <span style={styles.formItem}>Case Lots</span>
-          <span style={styles.formItem}>Total Weight</span>
-          {invisibleBtn()}
-        </div>
         {!this.props.items
           ? null
           : this.props.items.map((obj, index) => {
               return (
                 <div key={index} style={styles.row}>
-                  <div style={styles.productItem}>
-                    <ProductAutoComplete
-                      onProductChange={val => this.onProductChange(index, val)}
-                      obj={obj ? obj : undefined}
-                      index={index}
-                      autocompleteOptionsList={this.state.autocompleteOptionsList}
-                      onProductSelect={val => this.onProductSelect(index, obj, val)}
-                      products={this.props.products}
-                      fundingSources={this.props.fundingSources}
-                    />
-                  </div>
+                  <Form.Item
+                    style={styles.productItem}
+                    key={`product_id${index}`}
+                    label={index === 0 ? 'Product:' : ''}
+                  >
+                    {this.props.getFieldDecorator(`product_id${index}`, {
+                      initialValue: obj ? obj : undefined,
+                      rules: [
+                        {
+                          type: 'enum',
+                          transform: val => {
+                            if (val.product) {
+                              return val.product;
+                            }
+                            let productObj = this.props.products[val];
+                            return productObj ? productObj.uniq_id : val;
+                          },
+                          enum: Object.keys(this.props.products),
+                          required: index === 0 || isDataInRow(obj),
+                          message: 'Please Enter A Valid Product'
+                        }
+                      ]
+                    })(
+                      <ProductAutoComplete
+                        onChange={val => this.onProductChange(index, val)}
+                        autocompleteOptionsList={this.state.autocompleteOptionsList}
+                        onProductSelect={val => this.onProductSelect(index, obj, val)}
+                        products={this.props.products}
+                      />
+                    )}
+                  </Form.Item>
 
-                  <div style={styles.formItem}>
-                    <Input
-                      placeholder="Material #"
-                      value={obj ? obj['material_number'] : undefined}
-                      onChange={e => this.props.onChange('material_number', index, e.target.value)}
-                    />
-                  </div>
-
-                  <div style={styles.formItem}>
-                    <Input
-                      placeholder="Unit Weight"
-                      value={obj ? obj['unit_weight'] : undefined}
-                      onChange={e => this.changeUnitWeight(e.target.value, obj, index)}
-                    />
-                  </div>
-
-                  <div style={styles.formItem}>
-                    <Input
-                      placeholder="Case Lots"
-                      value={obj ? obj['case_lots'] : undefined}
-                      onChange={e => {
-                        this.props.onChange('case_lots', index, e.target.value);
-                        this.updateTotalWeight(obj, index);
-                      }}
-                    />
-                  </div>
-
-                  <div style={styles.formItem}>
-                    <Input
-                      placeholder="Total Weight"
-                      value={obj ? obj['total_weight'] : undefined}
-                      onChange={e => this.props.onChange('total_weight', index, e.target.value)}
-                    />
-                  </div>
+                  {accessorAndOnChangeList.map(pair => {
+                    const niceLabel = pair.accessor
+                      .split('_')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ');
+                    return (
+                      <Form.Item
+                        style={styles.formItem}
+                        key={`${pair.accessor}${index}`}
+                        label={index === 0 ? niceLabel : ''}
+                      >
+                        {this.props.getFieldDecorator(`${pair.accessor}${index}`, {
+                          initialValue: obj ? obj[pair.accessor] : undefined,
+                          rules: [
+                            {
+                              transform: val => (val === undefined ? undefined : Number(val)),
+                              type: 'number',
+                              message: 'Not A Number'
+                            }
+                          ]
+                        })(
+                          <InputNumber
+                            style={styles.input}
+                            placeholder={niceLabel}
+                            onChange={val => pair.onChange(val, obj, index)}
+                          />
+                        )}
+                      </Form.Item>
+                    );
+                  })}
 
                   {this.props.items.length === 1 ? (
                     invisibleBtn()
                   ) : (
                     <Icon
                       className="dynamic-delete-button"
-                      style={styles.icon}
+                      style={index === 0 ? styles.firstIcon : styles.icon}
                       type="minus-circle-o"
                       onClick={() => this.props.removeProductItem(index)}
                     />
