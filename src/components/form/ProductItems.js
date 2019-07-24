@@ -118,6 +118,7 @@ class ProductItems extends React.Component {
   };
 
   render() {
+    console.log('Product Items rendered!');
     function invisibleBtn() {
       return (
         <Icon className="dynamic-delete-button" style={styles.iconDisabled} type="minus-circle-o" />
@@ -159,17 +160,10 @@ class ProductItems extends React.Component {
                     label={index === 0 ? 'Product:' : ''}
                   >
                     {this.props.getFieldDecorator(`product_id${index}`, {
-                      initialValue: obj ? obj : undefined,
+                      initialValue: obj ? obj.product : undefined,
                       rules: [
                         {
                           type: 'enum',
-                          transform: val => {
-                            if (val.product) {
-                              return val.product;
-                            }
-                            let productObj = this.props.products[val];
-                            return productObj ? productObj.uniq_id : val;
-                          },
                           enum: Object.keys(this.props.products),
                           required: index === 0 || isDataInRow(obj),
                           message: 'Please Enter A Valid Product'
@@ -181,6 +175,7 @@ class ProductItems extends React.Component {
                         autocompleteOptionsList={this.state.autocompleteOptionsList}
                         onProductSelect={val => this.onProductSelect(index, obj, val)}
                         products={this.props.products}
+                        index={index}
                       />
                     )}
                   </Form.Item>

@@ -234,6 +234,10 @@ export function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
+function transformToType(val, type) {
+  return type === 'number' ? Number(val) : val.toString();
+}
+
 export function generateGenericFormItem(accessor, initialValue, onChange, getFieldDecorator, type) {
   const label = accessor
     .split('_')
@@ -247,7 +251,14 @@ export function generateGenericFormItem(accessor, initialValue, onChange, getFie
     >
       {getFieldDecorator(accessor, {
         initialValue: initialValue,
-        rules: [{ type: type, whitespace: true, message: `Please Enter A Valid ${label}` }]
+        rules: [
+          {
+            type: type,
+            transform: val => transformToType(val, type),
+            whitespace: true,
+            message: `Please Enter A Valid ${label}`
+          }
+        ]
       })(
         type === 'number' ? (
           <InputNumber

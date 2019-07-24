@@ -1,7 +1,7 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Divider, Modal } from 'antd';
-import { getCombinedWeight } from '../../../utils/misc.js';
+import { Input, DatePicker, Divider, Modal, Form } from 'antd';
+import { getCombinedWeight, hasErrors, generateGenericFormItem } from '../../../utils/misc.js';
 import { handleReceiptClick, deleteEmptyProductItems } from './pdfUtils';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
@@ -14,38 +14,21 @@ const { TextArea } = Input;
 const styles = {
   form: {
     display: 'flex',
-    flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
 
   formItem: {
     width: '45%',
-    margin: '0px 1em 1em 1em'
+    margin: '0px 1em 0em 1em'
   },
 
   datePicker: {
     width: '100%'
   },
 
-  topThird: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'center'
-  },
-
-  bottomThird: {
-    display: 'flex',
-    justifyContent: 'flex-start'
-  },
-
-  shipViaContainer: {
-    width: '45%',
-    margin: '0px 1em 1em 1em',
-    display: 'flex',
-    flexDirection: 'column'
+  notes: {
+    width: '100%'
   }
 };
 
@@ -92,25 +75,28 @@ class ReceiptForm extends React.Component {
   };
 
   handleOk = showLoadingAnimation => {
-    showLoadingAnimation();
-    var emptiedShipItems = deleteEmptyProductItems(this.state.receive_items);
-    var newData = JSON.parse(JSON.stringify(this.state));
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        var emptiedShipItems = deleteEmptyProductItems(this.state.receive_items);
+        var newData = JSON.parse(JSON.stringify(this.state));
 
-    newData['receive_items'] = emptiedShipItems;
+        newData['receive_items'] = emptiedShipItems;
 
-    var row = this.props.rowData;
+        var row = this.props.rowData;
 
-    if (row && row.uniq_id) {
-      // if we are editing a shipment, set in place
-      db.setReceiptObj(row.uniq_id, newData);
-    } else {
-      // else we are creating a new entry
-      db.pushReceiptObj(newData);
-    }
+        if (row && row.uniq_id) {
+          // if we are editing a shipment, set in place
+          db.setReceiptObj(row.uniq_id, newData);
+        } else {
+          // else we are creating a new entry
+          db.pushReceiptObj(newData);
+        }
 
-    // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
-    this.props.refreshTable(() => {
-      this.props.closeModal();
+        // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
+        this.props.refreshTable(() => {
+          this.props.closeModal();
+        });
+      }
     });
   };
 
@@ -141,9 +127,10 @@ class ReceiptForm extends React.Component {
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
     return (
       <Modal
-        title="Receipt Form"
+        title={'Receipt Form'}
         style={{ top: 20 }}
         width={'60vw'}
         destroyOnClose={true}
@@ -152,51 +139,65 @@ class ReceiptForm extends React.Component {
         onCancel={this.props.closeModal}
         footer={[
           <Footer
-            key="footer"
+            key={'footer'}
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
             handleReceiptClick={() => handleReceiptClick(this.state)}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}
           />
         ]}
       >
-        <div style={styles.form}>
-          <div style={styles.topThird}>
-            {/* intentially mispelled "receive" */}
-            <div style={styles.formItem}>
-              Date:
+        <Form layout={'vertical'} style={styles.form}>
+          <Form.Item style={styles.formItem} label={'Receive Date:'}>
+            {getFieldDecorator('recieve_date', {
+              initialValue: this.state.recieve_date
+                ? Moment.unix(this.state.recieve_date)
+                : undefined,
+              rules: [{ type: 'object', required: true, message: 'Please Enter A Receive Date' }]
+            })(
               <DatePicker
                 style={styles.datePicker}
                 onChange={date => this.onChange('recieve_date', Number(date.format('X')))}
+                placeholder={'Receive Date'}
                 format={'MM/DD/YYYY'}
-                key={`recievedate:${this.state.recieve_date}`}
-                defaultValue={
-                  this.state.recieve_date
-                    ? Moment.unix(this.state.recieve_date)
-                    : this.state.recieve_date
-                }
-                placeholder="Receive Date"
+                allowClear={false}
               />
-            </div>
+            )}
+          </Form.Item>
 
-            <div style={styles.formItem}>
-              Payment Source:
+          <Form.Item style={styles.formItem} label={'Provider Name:'}>
+            {getFieldDecorator('provider_id', {
+              initialValue: this.state.provider_id,
+              rules: [
+                {
+                  whitespace: true,
+                  type: 'enum',
+                  enum: Object.keys(this.props.providers),
+                  required: true,
+                  message: 'Please Enter A Valid Provider'
+                }
+              ]
+            })(
+              <ProviderAutoComplete
+                onChange={val => this.onChange('provider_id', val)}
+                rowData={this.props.rowData}
+              />
+            )}
+          </Form.Item>
+
+          <Form.Item style={styles.formItem} label={'Payment Source:'}>
+            {getFieldDecorator('status', {
+              initialValue: this.state.payment_source,
+              rules: [{ required: true, message: 'Please Enter A Payment Source' }]
+            })(
               <FundsSourceDropdown
-                value={this.state.payment_source}
                 onChange={val => this.onChange('payment_source', val)}
                 fundingSources={this.props.fundingSources}
               />
-            </div>
-
-            <div style={styles.formItem}>
-              Provider:
-              <ProviderAutoComplete
-                onProviderChange={val => this.onChange('provider_id', val)}
-                rowData={this.props.rowData}
-              />
-            </div>
-          </div>
+            )}
+          </Form.Item>
 
           <Divider orientation="left">Receipt Items</Divider>
 
@@ -216,31 +217,38 @@ class ReceiptForm extends React.Component {
             }
             addProductItem={this.addReceiveItem}
             removeProductItem={this.removeReceiveItem}
+            getFieldDecorator={getFieldDecorator}
           />
 
           <Divider />
 
-          <div style={styles.bottomThird}>
-            <div style={styles.formItem}>
-              Billed Amount:
-              <Input
-                placeholder="Billed Amount"
-                value={this.state.billed_amt}
-                onChange={e => this.onChange('billed_amt', e.target.value)}
-              />
-            </div>
-          </div>
+          {['billed_amt'].map(accessor => {
+            return generateGenericFormItem(
+              accessor,
+              this.state[accessor],
+              val => this.onChange(accessor, val),
+              getFieldDecorator,
+              'number'
+            );
+          })}
 
-          <TextArea
-            rows={4}
-            placeholder="Notes"
-            value={this.state.notes}
-            onChange={e => this.onChange('notes', e.target.value)}
-          />
-        </div>
+          <Form.Item style={{ ...styles.formItem, ...styles.notes }} label={'Notes:'}>
+            {getFieldDecorator('notes', {
+              initialValue: this.state.notes
+            })(
+              <TextArea
+                rows={4}
+                placeholder={'Notes'}
+                onChange={e => this.onChange('notes', e.target.value)}
+              />
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
 }
 
-export default ReceiptForm;
+const WrappedReceiptForm = Form.create({ name: 'ReceiptForm' })(ReceiptForm);
+
+export default WrappedReceiptForm;
