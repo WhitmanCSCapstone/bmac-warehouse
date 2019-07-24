@@ -121,7 +121,7 @@ class ProductForm extends React.Component {
         afterClose={this.props.closeForm}
         footer={[
           <Footer
-            key="footer"
+            key={'footer'}
             rowData={this.props.rowData}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
@@ -129,7 +129,7 @@ class ProductForm extends React.Component {
           />
         ]}
       >
-        <Form layout="vertical" style={styles.form}>
+        <Form layout={'vertical'} style={styles.form}>
           <Form.Item style={styles.formItem} label={'Product Name:'}>
             {getFieldDecorator('product_id', {
               initialValue: this.state.product_id,
@@ -176,7 +176,7 @@ class ProductForm extends React.Component {
               <DatePicker
                 style={styles.datePicker}
                 onChange={date => this.onChange('initial_date', Number(date.format('X')))}
-                placeholder="Initial Date"
+                placeholder={'Initial Date'}
                 format={'MM/DD/YYYY'}
                 allowClear={false}
               />
@@ -185,7 +185,7 @@ class ProductForm extends React.Component {
 
           <Form.Item style={styles.formItem} label={'Status:'}>
             {getFieldDecorator('status', {
-              initialValue: this.state.status,
+              initialValue: this.state.status ? this.state.status : undefined,
               rules: [{ required: true }]
             })(
               <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>

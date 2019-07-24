@@ -120,7 +120,7 @@ class CustomerForm extends React.Component {
           />
         ]}
       >
-        <Form layout="vertical" style={styles.form}>
+        <Form layout={'vertical'} style={styles.form}>
           <Form.Item style={styles.formItem} label={'Customer Name:'}>
             {getFieldDecorator('customer_id', {
               initialValue: this.state.customer_id,
@@ -137,7 +137,7 @@ class CustomerForm extends React.Component {
 
           <Form.Item style={styles.formItem} label={'Status:'}>
             {getFieldDecorator('status', {
-              initialValue: this.state.status,
+              initialValue: this.state.status ? this.state.status : undefined,
               rules: [{ required: true }]
             })(
               <Select placeholder={'Status'} onChange={val => this.onChange('status', val)}>
