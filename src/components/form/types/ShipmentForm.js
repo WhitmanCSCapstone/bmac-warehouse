@@ -72,6 +72,12 @@ class ShipmentForm extends React.Component {
     this.state = { ...this.defaultState, ...props.rowData };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({ ...this.defaultState, ...this.props.rowData });
+    }
+  }
+
   onChange = (prop, val) => {
     this.setState({
       [prop]: val
