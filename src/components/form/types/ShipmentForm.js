@@ -113,7 +113,8 @@ class ShipmentForm extends React.Component {
     this.setState({ ship_items: itemsCopy });
   };
 
-  handleDelete = () => {
+  handleDelete = showLoadingAnimation => {
+    showLoadingAnimation();
     db.deleteShipmentObj(this.props.rowData.uniq_id);
     this.props.refreshTable(this.props.closeModal);
   };

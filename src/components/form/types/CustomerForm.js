@@ -96,7 +96,6 @@ class CustomerForm extends React.Component {
           <Footer
             key="footer"
             rowData={this.props.rowData}
-            handleDelete={this.handleDelete}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
             saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}

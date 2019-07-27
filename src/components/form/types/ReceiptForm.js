@@ -107,7 +107,8 @@ class ReceiptForm extends React.Component {
     this.setState({ receive_items: itemsCopy });
   };
 
-  handleDelete = () => {
+  handleDelete = showLoadingAnimation => {
+    showLoadingAnimation();
     db.deleteReceiptObj(this.props.rowData.uniq_id);
     this.props.refreshTable(this.props.closeModal);
   };
