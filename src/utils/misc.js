@@ -235,7 +235,11 @@ export function hasErrors(fieldsError) {
 }
 
 function transformToType(val, type) {
-  return type === 'number' ? Number(val) : val.toString();
+  if (val) {
+    return type === 'number' ? Number(val) : val.toString();
+  } else {
+    return undefined;
+  }
 }
 
 export function generateGenericFormItem(accessor, initialValue, onChange, getFieldDecorator, type) {
