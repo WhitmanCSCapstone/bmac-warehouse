@@ -15,13 +15,19 @@ class Footer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      saveLoading: false,
+      deleteLoading: false
     };
   }
 
-  onClick = () => {
-    const showLoadingAnimation = () => this.setState({ loading: true });
+  onSaveClick = () => {
+    const showLoadingAnimation = () => this.setState({ saveLoading: true });
     this.props.handleOk(showLoadingAnimation);
+  };
+
+  onDeleteClick = () => {
+    const showLoadingAnimation = () => this.setState({ deleteLoading: true });
+    this.props.handleDelete(showLoadingAnimation);
   };
 
   render() {
@@ -33,7 +39,8 @@ class Footer extends React.Component {
             style={styles.deleteBtn}
             disabled={this.props.rowData ? false : true}
             type="danger"
-            onClick={this.props.handleDelete}
+            loading={this.state.deleteLoading}
+            onClick={this.onDeleteClick}
           >
             Delete
           </Button>
@@ -63,11 +70,11 @@ class Footer extends React.Component {
           Cancel
         </Button>
         <Button
-          key="submit"
+          key="save"
           disabled={this.props.saveDisabled}
-          loading={this.state.loading}
+          loading={this.state.saveLoading}
           type="primary"
-          onClick={this.onClick}
+          onClick={this.onSaveClick}
         >
           Save
         </Button>
