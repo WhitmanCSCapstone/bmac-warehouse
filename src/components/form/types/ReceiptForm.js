@@ -128,7 +128,14 @@ class ReceiptForm extends React.Component {
             key={'footer'}
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
-            handleReceiptClick={() => handleReceiptClick(this.state)}
+            handleReceiptClick={() =>
+              handleReceiptClick(
+                this.state,
+                this.props.providers,
+                this.props.products,
+                this.props.fundingSources
+              )
+            }
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
             saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError())}

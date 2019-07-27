@@ -133,7 +133,14 @@ class ShipmentForm extends React.Component {
           <Footer
             key={'footer'}
             handleLabelClick={() => handleLabelClick(this.state)}
-            handleInvoiceClick={() => handleInvoiceClick(this.state)}
+            handleInvoiceClick={() =>
+              handleInvoiceClick(
+                this.state,
+                this.props.customers,
+                this.props.products,
+                this.props.fundingSources
+              )
+            }
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
             closeModal={this.props.closeModal}

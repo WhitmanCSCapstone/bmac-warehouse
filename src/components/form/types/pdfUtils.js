@@ -1,4 +1,5 @@
 import * as jspdf from 'jspdf';
+import 'jspdf-autotable';
 import Moment from 'moment';
 import { db } from '../../../firebase';
 import {
@@ -7,32 +8,30 @@ import {
   deleteEmptyProductItems
 } from '../../../utils/misc.js';
 
-function writeBmacAddressToPdf(pdf) {
+function writeBmacAddressToPdf(pdf, base_x) {
   pdf.setFontType('italic');
-  pdf.text(55, 17.5, 'Blue Mountain Action Council');
-  pdf.text(55, 25, 'Walla Walla, WA, 99362');
+  pdf.text(base_x, 22.5, 'Blue Mountain Action Council');
+  pdf.text(base_x, 30, 'Walla Walla, WA, 99362');
 }
 
-function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
+function writeLabelValue(pdf, obj, base_x, y, x_diff) {
+  pdf.setFontType('bold');
+  pdf.text(base_x, y, obj.label);
+  pdf.setFontType('normal');
+  pdf.text(base_x + x_diff, y, '' + obj.value);
+}
+
+function writeProductItemsToPdfAndReturnY(pdf, items, y_old, base_x) {
   let y = Number(JSON.parse(JSON.stringify(y_old)));
 
-  const base_x = 5;
-  const prodX = base_x;
-  const materialNumX = prodX + 85;
-  const unitWeightX = materialNumX + 25;
-  const caseLotX = unitWeightX + 25;
-  const totalWeightX = caseLotX + 25;
-
-  pdf.text(10, 90, 'Items Shipped:');
   pdf.setFontType('bold');
-  pdf.text(prodX, 100, 'Product');
-  pdf.text(materialNumX, 100, 'Material #');
-  pdf.text(unitWeightX, 100, 'Unit Weight');
-  pdf.text(caseLotX, 100, 'Case Lots');
-  pdf.text(totalWeightX, 100, 'Total Weight');
+  pdf.text(10, y, 'Items Shipped:');
   pdf.setFontType('normal');
 
   let total_case_lots = 0;
+
+  const headers = [['Material #', 'Product', 'Unit Weight', 'Case Lots', 'Total Weight']];
+  const tableData = [];
 
   for (let i = 0; i < items.length; i++) {
     const product = items[i].product;
@@ -40,126 +39,188 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old) {
     const unit_weight = items[i].unit_weight;
     const case_lots = items[i].case_lots;
     const total_weight = items[i].total_weight;
-    product ? pdf.text(prodX, y, String(product)) : pdf.text(prodX, y, '-');
-    material_number
-      ? pdf.text(materialNumX, y, String(material_number))
-      : pdf.text(materialNumX, y, '-');
-    unit_weight ? pdf.text(unitWeightX, y, String(unit_weight)) : pdf.text(unitWeightX, y, '-');
-    case_lots ? pdf.text(caseLotX, y, String(case_lots)) : pdf.text(caseLotX, y, '-');
-    total_weight ? pdf.text(totalWeightX, y, String(total_weight)) : pdf.text(totalWeightX, y, '-');
-    y += 5;
+
+    const row = [material_number, product, unit_weight, case_lots, total_weight];
+
+    tableData.push(row);
+
     total_case_lots += parseInt(case_lots, 10);
   }
 
-  pdf.setFontType('bold');
-  pdf.text(unitWeightX, y + 5, 'Totals: ');
-  pdf.text(caseLotX, y + 5, String(total_case_lots));
-  pdf.text(totalWeightX, y + 5, String(getCombinedWeight(items)));
-  pdf.text(totalWeightX + 15, y + 5, 'pounds');
+  const lastRow = ['', '', 'Totals:', total_case_lots, getCombinedWeight(items)];
+
+  tableData.push(lastRow);
+
+  pdf.autoTable({
+    startY: y + 5,
+    head: headers,
+    margin: { left: base_x },
+    body: tableData,
+    styles: { fontSize: 11 }
+  });
+
+  y = pdf.previousAutoTable.finalY;
 
   return y;
 }
 
 /*
-   @param 1 - X Coordinate (in units declared at inception of PDF document)
-   @param 2 - Y Coordinate (in units declared at inception of PDF document)
-   @param 3 - String or array of strings to be added to the page. Each line
-   is shifted one line down per font, spacing settings declared
-   before this call.
- */
-export function handleInvoiceClick(state) {
+     @param 1 - X Coordinate (in units declared at inception of PDF document)
+     @param 2 - Y Coordinate (in units declared at inception of PDF document)
+     @param 3 - String or array of strings to be added to the page. Each line
+     is shifted one line down per font, spacing settings declared
+     before this call.
+   */
+export function handleInvoiceClick(state, customers, products, fundingSources) {
   const pdf = new jspdf();
-  db.onceGetSpecificCustomer(state.customer_id).then(customerObj => {
-    let customerName = customerObj.child('customer_id').val();
-    let address = customerObj.child('address').val();
-    let city = customerObj.child('city').val();
-    let stateUS = customerObj.child('state').val();
-    let zip = customerObj.child('zip').val();
-    let fullAddress = address + ', ' + city + ', ' + stateUS + ', ' + zip;
+  const customerObj = customers[state.customer_id];
+  let customerName = customerObj.customer_id;
+  let address = customerObj.address;
+  let city = customerObj.city;
+  let stateUS = customerObj.state;
+  let zip = customerObj.zip;
+  let fullAddress = address + ', ' + city + ', ' + stateUS + ', ' + zip;
 
-    pdf.setFont('helvetica');
-    pdf.setFontSize('20');
-    pdf.setFontType('bold');
-    pdf.text(55, 10, 'BMAC Shipment Invoice');
-    writeBmacAddressToPdf(pdf);
+  const base_x = 10;
+  var y = 15;
 
-    pdf.setFontType('italic');
-    pdf.setFontSize('12');
-    pdf.text(10, 40, 'Invoice No:' + state.ship_date);
-    pdf.text(10, 50, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
-    pdf.text(70, 50, 'Ship Via: ' + state.ship_via);
-    db.onceGetSpecificFundingSource(state.funds_source).then(fundsSrcObj => {
-      pdf.text(130, 50, 'Funds Source: ' + fundsSrcObj.child('id').val());
-      pdf.text(10, 65, 'Ship To: ');
-      pdf.text(15, 75, customerName);
-      pdf.text(15, 80, fullAddress);
+  const fundsSrcObj = fundingSources[state.funds_source];
+  const fundsSource = fundsSrcObj.id;
 
-      db.onceGetProducts().then(snapshot => {
-        const products = snapshot.val();
-        const items = makeProductItemsReadable(state.ship_items, products);
-        const clean_ship_items = deleteEmptyProductItems(items);
-        let y = 105;
+  pdf.setFont('helvetica');
+  pdf.setFontSize('20');
+  pdf.setFontType('bold');
+  pdf.text(base_x, y, 'BMAC Shipment Invoice');
+  writeBmacAddressToPdf(pdf, base_x);
 
-        y = writeProductItemsToPdfAndReturnY(pdf, clean_ship_items, y);
+  pdf.setFontSize('12');
+  pdf.setFontType('normal');
 
-        pdf.setFontType('normal');
-        pdf.setFontType('italic');
-        pdf.text(10, y + 20, 'Rate: ' + state.ship_rate);
-        pdf.text(70, y + 20, 'Billed Amount: ' + state.total_price);
-        pdf.text(10, y + 30, 'Notes: ' + state.notes);
-        pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
-        pdf.text(10, y + 60, 'Agency Signature - ___________________________________________');
+  y = y + 25;
 
-        pdf.save('shipment_invoice');
-      });
-    });
+  const info = [
+    { label: 'Invoice No:', value: state.ship_date },
+    { label: 'Ship Date:', value: Moment.unix(state.ship_date).format('MMM D, YYYY') },
+    { label: 'Ship Via:', value: state.ship_via },
+    { label: 'Funds Src:', value: fundsSource }
+  ];
+
+  let x_diff = 25;
+  info.forEach(obj => {
+    writeLabelValue(pdf, obj, base_x, y, x_diff);
+    y += 5;
   });
+
+  y += 5;
+  pdf.setFontType('bold');
+  pdf.text(base_x, y, 'Ship To: ');
+  pdf.setFontType('normal');
+  y += 5;
+  pdf.text(base_x, y, customerName);
+  y += 5;
+  pdf.text(base_x, y, fullAddress);
+  y += 10;
+
+  const items = makeProductItemsReadable(state.ship_items, products);
+  const clean_ship_items = deleteEmptyProductItems(items);
+
+  y = writeProductItemsToPdfAndReturnY(pdf, clean_ship_items, y, base_x);
+
+  const data = [
+    { label: 'Rate:', value: state.ship_rate ? state.ship_rate : '' },
+    { label: 'Billed Amt:', value: state.total_price ? state.total_price : '' },
+    { label: 'Notes:', value: state.notes ? state.notes : '' }
+  ];
+
+  y += 10;
+
+  x_diff = 25;
+  data.forEach(obj => {
+    writeLabelValue(pdf, obj, base_x, y, x_diff);
+    y += 5;
+  });
+
+  y += 10;
+
+  pdf.text(base_x, y, 'BMAC Signature - ____________________________________________');
+  y += 10;
+  pdf.text(base_x, y, 'Agency Signature - ___________________________________________');
+
+  pdf.save('shipment_invoice');
 }
 
-export function handleReceiptClick(state) {
+export function handleReceiptClick(state, providers, products, fundingSources) {
   const pdf = new jspdf();
-  db.onceGetSpecificProvider(state.provider_id).then(providerObj => {
-    let providerName = providerObj.child('provider_id').val();
-    let address = providerObj.child('address').val();
-    let city = providerObj.child('city').val();
-    let stateUS = providerObj.child('state').val();
-    let zip = providerObj.child('zip').val();
-    let fullAddress = address + ', ' + city + ', ' + stateUS + ', ' + zip;
+  const providerObj = providers[state.provider_id];
+  let providerName = providerObj.provider_id;
+  let address = providerObj.address;
+  let city = providerObj.city;
+  let stateUS = providerObj.state;
+  let zip = providerObj.zip;
+  let fullAddress = address + ', ' + city + ', ' + stateUS + ', ' + zip;
 
-    pdf.setFont('helvetica');
-    pdf.setFontSize('20');
-    pdf.setFontType('bold');
-    pdf.text(55, 10, 'BMAC Receipt');
-    writeBmacAddressToPdf(pdf);
+  const base_x = 10;
+  let y = 15;
 
-    pdf.setFontType('italic');
-    pdf.setFontSize('12');
-    pdf.text(10, 40, 'Invoice No: ' + state.recieve_date);
-    pdf.text(10, 50, 'Recieve Date: ' + Moment.unix(state.recieve_date).format('MMM D, YYYY'));
-    db.onceGetSpecificFundingSource(state.payment_source).then(fundsSrcObj => {
-      pdf.text(130, 50, 'Funds Source: ' + fundsSrcObj.child('id').val());
-      pdf.text(10, 65, 'Provider: ');
-      pdf.text(15, 75, providerName);
-      pdf.text(15, 80, fullAddress);
+  const fundsSrcObj = fundingSources[state.payment_source];
+  const fundsSource = fundsSrcObj.id;
 
-      db.onceGetProducts().then(snapshot => {
-        const products = snapshot.val();
-        const items = makeProductItemsReadable(state.receive_items, products);
-        const clean_recieve_items = deleteEmptyProductItems(items);
-        let y = 105;
+  pdf.setFont('helvetica');
+  pdf.setFontSize('20');
+  pdf.setFontType('bold');
+  pdf.text(base_x, y, 'BMAC Receipt');
+  writeBmacAddressToPdf(pdf, base_x);
 
-        y = writeProductItemsToPdfAndReturnY(pdf, clean_recieve_items, y);
+  pdf.setFontSize('12');
+  pdf.setFontType('normal');
 
-        pdf.setFontType('normal');
-        pdf.setFontType('italic');
-        pdf.text(70, y + 20, 'Billed Amount: ' + state.billed_amt);
-        pdf.text(10, y + 30, 'Notes: ' + state.notes);
-        pdf.text(10, y + 50, 'BMAC Signature - ____________________________________________');
+  y = y + 25;
 
-        pdf.save('receipt');
-      });
-    });
+  const info = [
+    { label: 'Invoice No:', value: state.recieve_date },
+    { label: 'Recieve Date:', value: Moment.unix(state.recieve_date).format('MMM D, YYYY') },
+    { label: 'Payment Src:', value: fundsSource }
+  ];
+
+  let x_diff = 30;
+  info.forEach(obj => {
+    writeLabelValue(pdf, obj, base_x, y, x_diff);
+    y += 5;
   });
+
+  y += 5;
+  pdf.setFontType('bold');
+  pdf.text(base_x, y, 'Provider: ');
+  pdf.setFontType('normal');
+  y += 5;
+  pdf.text(base_x, y, providerName);
+  y += 5;
+  pdf.text(base_x, y, fullAddress);
+  y += 10;
+
+  const items = makeProductItemsReadable(state.receive_items, products);
+  const clean_recieve_items = deleteEmptyProductItems(items);
+
+  y = writeProductItemsToPdfAndReturnY(pdf, clean_recieve_items, y, base_x);
+
+  const data = [
+    { label: 'Billed Amt:', value: state.billed_amt ? state.billed_amt : '' },
+    { label: 'Notes:', value: state.notes ? state.notes : '' }
+  ];
+
+  y += 10;
+
+  x_diff = 25;
+  data.forEach(obj => {
+    writeLabelValue(pdf, obj, base_x, y, x_diff);
+    y += 5;
+  });
+
+  y += 10;
+
+  pdf.text(base_x, y, 'BMAC Signature - ____________________________________________');
+
+  pdf.save('receipt');
 }
 
 export function handleLabelClick(state) {
