@@ -135,7 +135,7 @@ class ProviderForm extends React.Component {
             return generateGenericFormItem(
               accessor,
               this.state[accessor],
-              val => this.onChange(accessor, val),
+              e => this.onChange(accessor, e.target.value),
               getFieldDecorator,
               'string'
             );
