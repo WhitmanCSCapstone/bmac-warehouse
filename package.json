@@ -14,9 +14,11 @@
     "react-dom": "^16.5.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
-    "react-table": "^6.8.6"
+    "react-table": "^6.8.6",
+    "source-map-explorer": "^2.0.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "cross-env NODE_ENV=development && react-scripts start",
     "build": "cross-env NODE_ENV=production && react-scripts build",
     "deploy": "react-scripts build && firebase deploy",
