@@ -212,6 +212,7 @@ class ReceiptForm extends React.Component {
             addProductItem={this.addReceiveItem}
             removeProductItem={this.removeReceiveItem}
             getFieldDecorator={getFieldDecorator}
+            validateFields={this.props.validateFieldsAndScroll}
           />
 
           <Divider />
