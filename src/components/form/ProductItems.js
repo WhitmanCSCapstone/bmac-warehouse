@@ -59,18 +59,6 @@ class ProductItems extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (
-      this.props.fundsSource !== nextProps.fundsSource ||
-      this.props.items !== nextProps.items ||
-      this.props.products !== nextProps.products ||
-      this.props.fundingSources !== nextProps.fundingSources
-    ) {
-      return true;
-    }
-    return false;
-  }
-
   componentDidUpdate(prevProps) {
     if (this.props.fundsSource !== prevProps.fundsSource) {
       const productObjs = Object.values(this.props.products);
@@ -81,6 +69,9 @@ class ProductItems extends React.Component {
           this.props.fundingSources
         )
       });
+        },
+        this.props.validateFields
+      );
     }
   }
 
@@ -143,6 +134,8 @@ class ProductItems extends React.Component {
       }
     ];
 
+    const optionKeys = this.state.autocompleteOptionsList.map(option => option.value);
+
     return (
       <div style={styles.container}>
         {!this.props.items
@@ -160,7 +153,7 @@ class ProductItems extends React.Component {
                       rules: [
                         {
                           type: 'enum',
-                          enum: Object.keys(this.props.products),
+                          enum: optionKeys,
                           required: index === 0,
                           message: 'Please Enter A Valid Product'
                         }
