@@ -48,12 +48,12 @@ const styles = {
 class ProductItems extends React.Component {
   constructor(props) {
     super(props);
-    const productObjs = Object.values(this.props.products);
     const autocompleteOptionsList = getAutocompleteOptionsList(
-      productObjs,
-      this.props.fundsSource,
+      props.products,
+      props.fundsSource,
       props.fundingSources
     );
+
     this.state = {
       autocompleteOptionsList: autocompleteOptionsList
     };
@@ -62,13 +62,13 @@ class ProductItems extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.fundsSource !== prevProps.fundsSource) {
       const productObjs = Object.values(this.props.products);
-      this.setState({
-        autocompleteOptionsList: getAutocompleteOptionsList(
-          productObjs,
-          this.props.fundsSource,
-          this.props.fundingSources
-        )
-      });
+      this.setState(
+        {
+          autocompleteOptionsList: getAutocompleteOptionsList(
+            productObjs,
+            this.props.fundsSource,
+            this.props.fundingSources
+          )
         },
         this.props.validateFields
       );
