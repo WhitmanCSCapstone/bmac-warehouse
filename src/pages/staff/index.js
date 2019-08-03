@@ -14,7 +14,8 @@ class Staff extends React.Component {
     super(props);
     this.state = {
       shouldFormBeMounted: false,
-      modalVisible: false
+      modalVisible: false,
+      rowData: null
     };
   }
 
@@ -32,7 +33,8 @@ class Staff extends React.Component {
             onClick={() =>
               this.setState({
                 shouldFormBeMounted: true,
-                modalVisible: true
+                modalVisible: true,
+                rowData: null
               })
             }
           >
@@ -48,6 +50,7 @@ class Staff extends React.Component {
             modalVisible={this.state.modalVisible}
             refreshTable={this.refreshTable}
             closeForm={() => this.setState({ shouldFormBeMounted: false })}
+            rowData={this.state.rowData}
           />
         )}
 
@@ -55,6 +58,14 @@ class Staff extends React.Component {
           <LoadingScreen />
         ) : (
           <ReactTable
+            getTrProps={(state, rowInfo) => ({
+              onClick: () =>
+                this.setState({
+                  rowData: rowInfo.original,
+                  shouldFormBeMounted: true,
+                  modalVisible: true
+                })
+            })}
             data={this.props.users ? Object.values(this.props.users) : []}
             columns={keys.map(string => {
               return {
