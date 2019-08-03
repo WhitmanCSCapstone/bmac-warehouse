@@ -14,6 +14,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/functions';
 
 const prodConfig = {
   apiKey: process.env.REACT_APP_PROD_API_KEY,
@@ -43,5 +44,8 @@ if (!app.apps.length) {
 
 const auth = app.auth();
 const db = app.database();
+// specify data center so that we're always
+// grabbing functions from where we're deploying
+const functions = app.app().functions('us-central1');
 
-export { db, auth };
+export { db, auth, functions };

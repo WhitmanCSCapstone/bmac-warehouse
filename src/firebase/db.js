@@ -1,16 +1,7 @@
 import { db } from './firebase';
+import { revokeAuth, authUser } from './auth';
 
-// User API
-
-export const doCreateUser = (id, username, email, role) =>
-  db.ref(`users/${id}`).set({
-    username,
-    email,
-    role
-  });
-
-//Database API
-
+// Database API
 export const onceGetUsers = callback => db.ref('users').once('value', callback);
 
 export const onceGetCustomers = callback => db.ref('customers').once('value', callback);
@@ -30,8 +21,6 @@ export const onceGetShipments = callback =>
     .ref('shipments')
     .orderByChild('ship_date')
     .once('value', callback);
-
-export const onceGetStaff = callback => db.ref('persons').once('value', callback);
 
 export const onceGetFundingSources = callback => db.ref('fundingsources').once('value', callback);
 
@@ -62,6 +51,30 @@ export const setCustomerObj = (index, newData) => db.ref(`customers/${index}`).s
 export const setFundingSourceObj = (index, newData) =>
   db.ref(`fundingsources/${index}`).set(newData);
 
+export const setUserObj = (index, newData, callback) =>
+  db.ref(`users/${index}`).set(newData, callback);
+
+export const createNewUser = (data, callback) => {
+  return new Promise((resolve, reject) => {
+    authUser(data)
+      .then(uid => {
+        db.ref(`users/${uid}`).set(
+          {
+            username: data.username,
+            email: data.email,
+            role: data.role,
+            uniq_id: uid
+          },
+          callback
+        );
+        resolve();
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+};
+
 // DELETE
 
 export const deleteShipmentObj = index => db.ref(`shipments/${index}`).remove();
@@ -71,6 +84,21 @@ export const deleteReceiptObj = index => db.ref(`contributions/${index}`).remove
 export const deleteProviderObj = index => db.ref(`providers/${index}`).remove();
 
 export const deleteProductObj = index => db.ref(`products/${index}`).remove();
+
+export const deleteUserObj = (id, callback) => {
+  return new Promise((resolve, reject) => {
+    revokeAuth(id)
+      .then(() => {
+        // uses set rather than remove in order
+        // to make use of completion callback
+        db.ref(`users/${id}`).set(null, () => {
+          callback();
+        });
+        resolve();
+      })
+      .catch(error => reject(error));
+  });
+};
 
 // PUSH
 
@@ -93,6 +121,7 @@ export const pushFundingSourceObj = newData => {
       db.ref(`fundingsources/${uniq_id}`).set(newData);
     });
 };
+
 export const pushReceiptObj = newData => {
   db.ref('contributions')
     .push(newData)
@@ -132,5 +161,3 @@ export const pushCustomerObj = newData => {
       db.ref(`customers/${uniq_id}`).set(newData);
     });
 };
-
-export const pushStaffObj = newData => db.ref('users').push(newData);

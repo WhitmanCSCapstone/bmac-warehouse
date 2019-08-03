@@ -12,7 +12,7 @@ export const styles = {
 
   staffFormItem: {
     width: '100%',
-    margin: '0px 1em 0em 1em'
+    margin: '0px 0em 0em 0em'
   },
 
   datePicker: {
@@ -26,5 +26,10 @@ export const styles = {
   errorMessage: {
     display: 'flex',
     width: '100%'
+  },
+
+  passwordField: {
+    width: '100%',
+    margin: 0
   }
 };

@@ -1,11 +1,13 @@
 import React from 'react';
-import { Divider, Modal, Alert, Form } from 'antd';
+import { Modal, Form } from 'antd';
 import { auth, db } from '../../../firebase';
 import { Input, Select } from 'antd';
 import * as ROLES from '../../../constants/roles';
 import { hasErrors } from '../../../utils/misc.js';
 import Footer from '../Footer';
 import { styles } from './styles';
+import PasswordFields from './PasswordFields';
+import isEmail from 'validator/lib/isEmail';
 
 const Option = Select.Option;
 
@@ -13,16 +15,28 @@ const byPropKey = (propertyName, value) => () => ({ [propertyName]: value });
 
 //Staff Form Component
 class StaffForm extends React.Component {
+  defaultState = {
+    username: '',
+    email: '',
+    passwordOne: '',
+    passwordTwo: '',
+    error: null,
+    role: '',
+    uniq_id: ''
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      email: '',
-      passwordOne: '',
-      passwordTwo: '',
-      error: null,
-      role: ''
+      ...this.defaultState,
+      ...this.props.rowData
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({ ...this.defaultState, ...this.props.rowData });
+    }
   }
 
   //Used to send the data to the databsae and reset the state.
@@ -30,42 +44,34 @@ class StaffForm extends React.Component {
     this.props.form.validateFieldsAndScroll(err => {
       if (!err && !this.state.error) {
         showLoadingAnimation();
-        const roles = [];
 
+        var newData = JSON.parse(JSON.stringify(this.state));
+        var row = this.props.rowData;
+
+        // currently this chunk is unused
+        // but will likely be needed in future
+        const roles = [];
         if (this.state.role === 'Admin') {
           roles.push(ROLES.ADMIN);
         } else {
           roles.push(ROLES.STANDARD);
         }
 
-        auth
-          .doCreateUserWithEmailAndPassword(this.state.email, this.state.passwordOne) // Creates user in auth platform.
-          .then(authUser => {
-            // Create a user in your own accessible Firebase Database too
-            db.doCreateUser(
-              authUser.user.uid,
-              this.state.username,
-              this.state.email,
-              this.state.role
-            )
-              .then(() => {
-                this.setState({
-                  username: '',
-                  email: '',
-                  passwordOne: '',
-                  passwordTwo: '',
-                  error: null,
-                  role: ''
-                });
-                this.props.refreshTable(this.props.closeForm);
-              })
-              .catch(error => {
-                this.setState(byPropKey('error', error));
-              });
-          })
-          .catch(error => {
+        newData.password = newData.passwordOne;
+        delete newData.passwordOne;
+        delete newData.passwordTwo;
+
+        const callback = () => this.props.refreshTable(this.props.closeModal);
+
+        if (row && row.uniq_id) {
+          // if we are editing a user, set in place
+          db.setUserObj(row.uniq_id, newData, callback);
+        } else {
+          // else we are creating a new user
+          db.createNewUser(newData, callback).catch(error => {
             this.setState(byPropKey('error', error));
           });
+        }
       }
     });
   };
@@ -74,10 +80,20 @@ class StaffForm extends React.Component {
     this.setState({ role: value });
   };
 
+  handleDelete = showLoadingAnimation => {
+    showLoadingAnimation();
+    db.deleteUserObj(this.props.rowData.uniq_id, () =>
+      this.props.refreshTable(this.props.closeModal)
+    ).catch(error => {
+      this.setState(byPropKey('error', error));
+    });
+  };
+
   render() {
     const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
 
     const isInvalid = this.state.passwordOne !== this.state.passwordTwo;
+    const isCreatingNewUser = !this.props.rowData;
 
     return (
       <Modal
@@ -96,6 +112,7 @@ class StaffForm extends React.Component {
             rowData={this.props.rowData}
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
+            handleDelete={this.handleDelete}
             saveDisabled={!isFieldsTouched() || hasErrors(getFieldsError()) || isInvalid}
           />
         ]}
@@ -113,22 +130,36 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item style={styles.staffFormItem} label={'Email:'}>
-            {getFieldDecorator('email', {
-              initialValue: this.state.email,
-              rules: [{ whitespace: true, required: true, message: 'Please Enter A Email' }]
-            })(
-              <Input
-                placeholder={'Email'}
-                onChange={event => this.setState(byPropKey('email', event.target.value))}
-              />
-            )}
-          </Form.Item>
+          {!isCreatingNewUser ? null : (
+            <Form.Item style={styles.staffFormItem} label={'Email:'}>
+              {getFieldDecorator('email', {
+                initialValue: this.state.email,
+                rules: [
+                  {
+                    whitespace: true,
+                    required: true,
+                    message: 'Please Enter A Valid Email',
+                    validator: (rule, value, callback) => isEmail(value)
+                  }
+                ]
+              })(
+                <Input
+                  placeholder={'Email'}
+                  onChange={event => this.setState(byPropKey('email', event.target.value))}
+                />
+              )}
+            </Form.Item>
+          )}
 
           <Form.Item style={styles.staffFormItem} label={'Role:'}>
             {getFieldDecorator('role', {
               initialValue: this.state.role,
-              rules: [{ required: true, message: 'Please Select A Role' }]
+              rules: [
+                {
+                  required: true,
+                  message: 'Please Select A Role'
+                }
+              ]
             })(
               <Select placeholder={'Role'} onChange={val => this.setState(byPropKey('role', val))}>
                 <Option value={'Admin'}>Admin</Option>
@@ -137,56 +168,14 @@ class StaffForm extends React.Component {
             )}
           </Form.Item>
 
-          <Divider orientation={'left'}>Password</Divider>
-
-          <Form.Item style={styles.staffFormItem} label={'Password:'}>
-            {getFieldDecorator('passwordOne', {
-              initialValue: this.state.passwordOne,
-
-              rules: [{ whitespace: true, required: true, message: 'Please Enter A Password' }]
-            })(
-              <Input
-                placeholder={'Password'}
-                type={'password'}
-                onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
-              />
-            )}
-          </Form.Item>
-
-          <Form.Item style={styles.staffFormItem} label={'Password:'}>
-            {getFieldDecorator('passwordTwo', {
-              initialValue: this.state.passwordTwo,
-              rules: [{ whitespace: true, required: true, message: 'Please Enter A Password' }]
-            })(
-              <Input
-                placeholder={'Password'}
-                type={'password'}
-                onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
-              />
-            )}
-          </Form.Item>
-
-          <Form.Item style={styles.staffFormItem}>
-            <div style={styles.errorMessage}>
-              {isInvalid &&
-                this.state.username !== null &&
-                this.state.email !== null &&
-                this.state.passwordOne !== null &&
-                this.state.passwordTwo !== null && (
-                  <Alert message={'Passwords do not match.'} type={'warning'} showIcon />
-                )}
-            </div>
-            <div id={'alert'} style={styles.errorMessage}>
-              {this.state.error && (
-                <Alert
-                  message={this.state.error.message}
-                  type={'error'}
-                  timeout={'3sec'}
-                  showIcon
-                />
-              )}
-            </div>
-          </Form.Item>
+          <PasswordFields
+            isCreatingNewUser={isCreatingNewUser}
+            styles={styles}
+            error={this.state.error}
+            isInvalid={isInvalid}
+            onChange={(prop, event) => this.setState(byPropKey(prop, event.target.value))}
+            getFieldDecorator={getFieldDecorator}
+          />
         </Form>
       </Modal>
     );
