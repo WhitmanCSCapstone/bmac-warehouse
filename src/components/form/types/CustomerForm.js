@@ -51,21 +51,14 @@ class CustomerForm extends React.Component {
       if (!err) {
         showLoadingAnimation();
         var newData = JSON.parse(JSON.stringify(this.state));
-
         var row = this.props.rowData;
+        const callback = () => this.props.refreshTable(this.props.closeModal);
 
         if (row && row.uniq_id) {
-          db.setCustomerObj(row.uniq_id, newData);
+          db.setCustomerObj(row.uniq_id, newData, callback);
         } else {
-          db.pushCustomerObj(this.state);
+          db.pushCustomerObj(this.state, callback);
         }
-
-        // this only works if the push doesn't take too long, kinda sketch, should be
-        // made asynchronous
-
-        this.props.refreshTable(() => {
-          this.props.closeModal();
-        });
       }
     });
   };

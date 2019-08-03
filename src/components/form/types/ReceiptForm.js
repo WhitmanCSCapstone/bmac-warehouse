@@ -69,19 +69,15 @@ class ReceiptForm extends React.Component {
         newData['receive_items'] = emptiedShipItems;
 
         var row = this.props.rowData;
+        const callback = () => this.props.refreshTable(this.props.closeModal);
 
         if (row && row.uniq_id) {
           // if we are editing a shipment, set in place
-          db.setReceiptObj(row.uniq_id, newData);
+          db.setReceiptObj(row.uniq_id, newData, callback);
         } else {
           // else we are creating a new entry
-          db.pushReceiptObj(newData);
+          db.pushReceiptObj(newData, callback);
         }
-
-        // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
-        this.props.refreshTable(() => {
-          this.props.closeModal();
-        });
       }
     });
   };
@@ -109,8 +105,8 @@ class ReceiptForm extends React.Component {
 
   handleDelete = showLoadingAnimation => {
     showLoadingAnimation();
-    db.deleteReceiptObj(this.props.rowData.uniq_id);
-    this.props.refreshTable(this.props.closeModal);
+    const callback = () => this.props.refreshTable(this.props.closeModal);
+    db.deleteReceiptObj(this.props.rowData.uniq_id, callback);
   };
 
   render() {

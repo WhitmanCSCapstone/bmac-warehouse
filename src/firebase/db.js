@@ -38,18 +38,23 @@ export const onceGetSpecificFundingSource = hash => db.ref(`fundingsources/` + h
 
 // SET
 
-export const setShipmentObj = (index, newData) => db.ref(`shipments/${index}`).set(newData);
+export const setShipmentObj = (index, newData, callback) =>
+  db.ref(`shipments/${index}`).set(newData, callback);
 
-export const setProviderObj = (index, newData) => db.ref(`/providers/${index}`).set(newData);
+export const setProviderObj = (index, newData, callback) =>
+  db.ref(`/providers/${index}`).set(newData, callback);
 
-export const setReceiptObj = (index, newData) => db.ref(`contributions/${index}`).set(newData);
+export const setReceiptObj = (index, newData, callback) =>
+  db.ref(`contributions/${index}`).set(newData, callback);
 
-export const setProductObj = (index, newData) => db.ref(`products/${index}`).set(newData);
+export const setProductObj = (index, newData, callback) =>
+  db.ref(`products/${index}`).set(newData, callback);
 
-export const setCustomerObj = (index, newData) => db.ref(`customers/${index}`).set(newData);
+export const setCustomerObj = (index, newData, callback) =>
+  db.ref(`customers/${index}`).set(newData, callback);
 
-export const setFundingSourceObj = (index, newData) =>
-  db.ref(`fundingsources/${index}`).set(newData);
+export const setFundingSourceObj = (index, newData, callback) =>
+  db.ref(`fundingsources/${index}`).set(newData, callback);
 
 export const setUserObj = (index, newData, callback) =>
   db.ref(`users/${index}`).set(newData, callback);
@@ -76,21 +81,24 @@ export const createNewUser = (data, callback) => {
 };
 
 // DELETE
+// all use .set() rather than .remove() in order to make use of completion callback
 
-export const deleteShipmentObj = index => db.ref(`shipments/${index}`).remove();
+export const deleteShipmentObj = (index, callback) =>
+  db.ref(`shipments/${index}`).set(null, callback);
 
-export const deleteReceiptObj = index => db.ref(`contributions/${index}`).remove();
+export const deleteReceiptObj = (index, callback) =>
+  db.ref(`contributions/${index}`).set(null, callback);
 
-export const deleteProviderObj = index => db.ref(`providers/${index}`).remove();
+export const deleteProviderObj = (index, callback) =>
+  db.ref(`providers/${index}`).set(null, callback);
 
-export const deleteProductObj = index => db.ref(`products/${index}`).remove();
+export const deleteProductObj = (index, callback) =>
+  db.ref(`products/${index}`).set(null, callback);
 
 export const deleteUserObj = (id, callback) => {
   return new Promise((resolve, reject) => {
     revokeAuth(id)
       .then(() => {
-        // uses set rather than remove in order
-        // to make use of completion callback
         db.ref(`users/${id}`).set(null, () => {
           callback();
         });
@@ -102,62 +110,62 @@ export const deleteUserObj = (id, callback) => {
 
 // PUSH
 
-export const pushShipmentObj = newData => {
+export const pushShipmentObj = (newData, callback) => {
   db.ref('shipments')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`shipments/${uniq_id}`).set(newData);
+      db.ref(`shipments/${uniq_id}`).set(newData, callback);
     });
 };
 
-export const pushFundingSourceObj = newData => {
+export const pushFundingSourceObj = (newData, callback) => {
   db.ref('fundingsources')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`fundingsources/${uniq_id}`).set(newData);
+      db.ref(`fundingsources/${uniq_id}`).set(newData, callback);
     });
 };
 
-export const pushReceiptObj = newData => {
+export const pushReceiptObj = (newData, callback) => {
   db.ref('contributions')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`contributions/${uniq_id}`).set(newData);
+      db.ref(`contributions/${uniq_id}`).set(newData, callback);
     });
 };
 
-export const pushProviderObj = newData => {
+export const pushProviderObj = (newData, callback) => {
   db.ref('providers/')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`providers/${uniq_id}`).set(newData);
+      db.ref(`providers/${uniq_id}`).set(newData, callback);
     });
 };
 
-export const pushProductObj = newData => {
+export const pushProductObj = (newData, callback) => {
   db.ref('products')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`products/${uniq_id}`).set(newData);
+      db.ref(`products/${uniq_id}`).set(newData, callback);
     });
 };
 
-export const pushCustomerObj = newData => {
+export const pushCustomerObj = (newData, callback) => {
   db.ref('customers')
     .push(newData)
     .then(snapshot => {
       const uniq_id = snapshot.key;
       newData['uniq_id'] = uniq_id;
-      db.ref(`customers/${uniq_id}`).set(newData);
+      db.ref(`customers/${uniq_id}`).set(newData, callback);
     });
 };

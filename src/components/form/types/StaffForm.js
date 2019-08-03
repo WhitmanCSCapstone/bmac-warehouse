@@ -82,9 +82,8 @@ class StaffForm extends React.Component {
 
   handleDelete = showLoadingAnimation => {
     showLoadingAnimation();
-    db.deleteUserObj(this.props.rowData.uniq_id, () =>
-      this.props.refreshTable(this.props.closeModal)
-    ).catch(error => {
+    const callback = () => this.props.refreshTable(this.props.closeModal);
+    db.deleteUserObj(this.props.rowData.uniq_id, callback).catch(error => {
       this.setState(byPropKey('error', error));
     });
   };

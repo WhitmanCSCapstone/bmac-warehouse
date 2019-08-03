@@ -52,16 +52,13 @@ class ProviderForm extends React.Component {
         showLoadingAnimation();
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData;
+        const callback = () => this.props.refreshTable(this.props.closeModal);
+
         if (row && row.uniq_id) {
-          db.setProviderObj(row.uniq_id, newData);
+          db.setProviderObj(row.uniq_id, newData, callback);
         } else {
-          db.pushProviderObj(this.state);
+          db.pushProviderObj(this.state, callback);
         }
-        // this only works if the push doesn't take too long, kinda sketch, should be
-        // made asynchronous
-        this.props.refreshTable(() => {
-          this.props.closeModal();
-        });
       }
     });
   };

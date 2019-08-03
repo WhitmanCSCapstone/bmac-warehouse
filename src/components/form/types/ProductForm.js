@@ -57,20 +57,15 @@ class ProductForm extends React.Component {
         showLoadingAnimation();
         var newData = JSON.parse(JSON.stringify(this.state));
         var row = this.props.rowData;
+        const callback = () => this.props.refreshTable(this.props.closeModal);
 
         if (row && row.uniq_id) {
           //if we are editing a shipment, set in place
-          db.setProductObj(row.uniq_id, newData);
+          db.setProductObj(row.uniq_id, newData, callback);
         } else {
           //else we are creating a new entry
-          db.pushProductObj(newData);
+          db.pushProductObj(newData, callback);
         }
-
-        // this only works if the push doesn't take too long, kinda sketch, should be
-        // made asynchronous
-        this.props.refreshTable(() => {
-          this.props.closeModal();
-        });
       }
     });
   };

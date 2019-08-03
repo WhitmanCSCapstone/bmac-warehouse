@@ -75,19 +75,15 @@ class ShipmentForm extends React.Component {
         newData['ship_items'] = emptiedShipItems;
 
         var row = this.props.rowData;
+        const callback = () => this.props.refreshTable(this.props.closeModal);
 
         if (row && row.uniq_id) {
           // if we are editing a shipment, set in place
-          db.setShipmentObj(row.uniq_id, newData);
+          db.setShipmentObj(row.uniq_id, newData, callback);
         } else {
           // else we are creating a new entry
-          db.pushShipmentObj(newData);
+          db.pushShipmentObj(newData, callback);
         }
-
-        // this only works if the push doesn't take too long, kinda sketch, should be made asynchronous
-        this.props.refreshTable(() => {
-          this.props.closeModal();
-        });
       }
     });
   };
@@ -115,8 +111,8 @@ class ShipmentForm extends React.Component {
 
   handleDelete = showLoadingAnimation => {
     showLoadingAnimation();
-    db.deleteShipmentObj(this.props.rowData.uniq_id);
-    this.props.refreshTable(this.props.closeModal);
+    const callback = () => this.props.refreshTable(this.props.closeModal);
+    db.deleteShipmentObj(this.props.rowData.uniq_id, callback);
   };
 
   render() {
