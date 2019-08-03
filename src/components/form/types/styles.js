@@ -10,7 +10,7 @@ export const styles = {
     margin: '0px 1em 0em 1em'
   },
 
-  staffFormItem: {
+  fullWidthFormItem: {
     width: '100%',
     margin: '0px 0em 0em 0em'
   },
