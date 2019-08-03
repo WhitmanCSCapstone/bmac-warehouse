@@ -39,7 +39,7 @@ class ProviderAutoComplete extends React.Component {
   }
 
   onChange = val => {
-    this.props.onProviderChange(val);
+    this.props.onChange(val);
   };
 
   render() {
