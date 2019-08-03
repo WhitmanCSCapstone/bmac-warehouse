@@ -1,14 +1,18 @@
 import React from 'react';
 import { db } from '../../../firebase';
 import { hasErrors } from '../../../utils/misc.js';
-import { Input, Form, Modal } from 'antd';
+import { fundingSourceRestrictions } from '../../../constants/constants';
+import { Input, Form, Modal, Select } from 'antd';
+import { styles } from './styles';
 import Footer from '../Footer';
+
+const Option = Select.Option;
 
 class FundingSourceForm extends React.Component {
   defaultState = {
-    code: null,
     id: null,
-    uniq_id: null
+    uniq_id: null,
+    restriction: undefined
   };
 
   constructor(props) {
@@ -74,7 +78,7 @@ class FundingSourceForm extends React.Component {
           ]}
         >
           <Form layout={'vertical'} onSubmit={this.handleSubmit}>
-            <Form.Item label={'Funding Source'}>
+            <Form.Item style={styles.fullWidthFormItem} label={'Funding Source'}>
               {getFieldDecorator('id', {
                 initialValue: this.state.id,
                 rules: [
@@ -89,6 +93,19 @@ class FundingSourceForm extends React.Component {
                   placeholder={`Funding Source`}
                   onChange={e => this.onChange('id', e.target.value)}
                 />
+              )}
+            </Form.Item>
+
+            <Form.Item style={styles.fullWidthFormItem} label={'Restriction Level:'}>
+              {getFieldDecorator('restriction', {
+                initialValue: this.state.restriction
+              })(
+                <Select
+                  placeholder={'Restriction'}
+                  onChange={val => this.onChange('restriction', val)}
+                >
+                  <Option value={fundingSourceRestrictions.STRICT_MATCH}>Strict Match</Option>
+                </Select>
               )}
             </Form.Item>
           </Form>

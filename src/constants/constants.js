@@ -80,8 +80,8 @@ export const tableKeys = {
   ],
 
   fundingSources: [
-    //"code",
-    'id'
+    'id',
+    'restriction'
     //"uniq_id"
   ]
 };
@@ -157,4 +157,8 @@ export const table2Promise = {
   providers: db.onceGetProviders,
   customers: db.onceGetCustomers,
   fundingSources: db.onceGetFundingSources
+};
+
+export const fundingSourceRestrictions = {
+  STRICT_MATCH: 'Strict Match'
 };

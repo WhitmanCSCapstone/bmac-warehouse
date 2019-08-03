@@ -1,7 +1,7 @@
 import React from 'react';
 import Moment from 'moment';
 import matchSorter from 'match-sorter';
-import { table2Promise } from '../constants/constants';
+import { table2Promise, fundingSourceRestrictions } from '../constants/constants';
 import { Form, InputNumber, Input } from 'antd';
 
 export function makeProductItemsReadable(items, products) {
@@ -207,15 +207,29 @@ export function getAutocompleteOptionsList(products, fundsSrcHashToFilterBy, fun
       return false;
     }
     const fsHash = product.funding_source;
-    const productFundsSrcExists = !!fundingSources[fsHash];
-    // if product matches shipment/receipt funds source, or
-    // the given product has no funds source,
-    // AND the product isn't discontinued, return true
+    const productFundingSourceDoesntExist = !fundingSources[fsHash];
+    const restriction = fundingSources[fundsSrcHashToFilterBy].restriction;
+    const fundingSourcesDontMatch = fsHash !== fundsSrcHashToFilterBy;
 
-    return (
-      product.status !== 'discontinued' &&
-      (fsHash === fundsSrcHashToFilterBy || !productFundsSrcExists)
-    );
+    // filter out discontinued products
+    if (product.status === 'discontinued') {
+      return false;
+    }
+    // filter out conflicting funding sources
+    else if (fundingSourcesDontMatch && !productFundingSourceDoesntExist) {
+      return false;
+    }
+    // filter out products with no listed funding source if funding source is set to strict
+    else if (
+      productFundingSourceDoesntExist &&
+      restriction === fundingSourceRestrictions.STRICT_MATCH
+    ) {
+      return false;
+    }
+    // else the product should appear in our autocomplete dropdown
+    else {
+      return true;
+    }
   }
 
   return Object.values(products)
