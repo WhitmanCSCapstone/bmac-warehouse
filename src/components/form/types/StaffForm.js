@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form } from 'antd';
-import { auth, db } from '../../../firebase';
+import { db } from '../../../firebase';
 import { Input, Select } from 'antd';
 import * as ROLES from '../../../constants/roles';
 import { hasErrors } from '../../../utils/misc.js';
@@ -117,7 +117,7 @@ class StaffForm extends React.Component {
         ]}
       >
         <Form layout={'vertical'} style={styles.form}>
-          <Form.Item style={styles.staffFormItem} label={'Username:'}>
+          <Form.Item style={styles.fullWidthFormItem} label={'Username:'}>
             {getFieldDecorator('username', {
               initialValue: this.state.username,
               rules: [{ whitespace: true, required: true, message: 'Please Enter A Username' }]
@@ -130,7 +130,7 @@ class StaffForm extends React.Component {
           </Form.Item>
 
           {!isCreatingNewUser ? null : (
-            <Form.Item style={styles.staffFormItem} label={'Email:'}>
+            <Form.Item style={styles.fullWidthFormItem} label={'Email:'}>
               {getFieldDecorator('email', {
                 initialValue: this.state.email,
                 rules: [
@@ -150,7 +150,7 @@ class StaffForm extends React.Component {
             </Form.Item>
           )}
 
-          <Form.Item style={styles.staffFormItem} label={'Role:'}>
+          <Form.Item style={styles.fullWidthFormItem} label={'Role:'}>
             {getFieldDecorator('role', {
               initialValue: this.state.role,
               rules: [

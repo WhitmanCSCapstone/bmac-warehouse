@@ -3,7 +3,7 @@ import { Divider, Alert, Form, Input } from 'antd';
 
 function PasswordFields(props) {
   return (
-    <div style={props.styles.staffFormItem}>
+    <div style={props.styles.fullWidthFormItem}>
       {!props.isCreatingNewUser ? null : (
         <div>
           <Divider orientation={'left'}>Password</Divider>
