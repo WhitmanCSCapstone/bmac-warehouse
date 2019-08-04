@@ -129,7 +129,9 @@ class ShipmentForm extends React.Component {
         footer={[
           <Footer
             key={'footer'}
-            handleLabelClick={() => handleLabelClick(this.state)}
+            handleLabelClick={() =>
+              handleLabelClick(this.state, this.props.customers, this.props.fundingSources)
+            }
             handleInvoiceClick={() =>
               handleInvoiceClick(
                 this.state,

@@ -223,40 +223,40 @@ export function handleReceiptClick(state, providers, products, fundingSources) {
   pdf.save('receipt');
 }
 
-export function handleLabelClick(state) {
+export function handleLabelClick(state, customers, fundingSources) {
   const pdf = new jspdf();
 
-  db.onceGetSpecificCustomer(state.customer_id).then(customerObj => {
-    let customerName = customerObj.child('customer_id').val();
-    let address = customerObj.child('address').val();
-    let city = customerObj.child('city').val();
-    let stateUS = customerObj.child('state').val();
-    let zip = customerObj.child('zip').val();
-    let fullAddress = city + ', ' + stateUS + ', ' + zip;
+  const customerObj = customers[state.customer_id];
+  const fundsSrcObj = fundingSources[state.funds_source];
 
-    pdf
-      .setFont('Helvetica')
-      .setFontSize(28)
-      .setFontType('italic');
+  let customerName = customerObj.customer_id;
+  let address = customerObj.address + '';
+  let city = customerObj.city;
+  let stateUS = customerObj.state;
+  let zip = customerObj.zip;
+  let cityStateZip = city + ', ' + stateUS + ', ' + zip;
 
-    pdf.text(10, 20, 'From:');
-    pdf.text(50, 30, 'Blue Mountain Action Council');
-    pdf.text(50, 40, 'Walla Walla, WA 99362');
+  pdf
+    .setFont('Helvetica')
+    .setFontSize(28)
+    .setFontType('italic');
 
-    pdf.text(10, 60, 'Ship To: ');
-    pdf.text(50, 70, customerName);
-    pdf.text(50, 80, address);
-    pdf.text(50, 90, fullAddress);
+  pdf.text(10, 20, 'From:');
+  pdf.text(50, 30, 'Blue Mountain Action Council');
+  pdf.text(50, 40, 'Walla Walla, WA 99362');
 
-    pdf.setFontSize(12).setFontType('normal');
-    pdf.text(10, 110, 'Invoice no: ' + state.ship_date);
-    db.onceGetSpecificFundingSource(state.funds_source).then(fundsSrcObj => {
-      pdf.text(130, 110, 'Funds Source: ' + fundsSrcObj.child('id').val());
-      pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
-      pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
-      pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
+  pdf.text(10, 60, 'Ship To: ');
+  pdf.text(50, 70, customerName);
+  pdf.text(50, 80, address);
+  pdf.text(50, 90, cityStateZip);
 
-      pdf.save('Label');
-    });
-  });
+  pdf.setFontSize(12).setFontType('normal');
+
+  pdf.text(10, 110, 'Invoice no: ' + state.ship_date);
+  pdf.text(130, 110, 'Funds Source: ' + fundsSrcObj.id);
+  pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
+  pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
+  pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
+
+  pdf.save('Label');
 }
