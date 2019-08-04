@@ -20,7 +20,7 @@ import {
   reportType2DateRangeRelavancy,
   radioValue2ReportType
 } from '../../constants/constants';
-import { getCSVdata, makeDatesReadable } from './utils';
+import { getCSVdata, makeDatesReadable, totalColumnByField } from './utils';
 import { CSVLink } from 'react-csv';
 import withAuthorization from '../../components/withAuthorization';
 import CustomDatePicker from '../../components/CustomDatePicker';
@@ -82,17 +82,16 @@ class Reports extends React.Component {
   }
 
   createCSV = () => {
-    getCSVdata(
+    let dataCSV = getCSVdata(
       this.state.data,
       this.state.reportType,
-      dataCSV => {
-        this.setState({ dataCSV: dataCSV });
-      },
       this.props.customers,
       this.props.fundingSources,
       this.props.providers,
       this.props.products
     );
+    dataCSV = totalColumnByField(dataCSV, this.state.reportType);
+    this.setState({ dataCSV: dataCSV });
   };
 
   onReportTypeChange = e => {
@@ -123,9 +122,10 @@ class Reports extends React.Component {
   };
 
   updateCSVData = () => {
-    const sortedData = this.reactTable.getResolvedState().sortedData.map(obj => {
+    let sortedData = this.reactTable.getResolvedState().sortedData.map(obj => {
       return obj._original;
     });
+    sortedData = totalColumnByField(sortedData, this.state.reportType);
     this.setState({ filteredData: sortedData });
   };
 

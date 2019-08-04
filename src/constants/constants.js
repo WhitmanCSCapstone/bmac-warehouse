@@ -149,6 +149,30 @@ export const reportType2DateRangeRelavancy = {
   'Current Providers': true
 };
 
+export const reportType2TotalColumnByFieldArgs = {
+  'Inventory Shipments': {
+    fieldToGroupBy: 'product',
+    fieldToTotal: 'case_lots',
+    totalColumnHeader: 'total_case_lots'
+  },
+  'Inventory Receipts': {
+    fieldToGroupBy: 'product',
+    fieldToTotal: 'total_weight',
+    totalColumnHeader: 'totals'
+  },
+  'Current Inventory': null,
+  'Current Customers': {
+    fieldToGroupBy: 'customer_id',
+    fieldToTotal: 'total_weight',
+    totalColumnHeader: 'totals'
+  },
+  'Current Providers': {
+    fieldToGroupBy: 'provider_id',
+    fieldToTotal: 'total_weight',
+    totalColumnHeader: 'totals'
+  }
+};
+
 export const table2Promise = {
   shipments: db.onceGetShipments,
   receipts: db.onceGetReceipts,

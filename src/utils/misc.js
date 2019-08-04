@@ -52,9 +52,8 @@ export function getCombinedWeight(items) {
 
 function formatColumnHeader(string) {
   return string
-    .replace('_', ' ')
-    .split(' ')
-    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.substring(1))
     .join(' ');
 }
 
@@ -256,7 +255,7 @@ function transformToType(val, type) {
 export function generateGenericFormItem(accessor, initialValue, onChange, getFieldDecorator, type) {
   const label = accessor
     .split('_')
-    .map(word => word[0].toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
   return (
     <Form.Item
