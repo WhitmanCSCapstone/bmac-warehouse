@@ -105,6 +105,7 @@ class FundingSourceForm extends React.Component {
                   onChange={val => this.onChange('restriction', val)}
                 >
                   <Option value={fundingSourceRestrictions.STRICT_MATCH}>Strict Match</Option>
+                  <Option value={null}>None</Option>
                 </Select>
               )}
             </Form.Item>
