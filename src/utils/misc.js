@@ -207,7 +207,8 @@ export function getAutocompleteOptionsList(products, fundsSrcHashToFilterBy, fun
     }
     const fsHash = product.funding_source;
     const productFundingSourceDoesntExist = !fundingSources[fsHash];
-    const restriction = fundingSources[fundsSrcHashToFilterBy].restriction;
+    const fundingSourceToFilterBy = fundingSources[fundsSrcHashToFilterBy];
+    const restriction = fundingSourceToFilterBy ? fundingSourceToFilterBy.restriction : undefined;
     const fundingSourcesDontMatch = fsHash !== fundsSrcHashToFilterBy;
 
     // filter out discontinued products
