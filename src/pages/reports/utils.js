@@ -1,5 +1,5 @@
 import { getCombinedWeight } from '../../utils/misc.js';
-import { reportKeys } from '../../constants/constants';
+import { reportKeys, reportType2TotalColumnByFieldArgs } from '../../constants/constants';
 import Moment from 'moment';
 
 /*
@@ -111,15 +111,7 @@ function alphabatizeByProperty(data, prop) {
   });
 }
 
-export async function getCSVdata(
-  init_data,
-  reportType,
-  callback,
-  customers,
-  fundingSources,
-  providers,
-  products
-) {
+export function getCSVdata(init_data, reportType, customers, fundingSources, providers, products) {
   var data = JSON.parse(JSON.stringify(init_data)); // deep clone
   if (data) {
     var array = [];
@@ -155,10 +147,42 @@ export async function getCSVdata(
       array = createProvidersReportArray(data, reportType, providers, fundingSources);
       alphabatizeByProperty(array, 'provider_id');
     }
-    callback(array);
+    return array;
   } else {
-    callback([]);
+    return [];
   }
+}
+
+/*
+   array - an array of objects with at least two fields
+   fieldToGroupBy - when this field changes in the array, a total will be written
+   fieldToTotal - the field for the column that contains the data we're totalling
+   totalColumnHeader - the name that will appear at the top of total column
+ */
+export function totalColumnByField(array, reportType) {
+  const args = reportType2TotalColumnByFieldArgs[reportType];
+  const fieldToGroupBy = args.fieldToGroupBy;
+  const fieldToTotal = args.fieldToTotal;
+  const totalColumnHeader = args.totalColumnHeader;
+
+  let newArray = JSON.parse(JSON.stringify(array));
+  let total = 0;
+
+  for (let i = 0; i < newArray.length; i++) {
+    let currRow = newArray[i];
+    let nextRow = newArray[i + 1];
+    let currProduct = currRow[fieldToGroupBy];
+    let nextProduct = nextRow ? nextRow[fieldToGroupBy] : undefined;
+
+    total += Number(currRow[fieldToTotal]);
+
+    if (currProduct !== nextProduct) {
+      currRow[totalColumnHeader] = total;
+      total = 0;
+    }
+  }
+
+  return newArray;
 }
 
 function createProvidersReportArray(data, reportType, providers, fundingSources) {
