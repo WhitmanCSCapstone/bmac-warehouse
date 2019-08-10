@@ -153,7 +153,14 @@ export function handleInvoiceClick(state, customers, products, fundingSources) {
   y += 10;
   pdf.text(base_x, y, 'Agency Signature - ___________________________________________');
 
-  pdf.save('shipment_invoice');
+  let file_name = `invoice_${Moment.unix(state.ship_date).format(
+    'MMM_D_YYYY'
+  )}_${customerName}_${fundsSource}`;
+
+  // little bit of cleanup to make it more friendly
+  file_name = file_name.split(' ').join('_');
+
+  pdf.save(file_name);
 }
 
 export function handleReceiptClick(state, providers, products, fundingSources) {
@@ -227,7 +234,14 @@ export function handleReceiptClick(state, providers, products, fundingSources) {
 
   pdf.text(base_x, y, 'BMAC Signature - ____________________________________________');
 
-  pdf.save('receipt');
+  let file_name = `receipt_${Moment.unix(state.recieve_date).format(
+    'MMM_D_YYYY'
+  )}_${providerName}_${fundsSource}`;
+
+  // little bit of cleanup to make it more friendly
+  file_name = file_name.split(' ').join('_');
+
+  pdf.save(file_name);
 }
 
 export function handleLabelClick(state, customers, fundingSources) {
@@ -235,6 +249,7 @@ export function handleLabelClick(state, customers, fundingSources) {
 
   const customerObj = customers[state.customer_id];
   const fundsSrcObj = fundingSources[state.funds_source];
+  const fundsSource = fundsSrcObj.id;
 
   let customerName = customerObj.customer_id;
   let address = customerObj.address + '';
@@ -260,10 +275,17 @@ export function handleLabelClick(state, customers, fundingSources) {
   pdf.setFontSize(12).setFontType('normal');
 
   pdf.text(10, 110, 'Invoice no: ' + state.ship_date);
-  pdf.text(130, 110, 'Funds Source: ' + fundsSrcObj.id);
+  pdf.text(130, 110, 'Funds Source: ' + fundsSource);
   pdf.text(10, 120, 'Ship Date: ' + Moment.unix(state.ship_date).format('MMM D, YYYY'));
   pdf.text(70, 120, 'Ship Via: ' + state.ship_via);
   pdf.text(130, 120, 'Total Weight: ' + getCombinedWeight(state.ship_items));
 
-  pdf.save('Label');
+  let file_name = `label_${Moment.unix(state.ship_date).format(
+    'MMM_D_YYYY'
+  )}_${customerName}_${fundsSource}`;
+
+  // little bit of cleanup to make it more friendly
+  file_name = file_name.split(' ').join('_');
+
+  pdf.save(file_name);
 }
