@@ -231,7 +231,7 @@ class ShipmentForm extends React.Component {
             addProductItem={this.addShipmentItem}
             removeProductItem={this.removeShipmentItem}
             getFieldDecorator={getFieldDecorator}
-            validateFields={this.props.validateFieldsAndScroll}
+            validateFields={this.props.form.validateFieldsAndScroll}
           />
 
           <Divider />
