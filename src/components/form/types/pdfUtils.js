@@ -31,6 +31,7 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old, base_x) {
 
   const headers = [['Material #', 'Product', 'Unit Weight', 'Case Lots', 'Total Weight']];
   const tableData = [];
+  let missingCaseLotFieldExists = false;
 
   for (let i = 0; i < items.length; i++) {
     const product = items[i].product;
@@ -43,8 +44,15 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old, base_x) {
 
     tableData.push(row);
 
-    total_case_lots += parseInt(case_lots, 10);
+    if (!parseInt(case_lots, 10)) {
+      missingCaseLotFieldExists = true;
+    }
+
+    total_case_lots += parseInt(case_lots, 10) ? parseInt(case_lots, 10) : 0;
   }
+
+  // if a case lot is missing, note that there are more case lots than listed in total_case_lots
+  total_case_lots = missingCaseLotFieldExists ? `>${total_case_lots}` : total_case_lots;
 
   const lastRow = ['', '', 'Totals:', total_case_lots, getCombinedWeight(items)];
 

@@ -14,12 +14,14 @@ export const onceGetReceipts = callback =>
   db
     .ref('contributions')
     .orderByChild('recieve_date')
+    .limitToLast(100)
     .once('value', callback);
 
 export const onceGetShipments = callback =>
   db
     .ref('shipments')
     .orderByChild('ship_date')
+    .limitToLast(100)
     .once('value', callback);
 
 export const onceGetFundingSources = callback => db.ref('fundingsources').once('value', callback);
