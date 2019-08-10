@@ -1,7 +1,6 @@
 import React from 'react';
 import { Icon, InputNumber, Button, Form, AutoComplete } from 'antd';
 import { getAutocompleteOptionsList } from '../../utils/misc.js';
-import ProductAutoComplete from './ProductAutoComplete';
 
 const styles = {
   container: {

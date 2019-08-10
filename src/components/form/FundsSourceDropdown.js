@@ -17,7 +17,6 @@ function FundsSourceDropdown(props) {
       style={styles.select}
       value={props.value ? props.value : undefined}
       onChange={val => props.onChange(val)}
-      filterOption={true}
       showSearch={true}
       filterOption={(input, option) =>
         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

@@ -1,7 +1,6 @@
 import * as jspdf from 'jspdf';
 import 'jspdf-autotable';
 import Moment from 'moment';
-import { db } from '../../../firebase';
 import {
   makeProductItemsReadable,
   getCombinedWeight,
