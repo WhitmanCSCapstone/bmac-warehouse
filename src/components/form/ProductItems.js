@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, InputNumber, Button, Form } from 'antd';
+import { Icon, InputNumber, Button, Form, AutoComplete } from 'antd';
 import { getAutocompleteOptionsList } from '../../utils/misc.js';
 import ProductAutoComplete from './ProductAutoComplete';
 
@@ -159,12 +159,21 @@ class ProductItems extends React.Component {
                         }
                       ]
                     })(
-                      <ProductAutoComplete
+                      <AutoComplete
+                        dataSource={this.state.autocompleteOptionsList}
+                        key={`autocomplete${index}`}
                         onChange={val => this.onProductChange(index, val)}
-                        autocompleteOptionsList={this.state.autocompleteOptionsList}
                         onProductSelect={val => this.onProductSelect(index, obj, val)}
-                        products={this.props.products}
-                        index={index}
+                        placeholder="Product"
+                        filterOption={(inputValue, option) => {
+                          if (option.props.children) {
+                            return (
+                              option.props.children
+                                .toUpperCase()
+                                .indexOf(inputValue.toUpperCase()) !== -1
+                            );
+                          }
+                        }}
                       />
                     )}
                   </Form.Item>
