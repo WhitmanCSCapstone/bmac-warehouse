@@ -119,11 +119,14 @@ class ProductForm extends React.Component {
           </Form.Item>
 
           <Form.Item style={styles.formItem} label={'Funding Source:'}>
-            <FundsSourceDropdown
-              value={this.state.funding_source}
-              onChange={val => this.onChange('funding_source', val)}
-              fundingSources={this.props.fundingSources}
-            />
+            {getFieldDecorator('funding_source', {
+              initialValue: this.state.funding_source
+            })(
+              <FundsSourceDropdown
+                onChange={val => this.onChange('funding_source', val)}
+                fundingSources={this.props.fundingSources}
+              />
+            )}
           </Form.Item>
 
           <Divider />
