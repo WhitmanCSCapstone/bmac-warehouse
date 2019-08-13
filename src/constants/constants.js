@@ -93,7 +93,8 @@ export const reportKeys = {
     'ship_date',
     'funds_source',
     'customer_id',
-    'case_lots'
+    'case_lots',
+    'total_weight'
   ],
   'Inventory Receipts': [
     'product',
