@@ -200,45 +200,94 @@ export function getTablePromise(table, optCallback) {
   }
 }
 
-export function getAutocompleteOptionsList(products, fundsSrcHashToFilterBy, fundingSources) {
-  function isProductRelevant(product) {
-    if (!product) {
-      return false;
-    }
-    const fsHash = product.funding_source;
-    const productFundingSourceDoesntExist = !fundingSources[fsHash];
-    const fundingSourceToFilterBy = fundingSources[fundsSrcHashToFilterBy];
-    const restriction = fundingSourceToFilterBy ? fundingSourceToFilterBy.restriction : undefined;
-    const fundingSourcesDontMatch = fsHash !== fundsSrcHashToFilterBy;
+/*
+   data - list of customers or providers to sort through
+   textAccessor - the accessor used to get the display value of an object in the data
+   givenObjId - if there is a obj that is not active but should neverless be recognized by the Autocomplete, then give its hash here so that it can be added
+*/
+function getRelevantObjs(data, textAccessor, givenObjId = null) {
+  return Object.values(data)
+    .filter(obj => {
+      return obj.status === 'active' || obj.uniq_id === givenObjId;
+    })
+    .map(obj => {
+      return { value: obj.uniq_id, text: obj[textAccessor] };
+    });
+}
 
-    // filter out discontinued products
-    if (product.status === 'discontinued') {
-      return false;
-    }
-    // filter out conflicting funding sources
-    else if (fundingSourcesDontMatch && !productFundingSourceDoesntExist) {
-      return false;
-    }
-    // filter out products with no listed funding source if funding source is set to strict
-    else if (
-      productFundingSourceDoesntExist &&
-      restriction === fundingSourceRestrictions.STRICT_MATCH
-    ) {
-      return false;
-    }
-    // else the product should appear in our autocomplete dropdown
-    else {
-      return true;
-    }
-  }
+export function getRelevantCustomers(customers, givenCustomerId) {
+  return getRelevantObjs(customers, 'customer_id', givenCustomerId);
+}
 
+export function getRelevantProviders(providers, givenProviderId) {
+  return getRelevantObjs(providers, 'provider_id', givenProviderId);
+}
+
+/*
+   data - takes an object that is a collection of sub-objects, and filters them by their 'status' field
+ */
+export function getActiveObjKeys(data) {
+  return Object.values(data)
+    .filter(obj => {
+      return obj.status === 'active';
+    })
+    .map(obj => obj.uniq_id);
+}
+
+/*
+   products - list of all prodcuts
+   givenProductIds - products that might not be valid but are still relevant
+ */
+export function getRelevantProducts(products, fundsSource, fundingSources, givenProductIds) {
+  return Object.values(products)
+    .filter(product => {
+      return (
+        isProductValid(product, fundsSource, fundingSources) ||
+        givenProductIds.includes(product.uniq_id)
+      );
+    })
+    .map(product => ({ value: product.uniq_id, text: product.product_id }));
+}
+
+export function getValidProductIds(products, fundsSrcHashToFilterBy, fundingSources) {
   return Object.values(products)
     .filter(productObj => {
-      return isProductRelevant(productObj, fundsSrcHashToFilterBy, fundingSources);
+      return isProductValid(productObj, fundsSrcHashToFilterBy, fundingSources);
     })
     .map(productObj => {
-      return { value: productObj.uniq_id, text: productObj.product_id };
+      return productObj.uniq_id;
     });
+}
+
+function isProductValid(product, fundsSrcHashToFilterBy, fundingSources) {
+  if (!product) {
+    return false;
+  }
+  const fsHash = product.funding_source;
+  const productFundingSourceDoesntExist = !fundingSources[fsHash];
+  const fundingSourceToFilterBy = fundingSources[fundsSrcHashToFilterBy];
+  const restriction = fundingSourceToFilterBy ? fundingSourceToFilterBy.restriction : undefined;
+  const fundingSourcesDontMatch = fsHash !== fundsSrcHashToFilterBy;
+
+  // filter out discontinued products
+  if (product.status === 'discontinued') {
+    return false;
+  }
+  // filter out conflicting funding sources
+  else if (fundingSourcesDontMatch && !productFundingSourceDoesntExist) {
+    return false;
+  }
+  // filter out products with no listed funding source if funding source is set to strict
+  else if (
+    productFundingSourceDoesntExist &&
+    restriction === fundingSourceRestrictions.STRICT_MATCH
+  ) {
+    return false;
+  }
+  // else the product should appear in our autocomplete dropdown
+  else {
+    return true;
+  }
 }
 
 export function hasErrors(fieldsError) {

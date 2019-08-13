@@ -1,17 +1,18 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Select, Divider, Modal, Form } from 'antd';
+import { Input, DatePicker, Select, Divider, Modal, Form, AutoComplete } from 'antd';
 import { handleLabelClick, handleInvoiceClick } from './pdfUtils';
 import {
   getCombinedWeight,
   hasErrors,
   generateGenericFormItem,
-  deleteEmptyProductItems
+  deleteEmptyProductItems,
+  getActiveObjKeys,
+  getRelevantCustomers
 } from '../../../utils/misc.js';
 import ProductItems from '../ProductItems';
 import Footer from '../Footer';
 import FundsSourceDropdown from '../FundsSourceDropdown.js';
-import CustomerAutoComplete from '../CustomerAutoComplete';
 import Moment from 'moment';
 import { styles } from './styles';
 
@@ -40,9 +41,11 @@ class ShipmentForm extends React.Component {
     this.state = { ...this.defaultState, ...props.rowData };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
+    } else if (this.state.funds_source !== prevState.funds_source) {
+      this.props.form.validateFieldsAndScroll();
     }
   }
 
@@ -117,6 +120,9 @@ class ShipmentForm extends React.Component {
 
   render() {
     const { getFieldDecorator, getFieldsError, isFieldsTouched } = this.props.form;
+    const relevantCustomers = getRelevantCustomers(this.props.customers, this.state.customer_id);
+    const validCustomerKeys = getActiveObjKeys(this.props.customers);
+
     return (
       <Modal
         title={'Shipment Form'}
@@ -171,15 +177,23 @@ class ShipmentForm extends React.Component {
                 {
                   whitespace: true,
                   type: 'enum',
-                  enum: Object.keys(this.props.customers),
+                  enum: validCustomerKeys,
                   required: true,
                   message: 'Please Enter A Valid Customer'
                 }
               ]
             })(
-              <CustomerAutoComplete
+              <AutoComplete
+                dataSource={relevantCustomers}
                 onChange={val => this.onChange('customer_id', val)}
-                rowData={this.props.rowData}
+                placeholder="Customer"
+                filterOption={(inputValue, option) => {
+                  if (option.props.children) {
+                    return (
+                      option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    );
+                  }
+                }}
               />
             )}
           </Form.Item>

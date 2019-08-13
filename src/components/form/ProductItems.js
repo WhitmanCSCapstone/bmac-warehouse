@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, InputNumber, Button, Form, AutoComplete } from 'antd';
-import { getAutocompleteOptionsList } from '../../utils/misc.js';
+import { getRelevantProducts, getValidProductIds } from '../../utils/misc.js';
 
 const styles = {
   container: {
@@ -45,35 +45,6 @@ const styles = {
 };
 
 class ProductItems extends React.Component {
-  constructor(props) {
-    super(props);
-    const autocompleteOptionsList = getAutocompleteOptionsList(
-      props.products,
-      props.fundsSource,
-      props.fundingSources
-    );
-
-    this.state = {
-      autocompleteOptionsList: autocompleteOptionsList
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.fundsSource !== prevProps.fundsSource) {
-      const productObjs = Object.values(this.props.products);
-      this.setState(
-        {
-          autocompleteOptionsList: getAutocompleteOptionsList(
-            productObjs,
-            this.props.fundsSource,
-            this.props.fundingSources
-          )
-        },
-        this.props.validateFields
-      );
-    }
-  }
-
   updateTotalWeight = (obj, index) => {
     const calculatedTotalWeight = obj['case_lots'] * obj['unit_weight'];
     if (calculatedTotalWeight) {
@@ -133,7 +104,18 @@ class ProductItems extends React.Component {
       }
     ];
 
-    const optionKeys = this.state.autocompleteOptionsList.map(option => option.value);
+    const givenItemUniqIds = this.props.items.map(item => item.product);
+    const relevantProducts = getRelevantProducts(
+      this.props.products,
+      this.props.fundsSource,
+      this.props.fundingSources,
+      givenItemUniqIds
+    );
+    const validProductKeys = getValidProductIds(
+      this.props.products,
+      this.props.fundsSource,
+      this.props.fundingSources
+    );
 
     return (
       <div style={styles.container}>
@@ -152,17 +134,17 @@ class ProductItems extends React.Component {
                       rules: [
                         {
                           type: 'enum',
-                          enum: optionKeys,
+                          enum: validProductKeys,
                           required: index === 0,
                           message: 'Please Enter A Valid Product'
                         }
                       ]
                     })(
                       <AutoComplete
-                        dataSource={this.state.autocompleteOptionsList}
+                        dataSource={relevantProducts}
                         key={`autocomplete${index}`}
                         onChange={val => this.onProductChange(index, val)}
-                        onProductSelect={val => this.onProductSelect(index, obj, val)}
+                        onSelect={val => this.onProductSelect(index, obj, val)}
                         placeholder="Product"
                         filterOption={(inputValue, option) => {
                           if (option.props.children) {
