@@ -44,7 +44,10 @@ class ShipmentForm extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
-    } else if (this.state.funds_source !== prevState.funds_source) {
+    } else if (
+      this.state.funds_source !== prevState.funds_source &&
+      this.state.ship_items[0].product
+    ) {
       let count = 0;
       const fields = this.state.ship_items.map(() => `product_id${count++}`);
       this.props.form.validateFieldsAndScroll(fields);
