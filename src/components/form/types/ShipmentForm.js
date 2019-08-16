@@ -44,8 +44,6 @@ class ShipmentForm extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
-    } else if (this.state.funds_source !== prevState.funds_source) {
-      this.props.form.validateFieldsAndScroll();
     }
   }
 
@@ -245,7 +243,6 @@ class ShipmentForm extends React.Component {
             addProductItem={this.addShipmentItem}
             removeProductItem={this.removeShipmentItem}
             getFieldDecorator={getFieldDecorator}
-            validateFields={this.props.form.validateFieldsAndScroll}
           />
 
           <Divider />

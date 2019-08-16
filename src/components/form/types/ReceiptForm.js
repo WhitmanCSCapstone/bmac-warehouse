@@ -38,8 +38,6 @@ class ReceiptForm extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({ ...this.defaultState, ...this.props.rowData });
-    } else if (this.state.payment_source !== prevState.payment_source) {
-      this.props.form.validateFieldsAndScroll();
     }
   }
 
@@ -222,7 +220,6 @@ class ReceiptForm extends React.Component {
             addProductItem={this.addReceiveItem}
             removeProductItem={this.removeReceiveItem}
             getFieldDecorator={getFieldDecorator}
-            validateFields={this.props.form.validateFieldsAndScroll}
           />
 
           <Divider />
