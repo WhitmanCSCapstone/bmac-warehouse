@@ -17,7 +17,6 @@ import Staff from '../pages/staff';
 import Providers from '../pages/providers';
 import Customers from '../pages/customers';
 import Reports from '../pages/reports';
-import Help from '../pages/help';
 import FundingSources from '../pages/fundingSources';
 import AppHeader from './AppHeader';
 
@@ -83,8 +82,7 @@ const standardPages = {
   providers: Providers,
   customers: Customers,
   reports: Reports,
-  about: About,
-  help: Help
+  about: About
 };
 
 const adminPages = {
@@ -97,8 +95,7 @@ const adminPages = {
   fundingSources: FundingSources,
   staff: Staff,
   reports: Reports,
-  about: About,
-  help: Help
+  about: About
 };
 
 function cleanPathname(pathname) {
