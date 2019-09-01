@@ -158,7 +158,11 @@ export async function handleInvoiceClick(state, customers, products, fundingSour
   )}_${customerName}_${fundsSource}`;
 
   // little bit of cleanup to make it more friendly
-  file_name = file_name.split(' ').join('_');
+  file_name = file_name
+    .split(' ')
+    .join('_')
+    .split('.')
+    .join('');
 
   pdf.save(file_name);
 }
@@ -239,7 +243,11 @@ export async function handleReceiptClick(state, providers, products, fundingSour
   )}_${providerName}_${fundsSource}`;
 
   // little bit of cleanup to make it more friendly
-  file_name = file_name.split(' ').join('_');
+  file_name = file_name
+    .split(' ')
+    .join('_')
+    .split('.')
+    .join('');
 
   pdf.save(file_name);
 }
@@ -285,7 +293,11 @@ export async function handleLabelClick(state, customers, fundingSources) {
   )}_${customerName}_${fundsSource}`;
 
   // little bit of cleanup to make it more friendly
-  file_name = file_name.split(' ').join('_');
+  file_name = file_name
+    .split(' ')
+    .join('_')
+    .split('.')
+    .join('');
 
   pdf.save(file_name);
 }
