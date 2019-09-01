@@ -78,7 +78,7 @@ function writeProductItemsToPdfAndReturnY(pdf, items, y_old, base_x) {
      is shifted one line down per font, spacing settings declared
      before this call.
    */
-export function handleInvoiceClick(state, customers, products, fundingSources) {
+export async function handleInvoiceClick(state, customers, products, fundingSources) {
   const pdf = new jspdf();
   const customerObj = customers[state.customer_id];
   let customerName = customerObj.customer_id;
@@ -163,7 +163,7 @@ export function handleInvoiceClick(state, customers, products, fundingSources) {
   pdf.save(file_name);
 }
 
-export function handleReceiptClick(state, providers, products, fundingSources) {
+export async function handleReceiptClick(state, providers, products, fundingSources) {
   const pdf = new jspdf();
   const providerObj = providers[state.provider_id];
   let providerName = providerObj.provider_id;
@@ -244,7 +244,7 @@ export function handleReceiptClick(state, providers, products, fundingSources) {
   pdf.save(file_name);
 }
 
-export function handleLabelClick(state, customers, fundingSources) {
+export async function handleLabelClick(state, customers, fundingSources) {
   const pdf = new jspdf();
 
   const customerObj = customers[state.customer_id];

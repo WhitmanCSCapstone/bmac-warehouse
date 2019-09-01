@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Divider, Modal, Form, AutoComplete } from 'antd';
+import { Input, Alert, DatePicker, Divider, Modal, Form, AutoComplete } from 'antd';
 import {
   getCombinedWeight,
   hasErrors,
@@ -142,7 +142,9 @@ class ReceiptForm extends React.Component {
                 this.props.providers,
                 this.props.products,
                 this.props.fundingSources
-              )
+              ).catch(err => {
+                this.setState({ error: err });
+              })
             }
             closeModal={this.props.closeModal}
             handleOk={this.handleOk}
@@ -252,6 +254,18 @@ class ReceiptForm extends React.Component {
               />
             )}
           </Form.Item>
+
+          <div id={'alert'} style={styles.errorMessage}>
+            {this.state.error && (
+              <Alert
+                closable={true}
+                message={this.state.error.message}
+                type={'error'}
+                timeout={'3sec'}
+                showIcon
+              />
+            )}
+          </div>
         </Form>
       </Modal>
     );

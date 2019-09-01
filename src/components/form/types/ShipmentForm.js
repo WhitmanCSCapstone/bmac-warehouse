@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '../../../firebase';
-import { Input, DatePicker, Select, Divider, Modal, Form, AutoComplete } from 'antd';
+import { Input, Alert, DatePicker, Select, Divider, Modal, Form, AutoComplete } from 'antd';
 import { handleLabelClick, handleInvoiceClick } from './pdfUtils';
 import {
   getCombinedWeight,
@@ -141,7 +141,11 @@ class ShipmentForm extends React.Component {
           <Footer
             key={'footer'}
             handleLabelClick={() =>
-              handleLabelClick(this.state, this.props.customers, this.props.fundingSources)
+              handleLabelClick(this.state, this.props.customers, this.props.fundingSources).catch(
+                err => {
+                  this.setState({ error: err });
+                }
+              )
             }
             handleInvoiceClick={() =>
               handleInvoiceClick(
@@ -149,7 +153,9 @@ class ShipmentForm extends React.Component {
                 this.props.customers,
                 this.props.products,
                 this.props.fundingSources
-              )
+              ).catch(err => {
+                this.setState({ error: err });
+              })
             }
             rowData={this.props.rowData}
             handleDelete={this.handleDelete}
@@ -275,6 +281,18 @@ class ShipmentForm extends React.Component {
               />
             )}
           </Form.Item>
+
+          <div id={'alert'} style={styles.errorMessage}>
+            {this.state.error && (
+              <Alert
+                closable={true}
+                message={this.state.error.message}
+                type={'error'}
+                timeout={'3sec'}
+                showIcon
+              />
+            )}
+          </div>
         </Form>
       </Modal>
     );
