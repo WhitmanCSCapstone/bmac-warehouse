@@ -27,9 +27,9 @@ export const tableKeys = {
     //"zip",
     //"county",
     //"contact",
-    'phone'
+    'phone',
     //"email",
-    //"status",
+    'status'
     //"notes",
     //"uniq_id",
   ],
@@ -72,9 +72,9 @@ export const tableKeys = {
     //"zip",
     //"county",
     //"contact",
-    'phone'
+    'phone',
     //"email",
-    //"status",
+    'status'
     //"notes",
     //"uniq_id",
   ],
