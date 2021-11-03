@@ -17,7 +17,7 @@
     "react-scripts": "1.1.5",
     "react-table": "^6.8.6",
     "source-map-explorer": "^2.0.1",
-    "validator": "^11.1.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
